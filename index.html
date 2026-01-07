@@ -846,7 +846,7 @@ document.addEventListener("input", function(){
 </script>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwEJolb_V74J9Z-lQuMc0EUYu22afmzolFPsak5Pvx-mBP7Hscc3GOK0DPF-HVqQ1Lv/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxFg_fRFFj15vxh-kEZXazqLMjmA885UPz9PafOs_km1t5i6iif9S0E6ifnzTPW-ZV9/exec";
 
 /* ==== TRA CỨU TAG THÔNG TIN XE ==== */
 function searchXe() {
@@ -926,9 +926,12 @@ document.getElementById("xeForm").addEventListener("submit", function(e){
   const fd = new FormData(this);
   fd.append("action", "saveXe");
 
- fetch(SCRIPT_URL, {
+fetch(WEB_APP_URL, {
   method: "POST",
-  body: fd
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(formDataObject)
 })
 .then(res => res.json())
 .then(rs => {
@@ -1002,3 +1005,4 @@ function resetThongTinXe() {
 </script>
 </body>
 </html>
+
