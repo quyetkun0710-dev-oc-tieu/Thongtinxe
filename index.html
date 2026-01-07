@@ -846,7 +846,7 @@ document.addEventListener("input", function(){
 </script>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxmPjw-C8i9NIZS7wEBJQ3M6lO2HAoLN1sEkgAQ7z0X857AObtNM93km5kNK1gCCY9Q/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz67i_XtKGTTt44s2iZP-kWIDQmli9CTOCFr7KsZnduEERSkYZIsbzzDqqmiEFmpNQ7/exec";
 
 /* ==== TRA CỨU TAG THÔNG TIN XE ==== */
 function searchXe() {
@@ -926,10 +926,24 @@ document.getElementById("xeForm").addEventListener("submit", function(e){
   const fd = new FormData(this);
   fd.append("action", "saveXe");
 
-  fetch(SCRIPT_URL, { method:"POST", body:fd })
-    .then(r => r.json())
-    .then(rs => alert(rs.message || "Đã cập nhật"))
-    .catch(() => alert("❌ Không kết nối được App Script"));
+ fetch(SCRIPT_URL, {
+  method: "POST",
+  body: fd
+})
+.then(res => res.json())
+.then(rs => {
+  if (rs.status === "success") {
+    alert(rs.message || "Đã lưu dữ liệu");
+
+    // ===== RESET FORM SAU KHI GỬI =====
+    resetThongTinXe();
+
+  } else {
+    alert("Lỗi: " + rs.message);
+  }
+})
+.catch(err => {
+  alert("Không kết nối được server");
 });
 
 function calcTheTichThung() {
@@ -959,9 +973,42 @@ function calcTheTichThung() {
     theTichInput.value = "";
   }
 }
+function resetThongTinXe() {
+  const form = document.getElementById("xeForm");
+  if (!form) return;
+
+  // reset tất cả input text / number / date
+  form.querySelectorAll('input:not([type="radio"]):not([type="checkbox"])')
+    .forEach(el => {
+      el.value = "";
+      el.readOnly = false; // 🔓 mở khóa lại
+    });
+
+  // reset radio theo mặc định
+  form.querySelectorAll('input[type="radio"]').forEach(r => {
+    r.checked = r.hasAttribute("checked");
+  });
+
+  // reset hidden
+  form.querySelectorAll('input[type="hidden"]').forEach(h => h.value = "");
+
+  // reset select
+  form.querySelectorAll("select").forEach(s => s.selectedIndex = 0);
+
+  // reset textarea
+  form.querySelectorAll("textarea").forEach(t => t.value = "");
+
+  // reset field auto tính
+  ["kich_thuoc_thung", "the_tich_thung"].forEach(name => {
+    const el = form.querySelector(`[name="${name}"]`);
+    if (el) el.value = "";
+  });
+
+  // clear kết quả tra cứu
+  const rs = document.getElementById("xe_result");
+  if (rs) rs.innerHTML = "";
+}
 
 </script>
 </body>
 </html>
-
-
