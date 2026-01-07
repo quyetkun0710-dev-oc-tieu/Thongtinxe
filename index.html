@@ -846,7 +846,7 @@ document.addEventListener("input", function(){
 </script>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxFg_fRFFj15vxh-kEZXazqLMjmA885UPz9PafOs_km1t5i6iif9S0E6ifnzTPW-ZV9/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz2omhs4VSH7VU7DlyPta5Dcya7HUa6CDf2F2x-zUMNlsOrwwR8wpYnirLRFSEUJzRb/exec";
 
 /* ==== TRA CỨU TAG THÔNG TIN XE ==== */
 function searchXe() {
@@ -920,33 +920,28 @@ function fillXeForm(data) {
 document.getElementById("xeForm").addEventListener("submit", function(e){
   e.preventDefault();
 
-  const bienSoInput = this.querySelector('[name="bien_so_xe"]');
-  bienSoInput.value = bienSoInput.value.trim().toUpperCase(); // ⭐ BẮT BUỘC
+  const data = {};
+  [...this.elements].forEach(el => {
+    if (el.name) data[el.name] = el.value;
+  });
 
-  const fd = new FormData(this);
-  fd.append("action", "saveXe");
+  data.action = "saveXe";
 
-fetch(WEB_APP_URL, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify(formDataObject)
-})
-.then(res => res.json())
-.then(rs => {
-  if (rs.status === "success") {
-    alert(rs.message || "Đã lưu dữ liệu");
-
-    // ===== RESET FORM SAU KHI GỬI =====
-    resetThongTinXe();
-
-  } else {
-    alert("Lỗi: " + rs.message);
-  }
-})
-.catch(err => {
-  alert("Không kết nối được server");
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  })
+  .then(r => r.json())
+  .then(res => {
+    if (res.status === "success") {
+      alert("Đã lưu thông tin xe");
+      resetThongTinXe(); // ✅ Rule 3
+    } else {
+      alert(res.message || "Lỗi ghi dữ liệu");
+    }
+  })
+  .catch(() => alert("Không kết nối Apps Script"));
 });
 
 function calcTheTichThung() {
@@ -1005,4 +1000,3 @@ function resetThongTinXe() {
 </script>
 </body>
 </html>
-
