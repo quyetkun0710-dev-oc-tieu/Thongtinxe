@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>QUẢN LÝ PHƯƠNG TIỆN</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+
+<style>
+body { background:#f4f6f8 }
+.hidden { display:none }
+.card-hover { transition:0.2s }
+.card-hover:hover { cursor:pointer; transform:scale(1.03) }
+.form-box { max-width:1100px; margin:auto }
+
+/* ===== HEADER TRANG ĐẦU (HOME ONLY) ===== */
+
+.home-header {
+  background: linear-gradient(135deg, #fc1818, #b63c3c);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 32px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+}
+
+.home-header .logo {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(161, 245, 169, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+}
+
+.home-header .title-box h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.home-header .title-box p {
+  margin-top: 6px;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* mobile */
+@media (max-width: 768px) {
+  .home-header {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<section class="section">
+<div class="container">
+
+<!-- ================= HOME ================= -->
+<div id="home">
+<div class="home-header">
+<div class="header-inner header-center">
+  <img src="https://drive.google.com/thumbnail?id=12ye0HEGRTrKu57KVf05AV04ZdmMtN541&sz=w800">
+</div>
+ <div class="title-box">
+    <h1>MANAGERMENT FLEET SYSTEM</h1>
+    <p></p>
+  </div>
+</div>
+
+
+<div class="columns is-multiline">
+  <div class="column is-3">
+    <div class="card card-hover" onclick="openTag('xe')">
+      <div class="card-content has-text-centered">
+        <p class="title is-5">🚚 Thông tin xe</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="column is-3">
+    <div class="card card-hover" onclick="openTag('taixe')">
+      <div class="card-content has-text-centered">
+        <p class="title is-5">👨‍✈️ Tài xế</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="column is-3">
+    <div class="card card-hover" onclick="openTag('nhatky')">
+      <div class="card-content has-text-centered">
+        <p class="title is-5">📒 Nhật ký vận hành</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="column is-3">
+    <div class="card card-hover" onclick="openTag('baoduong')">
+      <div class="card-content has-text-centered">
+        <p class="title is-5">🛠️ Bảo dưỡng</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="column is-3">
+  <div class="card card-hover" onclick="openTag('fuel')">
+    <div class="card-content has-text-centered">
+      <p class="title is-5">⛽ Nhiên liệu</p>
+    </div>
+  </div>
+</div>
+</div>
+<div class="column is-3">
+  <div class="card card-hover" onclick="openTag('danhgia')">
+    <div class="card-content has-text-centered">
+      <p class="title is-5">📊 Đánh giá nhân sự</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ================= TAG THÔNG TIN XE ================= -->
+<div id="xe" class="hidden form-box">
+  <button class="button mb-4" onclick="backHome()">⬅ Quay lại</button>
+  <h2 class="title is-4">THÔNG TIN XE</h2>
+
+  <!-- ===== TRA CỨU ===== -->
+  <h3 class="subtitle">🔍 Tra cứu xe theo biển số</h3>
+  <div class="columns">
+    <div class="column is-one-third">
+      <label class="label">Biển số xe</label>
+      <input class="input" id="search_bien_so_xe" placeholder="VD: 51C-12345">
+    </div>
+    <div class="column">
+      <button class="button is-info mt-5" type="button" onclick="searchXe()">Tra cứu</button>
+    </div>
+  </div>
+
+  <div id="xe_result" class="table-container mt-4"></div>
+
+  <hr>
+
+  <!-- ===== FORM GỐC ===== -->
+  <form id="xeForm">
+
+    <h3 class="subtitle">1. Thông tin cơ bản</h3>
+    <div class="columns">
+      <div class="column"><label class="label">Biển số xe</label><input class="input" name="bien_so_xe"></div>
+      <div class="column"><label class="label">Loại xe</label><input class="input" name="loai_xe"></div>
+      <div class="column"><label class="label">Tải trọng</label><input class="input" name="tai_trong"></div>
+    </div>
+
+    <h3 class="subtitle">2. Thông số kỹ thuật</h3>
+    <div class="columns">
+      <div class="column"><label class="label">Năm sản xuất</label><input class="input" name="nam_sx"></div>
+      <div class="column"><label class="label">Số khung</label><input class="input" name="so_khung"></div>
+      <div class="column"><label class="label">Số máy</label><input class="input" name="so_may"></div>
+    </div>
+
+    <div class="columns">
+      <div class="column"><label class="label">Mã loại</label><input class="input" name="ma_loai"></div>
+      <div class="column"></div>
+      <div class="column"></div>
+    </div>
+
+    <h3 class="subtitle">3. Khối lượng</h3>
+    <div class="columns">
+      <div class="column"><label class="label">Khối lượng bản thân</label><input class="input" name="khoi_luong_bt"></div>
+      <div class="column"><label class="label">Khối lượng chuyên chở</label><input class="input" name="khoi_luong_cc"></div>
+      <div class="column"></div>
+    </div>
+
+    <h3 class="subtitle">4. Đăng ký & Đăng kiểm</h3>
+    <div class="columns">
+      <div class="column"><label class="label">Số đăng ký</label><input class="input" name="so_dang_ky"></div>
+      <div class="column">
+        <label class="label">Ngày đăng ký</label>
+        <input class="input" type="date" name="ngay_dang_ky" onchange="calc(this,30,'cb_dk')">
+      </div>
+      <div class="column"></div>
+    </div>
+
+    <div class="columns">
+      <div class="column"><label class="label">Số đăng kiểm</label><input class="input" name="so_dang_kiem"></div>
+      <div class="column">
+        <label class="label">Ngày đăng kiểm</label>
+        <input class="input" type="date" name="ngay_dang_kiem" onchange="calc(this,30,'cb_dkiem')">
+      </div>
+      <div class="column"></div>
+    </div>
+
+    <h3 class="subtitle">5. Phù hiệu & Bảo hiểm</h3>
+    <div class="columns">
+      <div class="column"><label class="label">Số phù hiệu</label><input class="input" name="so_phu_hieu"></div>
+      <div class="column">
+        <label class="label">Ngày phù hiệu</label>
+        <input class="input" type="date" name="ngay_phu_hieu" onchange="calc(this,15,'cb_ph')">
+      </div>
+      <div class="column"></div>
+    </div>
+
+    <div class="columns">
+      <div class="column"><label class="label">Số bảo hiểm</label><input class="input" name="so_bao_hiem"></div>
+      <div class="column">
+        <label class="label">Ngày bảo hiểm</label>
+        <input class="input" type="date" name="ngay_bao_hiem" onchange="calc(this,30,'cb_bh')">
+      </div>
+      <div class="column"></div>
+    </div>
+
+    <input type="hidden" name="cb_dk">
+    <input type="hidden" name="cb_dkiem">
+    <input type="hidden" name="cb_ph">
+    <input type="hidden" name="cb_bh">
+
+    <button class="button is-primary mt-4">💾 Lưu thông tin xe</button>
+  </form>
+</div>
+
+<!-- ================= TAG TÀI XẾ ================= -->
+<div id="taixe" class="hidden form-box">
+<button class="button mb-4" onclick="backHome()">⬅ Quay lại</button>
+<h2 class="title is-4">THÔNG TIN TÀI XẾ</h2>
+
+<form>
+
+<h3 class="subtitle">1. Thông tin cá nhân</h3>
+<div class="columns">
+  <div class="column"><label class="label">Họ và tên</label><input class="input" name="tx_ho_ten"></div>
+  <div class="column"><label class="label">Năm sinh</label><input class="input" name="tx_nam_sinh"></div>
+  <div class="column"></div>
+</div>
+
+<div class="columns">
+  <div class="column"><label class="label">Quê quán</label><input class="input" name="tx_que_quan"></div>
+  <div class="column"><label class="label">Số điện thoại</label><input class="input" name="tx_sdt"></div>
+  <div class="column"></div>
+</div>
+
+<h3 class="subtitle">2. Giấy phép lái xe</h3>
+<div class="columns">
+  <div class="column"><label class="label">Hạng GPLX</label><input class="input" name="tx_hang_gplx"></div>
+  <div class="column"><label class="label">Số GPLX</label><input class="input" name="tx_so_gplx"></div>
+  <div class="column"></div>
+</div>
+
+<div class="columns">
+  <div class="column"><label class="label">Ngày trúng tuyển</label><input class="input" type="date" name="tx_ngay_trung_tuyen"></div>
+  <div class="column"><label class="label">Nơi cấp GPLX</label><input class="input" name="tx_noi_cap_gplx"></div>
+  <div class="column"></div>
+</div>
+
+<h3 class="subtitle">3. Quá trình làm việc</h3>
+<div class="columns">
+  <div class="column"><label class="label">Ngày nhận việc</label><input class="input" type="date" name="tx_ngay_nhan_viec"></div>
+  <div class="column"><label class="label">Thời gian thử việc</label><input class="input" name="tx_thu_viec"></div>
+  <div class="column"></div>
+</div>
+
+<div class="columns">
+  <div class="column"><label class="label">Thời gian chính thức</label><input class="input" name="tx_ngay_chinh_thuc"></div>
+  <div class="column"><label class="label">Ghi chú</label><input class="input" name="tx_ghi_chu"></div>
+  <div class="column"></div>
+</div>
+
+<h3 class="subtitle">4. Phân công</h3>
+<div class="columns">
+  <div class="column"><label class="label">Xe phụ trách</label><input class="input" name="tx_xe_phu_trach"></div>
+  <div class="column"><label class="label">Tuyến phụ trách</label><input class="input" name="tx_tuyen_phu_trach"></div>
+  <div class="column"></div>
+</div>
+
+<h3 class="subtitle">5. Người bảo lãnh</h3>
+<div class="columns">
+  <div class="column"><label class="label">Họ và tên</label><input class="input" name="bl_ho_ten"></div>
+  <div class="column"><label class="label">Quan hệ</label><input class="input" name="bl_quan_he"></div>
+  <div class="column"></div>
+</div>
+
+<div class="columns">
+  <div class="column"><label class="label">Số điện thoại</label><input class="input" name="bl_sdt"></div>
+  <div class="column"><label class="label">Nơi ở</label><input class="input" name="bl_noi_o"></div>
+  <div class="column"></div>
+</div>
+
+<button class="button is-primary mt-4">💾 Lưu thông tin tài xế</button>
+</form>
+</div>
+
+<!-- ================= TAG NHẬT KÝ VẬN HÀNH ================= -->
+<div id="nhatky" class="hidden form-box">
+
+<button class="button mb-4" onclick="backHome()">⬅ Quay lại</button>
+<h2 class="title is-4">NHẬT KÝ VẬN HÀNH</h2>
+
+<form>
+
+<!-- 1. THÔNG TIN CHUYẾN -->
+<h3 class="subtitle">1. Thông tin chuyến</h3>
+<div class="columns">
+  <div class="column">
+    <label class="label">Ngày vận hành</label>
+    <input class="input" type="date" name="nk_ngay_van_hanh">
+  </div>
+  <div class="column">
+    <label class="label">Biển số xe</label>
+    <input class="input" name="nk_bien_so_xe">
+  </div>
+  <div class="column">
+    <label class="label">Tài xế</label>
+    <input class="input" name="nk_tai_xe">
+  </div>
+</div>
+
+<div class="columns">
+  <div class="column">
+    <label class="label">Tuyến đường</label>
+    <input class="input" name="nk_tuyen_duong">
+  </div>
+  <div class="column">
+    <label class="label">Điểm xuất phát</label>
+    <input class="input" name="nk_diem_xuat_phat">
+  </div>
+  <div class="column">
+    <label class="label">Điểm kết thúc</label>
+    <input class="input" name="nk_diem_ket_thuc">
+  </div>
+</div>
+
+<!-- 2. THỜI GIAN VẬN HÀNH -->
+<h3 class="subtitle">2. Thời gian vận hành</h3>
+<div class="columns">
+  <div class="column">
+    <label class="label">Giờ xuất bến</label>
+    <input class="input" type="time" name="nk_gio_xuat_ben">
+  </div>
+  <div class="column">
+    <label class="label">Giờ về bến</label>
+    <input class="input" type="time" name="nk_gio_ve_ben">
+  </div>
+  <div class="column">
+    <label class="label">Tổng thời gian (giờ)</label>
+    <input class="input" name="nk_tong_thoi_gian">
+  </div>
+</div>
+
+<!-- 3. NHIÊN LIỆU -->
+<h3 class="subtitle">3. Nhiên liệu</h3>
+<div class="columns">
+  <div class="column">
+    <label class="label">Số lượng nhiên liệu (lít)</label>
+    <input class="input" name="nk_nhien_lieu_lit">
+  </div>
+  <div class="column">
+    <label class="label">Chi phí nhiên liệu</label>
+    <input class="input" name="nk_chi_phi_nhien_lieu">
+  </div>
+  <div class="column">
+    <label class="label">Hình thức cấp</label>
+    <input class="input" name="nk_hinh_thuc_cap">
+  </div>
+</div>
+
+<!-- 4. QUÃNG ĐƯỜNG & TẢI -->
+<h3 class="subtitle">4. Quãng đường & tải</h3>
+<div class="columns">
+  <div class="column">
+    <label class="label">Km đầu</label>
+    <input class="input" name="nk_km_dau">
+  </div>
+  <div class="column">
+    <label class="label">Km cuối</label>
+    <input class="input" name="nk_km_cuoi">
+  </div>
+  <div class="column">
+    <label class="label">Tổng km</label>
+    <input class="input" name="nk_tong_km">
+  </div>
+</div>
+
+<div class="columns">
+  <div class="column">
+    <label class="label">Khối lượng hàng (kg)</label>
+    <input class="input" name="nk_khoi_luong_hang">
+  </div>
+  <div class="column">
+    <label class="label">Số chuyến</label>
+    <input class="input" name="nk_so_chuyen">
+  </div>
+  <div class="column"></div>
+</div>
+
+<!-- 5. SỰ CỐ & GHI CHÚ -->
+<h3 class="subtitle">5. Sự cố & ghi chú</h3>
+<div class="columns">
+  <div class="column">
+    <label class="label">Sự cố phát sinh</label>
+    <input class="input" name="nk_su_co">
+  </div>
+  <div class="column">
+    <label class="label">Xử lý</label>
+    <input class="input" name="nk_xu_ly">
+  </div>
+  <div class="column"></div>
+</div>
+
+<div class="columns">
+  <div class="column is-full">
+    <label class="label">Ghi chú</label>
+    <textarea class="textarea" name="nk_ghi_chu"></textarea>
+  </div>
+</div>
+<button class="button is-primary mt-4">💾 Lưu nhật ký vận hành</button>
+</form>
+</div>
+
+<!-- ================= TAG BẢO DƯỠNG – SỬA CHỮA ================= -->
+<div id="baoduong" class="hidden form-box">
+
+<button class="button mb-4" onclick="backHome()">⬅ Quay lại</button>
+<h2 class="title is-4">BẢO DƯỠNG – SỬA CHỮA</h2>
+
+<form>
+
+<!-- 1. THÔNG TIN XE -->
+<h3 class="subtitle">1. Thông tin xe</h3>
+<div class="columns">
+  <div class="column">
+    <label class="label">Biển số xe</label>
+    <input class="input" name="bd_bien_so_xe">
+  </div>
+  <div class="column">
+    <label class="label">KM bảo dưỡng kỳ trước</label>
+    <input class="input" name="bd_km_truoc">
+  </div>
+  <div class="column">
+    <label class="label">KM bảo dưỡng kỳ này</label>
+    <input class="input" name="bd_km_hien_tai">
+  </div>
+</div>
+
+<!-- 2. MỐC BẢO DƯỠNG -->
+<h3 class="subtitle">2. Mốc bảo dưỡng</h3>
+<div class="columns">
+  <div class="column">
+    <label class="label">Mốc bảo dưỡng</label>
+    <div class="select is-fullwidth">
+      <select name="bd_moc_bao_duong">
+        <option value="">-- Chọn mốc --</option>
+        <option>5000</option>
+        <option>7000</option>
+        <option>10000</option>
+      </select>
+    </div>
+  </div>
+  <div class="column"></div>
+  <div class="column"></div>
+</div>
+
+<!-- 3. THỜI GIAN & TRẠNG THÁI -->
+<h3 class="subtitle">3. Thời gian & trạng thái</h3>
+<div class="columns">
+  <div class="column">
+    <label class="label">Ngày bắt đầu bảo dưỡng</label>
+    <input class="input" type="date" name="bd_ngay_bat_dau">
+  </div>
+  <div class="column">
+    <label class="label">Ngày kết thúc bảo dưỡng</label>
+    <input class="input" type="date" name="bd_ngay_ket_thuc">
+  </div>
+  <div class="column">
+    <label class="label">Trạng thái</label>
+    <div class="select is-fullwidth">
+      <select name="bd_trang_thai">
+        <option value="">-- Chọn trạng thái --</option>
+        <option>Đã hoàn thành</option>
+        <option>Đang thực hiện</option>
+        <option>Chờ xử lý</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- 4. ĐƠN VỊ BẢO DƯỠNG -->
+<h3 class="subtitle">4. Đơn vị bảo dưỡng</h3>
+<div class="columns">
+  <div class="column">
+    <label class="label">Đơn vị bảo dưỡng</label>
+    <input class="input" name="bd_don_vi">
+  </div>
+  <div class="column">
+    <label class="label">Địa chỉ</label>
+    <input class="input" name="bd_dia_chi">
+  </div>
+  <div class="column">
+    <label class="label">Loại đơn vị</label>
+    <div class="select is-fullwidth">
+      <select name="bd_loai_don_vi">
+        <option value="">-- Chọn loại --</option>
+        <option>Gara hợp đồng công ty</option>
+        <option>Gara ngoài</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- 5. HẠNG MỤC & PHỤ TÙNG -->
+<h3 class="subtitle">5. Hạng mục & phụ tùng</h3>
+<div class="columns">
+  <div class="column">
+    <label class="label">Hạng mục bảo dưỡng</label>
+    <input class="input" name="bd_hang_muc">
+  </div>
+  <div class="column">
+    <label class="label">Phát sinh</label>
+    <input class="input" name="bd_phat_sinh">
+  </div>
+  <div class="column">
+    <label class="label">Phụ tùng thay thế</label>
+    <input class="input" name="bd_phu_tung">
+  </div>
+</div>
+
+<!-- 6. TÀI CHÍNH -->
+<h3 class="subtitle">6. Tài chính</h3>
+<div class="columns">
+  <div class="column">
+    <label class="label">Hình thức chứng từ</label>
+    <div class="select is-fullwidth">
+      <select name="bd_chung_tu">
+        <option value="">-- Chọn --</option>
+        <option>Có hóa đơn</option>
+        <option>Không hóa đơn</option>
+        <option>Công nợ</option>
+      </select>
+    </div>
+  </div>
+  <div class="column">
+    <label class="label">Tổng tiền</label>
+    <input class="input" name="bd_tong_tien">
+  </div>
+  <div class="column"></div>
+</div>
+
+<!-- 7. GHI CHÚ -->
+<h3 class="subtitle">7. Ghi chú</h3>
+<div class="columns">
+  <div class="column is-full">
+    <label class="label">Ghi chú</label>
+    <textarea class="textarea" name="bd_ghi_chu"></textarea>
+  </div>
+</div>
+
+<button class="button is-primary mt-4">💾 Lưu thông tin bảo dưỡng</button>
+</form>
+</div>
+
+</section>
+<!-- ================= TAG QUẢN LÝ NHIÊN LIỆU ================= -->
+<div id="fuel" class="hidden form-box">
+
+<button class="button mb-4" onclick="backHome()">⬅ Quay lại</button>
+<h2 class="title is-4">QUẢN LÝ NHIÊN LIỆU</h2>
+
+<form>
+
+<h3 class="subtitle">1. Thông tin bổ sung nhiên liệu</h3>
+<div class="columns">
+  <div class="column">
+    <label class="label">Biển số xe</label>
+    <input class="input" name="fuel_bien_so_xe">
+  </div>
+  <div class="column">
+    <label class="label">Km khi bổ sung</label>
+    <input class="input" name="fuel_km_bo_sung">
+  </div>
+  <div class="column"></div>
+</div>
+
+<h3 class="subtitle">2. Chi tiết nhiên liệu</h3>
+<div class="columns">
+  <div class="column">
+    <label class="label">Ngày thực hiện</label>
+    <input class="input" type="date" name="fuel_ngay_thuc_hien">
+  </div>
+  <div class="column">
+    <label class="label">Số lít</label>
+    <input class="input" type="number" step="0.01" id="fuel_so_lit" name="fuel_so_lit">
+  </div>
+  <div class="column">
+    <label class="label">Đơn giá</label>
+    <input class="input" type="number" step="1" id="fuel_don_gia" name="fuel_don_gia">
+  </div>
+</div>
+
+<div class="columns">
+  <div class="column">
+    <label class="label">Thành tiền</label>
+    <input class="input" name="fuel_thanh_tien" id="fuel_thanh_tien" readonly>
+  </div>
+  <div class="column"></div>
+  <div class="column"></div>
+</div>
+
+<h3 class="subtitle">3. Ghi chú</h3>
+<div class="columns">
+  <div class="column is-full">
+    <label class="label">Ghi chú</label>
+    <textarea class="textarea" name="fuel_ghi_chu"></textarea>
+  </div>
+</div>
+
+<button class="button is-primary mt-4">💾 Lưu thông tin nhiên liệu</button>
+</form>
+</div>
+
+<!-- ================= TAG ĐÁNH GIÁ NHÂN SỰ ================= -->
+<div id="danhgia" class="hidden form-box">
+
+<button class="button mb-4" onclick="backHome()">⬅ Quay lại</button>
+<h2 class="title is-4">ĐÁNH GIÁ NHÂN SỰ</h2>
+
+<form>
+
+<h3 class="subtitle">1. Thông tin nhân sự</h3>
+<div class="columns">
+  <div class="column">
+    <label class="label">Ngày đánh giá</label>
+    <input class="input" type="date" name="dg_ngay">
+  </div>
+  <div class="column">
+    <label class="label">Họ và tên</label>
+    <input class="input" name="dg_ho_ten">
+  </div>
+  <div class="column">
+    <label class="label">Mã nhân viên</label>
+    <input class="input" name="dg_ma_nv">
+  </div>
+</div>
+
+<h3 class="subtitle">2. Lỗi vi phạm</h3>
+<div class="columns">
+  <div class="column">
+    <label class="label">Lỗi vi phạm</label>
+    <input class="input" name="dg_loi_vi_pham">
+  </div>
+  <div class="column">
+    <label class="label">Mức độ nghiêm trọng</label>
+    <div class="select is-fullwidth">
+      <select name="dg_muc_do" id="dg_muc_do">
+        <option value="">-- Chọn mức độ --</option>
+        <option>Nhẹ - Cảnh báo</option>
+        <option>Trung bình - Lập biên bản vi phạm</option>
+        <option>Nặng - Kỷ luật theo quy định</option>
+      </select>
+    </div>
+  </div>
+  <div class="column"></div>
+</div>
+
+<h3 class="subtitle">3. Theo dõi số lần vi phạm</h3>
+<div class="columns">
+  <div class="column">
+    <label class="label">Số lần vi phạm mức Trung bình</label>
+    <input class="input" type="number" id="dg_tb" name="dg_vi_pham_tb">
+  </div>
+  <div class="column">
+    <label class="label">Số lần vi phạm mức Nặng</label>
+    <input class="input" type="number" id="dg_nang" name="dg_vi_pham_nang">
+  </div>
+  <div class="column"></div>
+</div>
+
+<h3 class="subtitle">4. Kết luận & cảnh báo</h3>
+<div class="columns">
+  <div class="column is-full">
+    <label class="label">Kết luận tự động</label>
+    <textarea class="textarea" name="dg_ket_luan" id="dg_ket_luan" readonly></textarea>
+  </div>
+</div>
+
+<button class="button is-primary mt-4">💾 Lưu đánh giá nhân sự</button>
+
+</form>
+</div>
+
+
+
+<script>
+function openTag(id){
+  document.getElementById("home").classList.add("hidden");
+  ["xe","taixe","nhatky","baoduong","fuel","danhgia"].forEach(
+    t => document.getElementById(t).classList.add("hidden")
+  );
+  document.getElementById(id).classList.remove("hidden");
+}
+
+function backHome(){
+  document.getElementById("home").classList.remove("hidden");
+  ["xe","taixe","nhatky","baoduong","fuel","danhgia"].forEach(
+    t => document.getElementById(t).classList.add("hidden")
+  );
+}
+
+function calc(i,d,t){
+  if(!i.value) return;
+  let x=new Date(i.value); 
+  x.setDate(x.getDate()-d);
+  document.querySelector(`[name="${t}"]`).value =
+    x.toISOString().split("T")[0];
+}
+
+/* TÍNH THÀNH TIỀN NHIÊN LIỆU */
+function tinhTienNhienLieu(){
+  const lit = parseFloat(document.getElementById("fuel_so_lit")?.value) || 0;
+  const gia = parseFloat(document.getElementById("fuel_don_gia")?.value) || 0;
+  const tt = document.getElementById("fuel_thanh_tien");
+  if(tt) tt.value = lit * gia;
+}
+
+document.addEventListener("input", function(e){
+  if(e.target.id==="fuel_so_lit" || e.target.id==="fuel_don_gia"){
+    tinhTienNhienLieu();
+  }
+});
+
+document.addEventListener("input", function(){
+  const tb = parseInt(document.getElementById("dg_tb")?.value || 0);
+  const nang = parseInt(document.getElementById("dg_nang")?.value || 0);
+  const kl = document.getElementById("dg_ket_luan");
+
+  if(!kl) return;
+
+  let rs = "";
+
+  if(tb >= 2 && tb < 3){
+    rs += "⚠️ Vượt 2 lần vi phạm mức Trung bình → Thực hiện đào tạo lại.\n";
+  }
+  if(tb >= 3){
+    rs += "🚨 Vượt 3 lần vi phạm mức Trung bình → Chuyển nhân sự quản lý.\n";
+  }
+  if(nang === 1){
+    rs += "🚫 1 lần vi phạm mức Nặng → Đình chỉ công việc dưới 15 ngày.\n";
+  }
+  if(nang >= 2){
+    rs += "❌ 2 lần vi phạm mức Nặng → Sa thải theo quy định.\n";
+  }
+
+  if(rs==="") rs = "Chưa phát sinh cảnh báo.";
+
+  kl.value = rs;
+});
+</script>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyC28pHR1tNS4meWwHzIW1wTPhoMqRQQ1T94r_p9FBjmWidyQcAQWA1gz_lbYVgmV3c/exec";
+
+/* ==== TRA CỨU TAG THÔNG TIN XE ==== */
+function searchXe() {
+  const bienSo = document.getElementById("search_bien_so_xe").value.trim();
+  if (!bienSo) {
+    alert("Vui lòng nhập biển số xe");
+    return;
+  }
+
+  fetch(`${SCRIPT_URL}?action=searchXe&bien_so_xe=${encodeURIComponent(bienSo)}`)
+    .then(res => res.json())
+    .then(data => renderXeTable(data))
+    .catch(() => alert("Lỗi truy vấn dữ liệu"));
+}
+
+/* ==== HIỂN THỊ BẢNG ==== */
+function renderXeTable(data) {
+  if (!data || data.length === 0) {
+    document.getElementById("xe_result").innerHTML = "<p>Không có dữ liệu</p>";
+    return;
+  }
+
+  let html = `
+  <table class="table is-bordered is-hoverable is-fullwidth">
+    <thead>
+      <tr>
+        <th>Biển số</th>
+        <th>Loại xe</th>
+        <th>Năm SX</th>
+        <th>Số khung</th>
+        <th>Số máy</th>
+        <th>Hành động</th>
+      </tr>
+    </thead>
+    <tbody>`;
+
+  data.forEach(r => {
+    html += `
+      <tr>
+        <td>${r.bien_so_xe}</td>
+        <td>${r.loai_xe}</td>
+        <td>${r.nam_sx}</td>
+        <td>${r.so_khung}</td>
+        <td>${r.so_may}</td>
+        <td>
+          <button class="button is-small is-link"
+            onclick='fillXeForm(${JSON.stringify(r)})'>Chọn</button>
+        </td>
+      </tr>`;
+  });
+
+  html += "</tbody></table>";
+  document.getElementById("xe_result").innerHTML = html;
+}
+
+/* ==== ĐỔ FORM ==== */
+function fillXeForm(data) {
+  const form = document.getElementById("xeForm");
+  Object.keys(data).forEach(k => {
+    if (form.elements[k]) form.elements[k].value = data[k];
+  });
+}
+
+/* ==== SUBMIT FORM THÔNG TIN XE ==== */
+document.getElementById("xeForm").addEventListener("submit", function(e){
+  e.preventDefault();
+
+  const fd = new FormData(this);
+  fd.append("action", "saveXe");
+
+  fetch(SCRIPT_URL, { method:"POST", body:fd })
+    .then(res => res.json())
+    .then(rs => {
+      if(rs.status === "success"){
+        alert("✅ Đã lưu thông tin xe");
+        this.reset();
+        document.getElementById("xe_result").innerHTML = "";
+      }else{
+        alert("❌ " + rs.message);
+      }
+    })
+    .catch(() => alert("❌ Không kết nối được server"));
+});
+</script>
+</body>
+</html>
+
