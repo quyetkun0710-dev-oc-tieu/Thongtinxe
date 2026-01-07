@@ -164,7 +164,7 @@ body { background:#f4f6f8 }
       <div class="column"><label class="label">Tải trọng</label><input class="input" name="tai_trong"></div>
     </div>
 
-    <h3 class="subtitle">2. Thông số xe</h3>
+    <h3 class="subtitle">2. Thông số kỹ thuật</h3>
     <div class="columns">
       <div class="column"><label class="label">Năm sản xuất</label><input class="input" name="nam_sx"></div>
       <div class="column"><label class="label">Số khung</label><input class="input" name="so_khung"></div>
@@ -846,57 +846,83 @@ document.addEventListener("input", function(){
 </script>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyhUeVrZTYF-h5QoR7Vokob7eLM2ev7OoIZzwqsqosWem54-tBw_de8wJbDoUOE1jVY/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwyuoWKhQAOjLHG2F8oeHUHSSeICh3Wls4KGg-nl5rrH1dCpWfritfhaRUHESNiqgw3/exec";
 
-/* ==== TRA CỨU XE ==== */
+/* ==== TRA CỨU TAG THÔNG TIN XE ==== */
 function searchXe() {
   const bienSo = document.getElementById("search_bien_so_xe").value.trim();
-  if (!bienSo) return alert("Nhập biển số xe");
+  if (!bienSo) {
+    alert("Vui lòng nhập biển số xe");
+    return;
+  }
 
   fetch(`${SCRIPT_URL}?action=searchXe&bien_so_xe=${encodeURIComponent(bienSo)}`)
-    .then(r => r.json())
-    .then(renderXeTable)
-    .catch(() => alert("❌ Lỗi truy vấn dữ liệu"));
+    .then(res => res.json())
+    .then(data => renderXeTable(data))
+    .catch(() => alert("Lỗi truy vấn dữ liệu"));
 }
 
 /* ==== HIỂN THỊ BẢNG ==== */
 function renderXeTable(data) {
-  const c = document.getElementById("xe_result");
   if (!data || data.length === 0) {
-    c.innerHTML = "<p>Không có dữ liệu</p>";
+    document.getElementById("xe_result").innerHTML = "<p>Không có dữ liệu</p>";
     return;
   }
 
-  let html = `<table class="table is-bordered is-fullwidth">
-    <thead><tr>
-      <th>Biển số</th><th>Loại xe</th><th>Năm SX</th><th>Hành động</th>
-    </tr></thead><tbody>`;
+  let html = `
+  <table class="table is-bordered is-hoverable is-fullwidth">
+    <thead>
+      <tr>
+        <th>Biển số</th>
+        <th>Loại xe</th>
+        <th>Năm SX</th>
+        <th>Số khung</th>
+        <th>Số máy</th>
+        <th>Hành động</th>
+      </tr>
+    </thead>
+    <tbody>`;
 
   data.forEach(r => {
-    html += `<tr>
-      <td>${r.bien_so_xe}</td>
-      <td>${r.loai_xe}</td>
-      <td>${r.nam_sx}</td>
-      <td><button class="button is-small is-link"
-        onclick='fillXeForm(${JSON.stringify(r)})'>Chọn</button></td>
-    </tr>`;
+    html += `
+      <tr>
+        <td>${r.bien_so_xe}</td>
+        <td>${r.loai_xe}</td>
+        <td>${r.nam_sx}</td>
+        <td>${r.so_khung}</td>
+        <td>${r.so_may}</td>
+        <td>
+          <button class="button is-small is-link"
+            onclick='fillXeForm(${JSON.stringify(r)})'>Chọn</button>
+        </td>
+      </tr>`;
   });
 
   html += "</tbody></table>";
-  c.innerHTML = html;
+  document.getElementById("xe_result").innerHTML = html;
 }
 
-/* ==== ĐỔ DỮ LIỆU LÊN FORM ==== */
+/* ==== ĐỔ FORM ==== */
 function fillXeForm(data) {
   const f = document.getElementById("xeForm");
   Object.keys(data).forEach(k => {
-    if (f.elements[k]) f.elements[k].value = data[k];
+    if (f.elements[k]) {
+      f.elements[k].value = data[k];
+      if (k === "bien_so_xe") {
+        f.elements[k].readOnly = true; // 🔒 khóa biển số
+      }
+    }
   });
 }
 
-/* ==== SUBMIT (UPDATE THEO BIỂN SỐ – KHÔNG THÊM DÒNG) ==== */
+
+/* ==== SUBMIT FORM THÔNG TIN XE ==== */
 document.getElementById("xeForm").addEventListener("submit", function(e){
   e.preventDefault();
+
+  const bienSoInput = this.querySelector('[name="bien_so_xe"]');
+  bienSoInput.value = bienSoInput.value.trim().toUpperCase(); // ⭐ BẮT BUỘC
+
   const fd = new FormData(this);
   fd.append("action", "saveXe");
 
@@ -906,20 +932,34 @@ document.getElementById("xeForm").addEventListener("submit", function(e){
     .catch(() => alert("❌ Không kết nối được App Script"));
 });
 
-/* ==== TÍNH THỂ TÍCH THÙNG ==== */
 function calcTheTichThung() {
-  const d = +document.querySelector('[name="thung_dai"]').value || 0;
-  const r = +document.querySelector('[name="thung_rong"]').value || 0;
-  const c = +document.querySelector('[name="thung_cao"]').value || 0;
+  const daiInput  = document.querySelector('[name="thung_dai"]');
+  const rongInput = document.querySelector('[name="thung_rong"]');
+  const caoInput  = document.querySelector('[name="thung_cao"]');
+  const ktThungInput = document.querySelector('[name="kich_thuoc_thung"]');
+  const theTichInput = document.querySelector('[name="the_tich_thung"]');
 
-  if (d && r && c) {
-    document.querySelector('[name="kich_thuoc_thung"]').value =
-      `${d} x ${r} x ${c} m`;
-    document.querySelector('[name="the_tich_thung"]').value =
-      (d*r*c).toFixed(2);
+  if (!daiInput || !rongInput || !caoInput || !ktThungInput || !theTichInput) {
+    return; // bảo vệ DOM
+  }
+
+  const dai  = parseFloat(daiInput.value);
+  const rong = parseFloat(rongInput.value);
+  const cao  = parseFloat(caoInput.value);
+
+  if (dai > 0 && rong > 0 && cao > 0) {
+    const theTich = (dai * rong * cao).toFixed(2);
+
+    ktThungInput.value =
+      `${dai.toFixed(2)} x ${rong.toFixed(2)} x ${cao.toFixed(2)} m`;
+
+    theTichInput.value = theTich;
+  } else {
+    ktThungInput.value = "";
+    theTichInput.value = "";
   }
 }
+
 </script>
 </body>
 </html>
-
