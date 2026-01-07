@@ -135,6 +135,9 @@ body { background:#f4f6f8 }
   <button class="button mb-4" onclick="backHome()">⬅ Quay lại</button>
   <h2 class="title is-4">THÔNG TIN XE</h2>
 
+  <section id="tag-thong-tin-xe">
+  <h3 class="title is-5">Thông tin xe</h3>
+
   <!-- ===== TRA CỨU ===== -->
   <h3 class="subtitle">🔍 Tra cứu xe theo biển số</h3>
   <div class="columns">
@@ -161,7 +164,7 @@ body { background:#f4f6f8 }
       <div class="column"><label class="label">Tải trọng</label><input class="input" name="tai_trong"></div>
     </div>
 
-    <h3 class="subtitle">2. Thông số kỹ thuật</h3>
+    <h3 class="subtitle">2. Thông số xe</h3>
     <div class="columns">
       <div class="column"><label class="label">Năm sản xuất</label><input class="input" name="nam_sx"></div>
       <div class="column"><label class="label">Số khung</label><input class="input" name="so_khung"></div>
@@ -219,6 +222,84 @@ body { background:#f4f6f8 }
       <div class="column"></div>
     </div>
 
+     <hr>
+
+  <!-- ====== THÔNG SỐ KỸ THUẬT ====== -->
+  <h4 class="title is-6">Thông số kỹ thuật</h4>
+
+  <div class="columns">
+    <div class="column">
+      <label class="label">Kích thước lốp</label>
+      <input class="input" name="kich_thuoc_lop">
+    </div>
+    <div class="column">
+      <label class="label">Kích thước tổng thể</label>
+      <input class="input" name="kich_thuoc_tong_the">
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="column">
+      <label class="label">Thùng dài (m)</label>
+      <input class="input" type="number" step="0.01" name="thung_dai" oninput="calcTheTichThung()">
+    </div>
+    <div class="column">
+      <label class="label">Thùng rộng (m)</label>
+      <input class="input" type="number" step="0.01" name="thung_rong" oninput="calcTheTichThung()">
+    </div>
+    <div class="column">
+      <label class="label">Thùng cao (m)</label>
+      <input class="input" type="number" step="0.01" name="thung_cao" oninput="calcTheTichThung()">
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="column">
+      <label class="label">Kích thước thùng</label>
+      <input class="input" name="kich_thuoc_thung" readonly>
+    </div>
+    <div class="column">
+      <label class="label">Thể tích thùng (m³)</label>
+      <input class="input" name="the_tich_thung" readonly>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ====== TRẠNG THÁI HOẠT ĐỘNG ====== -->
+  <div class="field">
+    <label class="label">Tình trạng hoạt động</label>
+    <div class="control">
+      <label class="radio">
+        <input type="radio" name="tinh_trang_hoat_dong" value="dang_hoat_dong" checked>
+        Đang hoạt động
+      </label>
+      <label class="radio">
+        <input type="radio" name="tinh_trang_hoat_dong" value="da_ngung">
+        Đã ngừng hoạt động
+      </label>
+      <label class="radio">
+        <input type="radio" name="tinh_trang_hoat_dong" value="da_ban_giao">
+        Đã bàn giao đơn vị khác
+      </label>
+    </div>
+  </div>
+
+  <!-- ====== LOẠI BIỂN SỐ ====== -->
+  <div class="field">
+    <label class="label">Loại biển số</label>
+    <div class="control">
+      <label class="radio">
+        <input type="radio" name="loai_bien_so" value="bien_vang" checked>
+        Biển vàng
+      </label>
+      <label class="radio">
+        <input type="radio" name="loai_bien_so" value="bien_trang">
+        Biển trắng
+      </label>
+    </div>
+  </div>
+
     <input type="hidden" name="cb_dk">
     <input type="hidden" name="cb_dkiem">
     <input type="hidden" name="cb_ph">
@@ -231,13 +312,14 @@ body { background:#f4f6f8 }
 <!-- ================= TAG TÀI XẾ ================= -->
 <div id="taixe" class="hidden form-box">
 <button class="button mb-4" onclick="backHome()">⬅ Quay lại</button>
-<h2 class="title is-4">THÔNG TIN TÀI XẾ</h2>
+<h2 class="title is-5">THÔNG TIN TÀI XẾ</h2>
 
 <form>
 
 <h3 class="subtitle">1. Thông tin cá nhân</h3>
 <div class="columns">
   <div class="column"><label class="label">Họ và tên</label><input class="input" name="tx_ho_ten"></div>
+  <div class="column"><label class="label">Mã nhân viên</label><input class="input" name="mnv"></div>
   <div class="column"><label class="label">Năm sinh</label><input class="input" name="tx_nam_sinh"></div>
   <div class="column"></div>
 </div>
@@ -764,7 +846,7 @@ document.addEventListener("input", function(){
 </script>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz67i_XtKGTTt44s2iZP-kWIDQmli9CTOCFr7KsZnduEERSkYZIsbzzDqqmiEFmpNQ7/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwmu4FOczS0QDo72sb7XYg4u5Jet-3NUHKsedVMoVhuC-nkyCJiYJcxCOjyif6jGxHQ/exec";
 
 /* ==== TRA CỨU TAG THÔNG TIN XE ==== */
 function searchXe() {
@@ -848,11 +930,35 @@ document.getElementById("xeForm").addEventListener("submit", function(e){
     })
     .catch(() => alert("❌ Không kết nối được server"));
 });
+
+function calcTheTichThung() {
+  const daiInput  = document.querySelector('[name="thung_dai"]');
+  const rongInput = document.querySelector('[name="thung_rong"]');
+  const caoInput  = document.querySelector('[name="thung_cao"]');
+  const ktThungInput = document.querySelector('[name="kich_thuoc_thung"]');
+  const theTichInput = document.querySelector('[name="the_tich_thung"]');
+
+  if (!daiInput || !rongInput || !caoInput || !ktThungInput || !theTichInput) {
+    return; // bảo vệ DOM
+  }
+
+  const dai  = parseFloat(daiInput.value);
+  const rong = parseFloat(rongInput.value);
+  const cao  = parseFloat(caoInput.value);
+
+  if (dai > 0 && rong > 0 && cao > 0) {
+    const theTich = (dai * rong * cao).toFixed(2);
+
+    ktThungInput.value =
+      `${dai.toFixed(2)} x ${rong.toFixed(2)} x ${cao.toFixed(2)} m`;
+
+    theTichInput.value = theTich;
+  } else {
+    ktThungInput.value = "";
+    theTichInput.value = "";
+  }
+}
+
 </script>
 </body>
 </html>
-
-
-
-
-
