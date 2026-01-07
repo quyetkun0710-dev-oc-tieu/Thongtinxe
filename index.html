@@ -846,7 +846,7 @@ document.addEventListener("input", function(){
 </script>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz67i_XtKGTTt44s2iZP-kWIDQmli9CTOCFr7KsZnduEERSkYZIsbzzDqqmiEFmpNQ7/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwEJolb_V74J9Z-lQuMc0EUYu22afmzolFPsak5Pvx-mBP7Hscc3GOK0DPF-HVqQ1Lv/exec";
 
 /* ==== TRA CỨU TAG THÔNG TIN XE ==== */
 function searchXe() {
@@ -947,30 +947,20 @@ document.getElementById("xeForm").addEventListener("submit", function(e){
 });
 
 function calcTheTichThung() {
-  const daiInput  = document.querySelector('[name="thung_dai"]');
-  const rongInput = document.querySelector('[name="thung_rong"]');
-  const caoInput  = document.querySelector('[name="thung_cao"]');
-  const ktThungInput = document.querySelector('[name="kich_thuoc_thung"]');
-  const theTichInput = document.querySelector('[name="the_tich_thung"]');
+  const dai  = parseFloat(document.querySelector('[name="thung_dai"]')?.value)  || 0;
+  const rong = parseFloat(document.querySelector('[name="thung_rong"]')?.value) || 0;
+  const cao  = parseFloat(document.querySelector('[name="thung_cao"]')?.value)  || 0;
 
-  if (!daiInput || !rongInput || !caoInput || !ktThungInput || !theTichInput) {
-    return; // bảo vệ DOM
-  }
-
-  const dai  = parseFloat(daiInput.value);
-  const rong = parseFloat(rongInput.value);
-  const cao  = parseFloat(caoInput.value);
+  const ktThung = document.querySelector('[name="kich_thuoc_thung"]');
+  const theTich = document.querySelector('[name="the_tich_thung"]');
 
   if (dai > 0 && rong > 0 && cao > 0) {
-    const theTich = (dai * rong * cao).toFixed(2);
-
-    ktThungInput.value =
-      `${dai.toFixed(2)} x ${rong.toFixed(2)} x ${cao.toFixed(2)} m`;
-
-    theTichInput.value = theTich;
+    const v = (dai * rong * cao).toFixed(2);
+    ktThung.value = `${dai} x ${rong} x ${cao} m`;
+    theTich.value = v;
   } else {
-    ktThungInput.value = "";
-    theTichInput.value = "";
+    if (ktThung) ktThung.value = "";
+    if (theTich) theTich.value = "";
   }
 }
 function resetThongTinXe() {
