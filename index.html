@@ -846,119 +846,79 @@ document.addEventListener("input", function(){
 </script>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwmu4FOczS0QDo72sb7XYg4u5Jet-3NUHKsedVMoVhuC-nkyCJiYJcxCOjyif6jGxHQ/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz67i_XtKGTTt44s2iZP-kWIDQmli9CTOCFr7KsZnduEERSkYZIsbzzDqqmiEFmpNQ7/exec";
 
-/* ==== TRA CỨU TAG THÔNG TIN XE ==== */
+/* ==== TRA CỨU XE ==== */
 function searchXe() {
   const bienSo = document.getElementById("search_bien_so_xe").value.trim();
-  if (!bienSo) {
-    alert("Vui lòng nhập biển số xe");
-    return;
-  }
+  if (!bienSo) return alert("Nhập biển số xe");
 
   fetch(`${SCRIPT_URL}?action=searchXe&bien_so_xe=${encodeURIComponent(bienSo)}`)
-    .then(res => res.json())
-    .then(data => renderXeTable(data))
-    .catch(() => alert("Lỗi truy vấn dữ liệu"));
+    .then(r => r.json())
+    .then(renderXeTable)
+    .catch(() => alert("❌ Lỗi truy vấn dữ liệu"));
 }
 
 /* ==== HIỂN THỊ BẢNG ==== */
 function renderXeTable(data) {
+  const c = document.getElementById("xe_result");
   if (!data || data.length === 0) {
-    document.getElementById("xe_result").innerHTML = "<p>Không có dữ liệu</p>";
+    c.innerHTML = "<p>Không có dữ liệu</p>";
     return;
   }
 
-  let html = `
-  <table class="table is-bordered is-hoverable is-fullwidth">
-    <thead>
-      <tr>
-        <th>Biển số</th>
-        <th>Loại xe</th>
-        <th>Năm SX</th>
-        <th>Số khung</th>
-        <th>Số máy</th>
-        <th>Hành động</th>
-      </tr>
-    </thead>
-    <tbody>`;
+  let html = `<table class="table is-bordered is-fullwidth">
+    <thead><tr>
+      <th>Biển số</th><th>Loại xe</th><th>Năm SX</th><th>Hành động</th>
+    </tr></thead><tbody>`;
 
   data.forEach(r => {
-    html += `
-      <tr>
-        <td>${r.bien_so_xe}</td>
-        <td>${r.loai_xe}</td>
-        <td>${r.nam_sx}</td>
-        <td>${r.so_khung}</td>
-        <td>${r.so_may}</td>
-        <td>
-          <button class="button is-small is-link"
-            onclick='fillXeForm(${JSON.stringify(r)})'>Chọn</button>
-        </td>
-      </tr>`;
+    html += `<tr>
+      <td>${r.bien_so_xe}</td>
+      <td>${r.loai_xe}</td>
+      <td>${r.nam_sx}</td>
+      <td><button class="button is-small is-link"
+        onclick='fillXeForm(${JSON.stringify(r)})'>Chọn</button></td>
+    </tr>`;
   });
 
   html += "</tbody></table>";
-  document.getElementById("xe_result").innerHTML = html;
+  c.innerHTML = html;
 }
 
-/* ==== ĐỔ FORM ==== */
+/* ==== ĐỔ DỮ LIỆU LÊN FORM ==== */
 function fillXeForm(data) {
-  const form = document.getElementById("xeForm");
+  const f = document.getElementById("xeForm");
   Object.keys(data).forEach(k => {
-    if (form.elements[k]) form.elements[k].value = data[k];
+    if (f.elements[k]) f.elements[k].value = data[k];
   });
 }
 
-/* ==== SUBMIT FORM THÔNG TIN XE ==== */
+/* ==== SUBMIT (UPDATE THEO BIỂN SỐ – KHÔNG THÊM DÒNG) ==== */
 document.getElementById("xeForm").addEventListener("submit", function(e){
   e.preventDefault();
-
   const fd = new FormData(this);
   fd.append("action", "saveXe");
 
   fetch(SCRIPT_URL, { method:"POST", body:fd })
-    .then(res => res.json())
-    .then(rs => {
-      if(rs.status === "success"){
-        alert("✅ Đã lưu thông tin xe");
-        this.reset();
-        document.getElementById("xe_result").innerHTML = "";
-      }else{
-        alert("❌ " + rs.message);
-      }
-    })
-    .catch(() => alert("❌ Không kết nối được server"));
+    .then(r => r.json())
+    .then(rs => alert(rs.message || "Đã cập nhật"))
+    .catch(() => alert("❌ Không kết nối được App Script"));
 });
 
+/* ==== TÍNH THỂ TÍCH THÙNG ==== */
 function calcTheTichThung() {
-  const daiInput  = document.querySelector('[name="thung_dai"]');
-  const rongInput = document.querySelector('[name="thung_rong"]');
-  const caoInput  = document.querySelector('[name="thung_cao"]');
-  const ktThungInput = document.querySelector('[name="kich_thuoc_thung"]');
-  const theTichInput = document.querySelector('[name="the_tich_thung"]');
+  const d = +document.querySelector('[name="thung_dai"]').value || 0;
+  const r = +document.querySelector('[name="thung_rong"]').value || 0;
+  const c = +document.querySelector('[name="thung_cao"]').value || 0;
 
-  if (!daiInput || !rongInput || !caoInput || !ktThungInput || !theTichInput) {
-    return; // bảo vệ DOM
-  }
-
-  const dai  = parseFloat(daiInput.value);
-  const rong = parseFloat(rongInput.value);
-  const cao  = parseFloat(caoInput.value);
-
-  if (dai > 0 && rong > 0 && cao > 0) {
-    const theTich = (dai * rong * cao).toFixed(2);
-
-    ktThungInput.value =
-      `${dai.toFixed(2)} x ${rong.toFixed(2)} x ${cao.toFixed(2)} m`;
-
-    theTichInput.value = theTich;
-  } else {
-    ktThungInput.value = "";
-    theTichInput.value = "";
+  if (d && r && c) {
+    document.querySelector('[name="kich_thuoc_thung"]').value =
+      `${d} x ${r} x ${c} m`;
+    document.querySelector('[name="the_tich_thung"]').value =
+      (d*r*c).toFixed(2);
   }
 }
-
 </script>
 </body>
 </html>
