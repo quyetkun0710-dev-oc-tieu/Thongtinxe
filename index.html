@@ -792,165 +792,146 @@ body { background:#f4f6f8 }
 </div>
 <!-- ===== END TAG ĐÁNH GIÁ ===== -->
 
-<script> 
+<script>
 /* ================= CONFIG ================= */
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz6uxtfRsens4hXSin6n5y1dHvLxOD8DI_nPFIDTuZd8pbtyC6QMqwv6iPLik5Oicau/exec";
 
 /* ================= UI NAV ================= */
 function openTag(id){
   document.getElementById("home").classList.add("hidden");
-  ["xe","taixe","nhatky","baoduong","fuel","danhgia"].forEach(
-    t => document.getElementById(t)?.classList.add("hidden")
-  );
+  ["xe","taixe","nhatky","baoduong","fuel","danhgia"].forEach(t=>{
+    document.getElementById(t)?.classList.add("hidden");
+  });
   document.getElementById(id).classList.remove("hidden");
 }
 
 function backHome(){
   document.getElementById("home").classList.remove("hidden");
-  ["xe","taixe","nhatky","baoduong","fuel","danhgia"].forEach(
-    t => document.getElementById(t)?.classList.add("hidden")
-  );
+  ["xe","taixe","nhatky","baoduong","fuel","danhgia"].forEach(t=>{
+    document.getElementById(t)?.classList.add("hidden");
+  });
+}
+
+/* ================= SUBMIT FORM (FormData) ================= */
+function submitForm(tag, form){
+  const fd = new FormData(form);
+  fd.append("tag", tag);
+
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    body: fd
+  })
+  .then(res => res.text())
+  .then(txt => {
+    console.log("SERVER:", txt);
+    let r;
+    try { r = JSON.parse(txt); } catch { r = {}; }
+
+    if(r.status === "success"){
+      alert("✅ Lưu thành công");
+      form.reset();
+    }else{
+      alert("❌ Lỗi lưu dữ liệu");
+    }
+  })
+  .catch(err=>{
+    console.error(err);
+    alert("❌ Lỗi kết nối server");
+  });
+}
+
+/* ================= SEARCH ================= */
+function searchByKey(tag, keyName, keyValue, formId){
+  if(!keyValue){
+    alert("⚠️ Thiếu dữ liệu tra cứu");
+    return;
+  }
+
+  const url = `${SCRIPT_URL}?tag=${encodeURIComponent(tag)}&${encodeURIComponent(keyName)}=${encodeURIComponent(keyValue)}`;
+
+  fetch(url)
+    .then(res => res.json())
+    .then(data=>{
+      if(!data || Object.keys(data).length===0){
+        alert("❌ Không tìm thấy dữ liệu");
+        return;
+      }
+      fillForm(formId, data);
+    })
+    .catch(err=>{
+      console.error(err);
+      alert("❌ Lỗi tra cứu");
+    });
 }
 
 /* ================= FORM UTIL ================= */
-function getFormData(form){
-  const data = {};
-  [...form.elements].forEach(el=>{
-    if(!el.name) return;
-    if(el.type === "checkbox") data[el.name] = el.checked;
-    else if(el.type === "radio"){
-      if(el.checked) data[el.name] = el.value;
-    }else data[el.name] = el.value;
-  });
-  return data;
-}
-
 function fillForm(formId, data){
-  if(!data) return;
   const f = document.getElementById(formId);
+  if(!f) return;
+
   Object.keys(data).forEach(k=>{
-    if(f.elements[k]){
-      if(f.elements[k].type==="checkbox")
-        f.elements[k].checked = data[k];
-      else
-        f.elements[k].value = data[k];
-    }
-  });
-}
-
-/* ================= SUBMIT CHUNG ================= */
-async function submitForm(tag, form){
-  const payload = {
-    tag,
-    data: getFormData(form)
-  };
-
-  try{
-    const res = await fetch(SCRIPT_URL,{
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body: JSON.stringify(payload)
-    });
-    const r = await res.json();
-    if(r.status==="success"){
-      alert("✅ Đã lưu thành công");
-      form.reset();
+    if(!f.elements[k]) return;
+    const el = f.elements[k];
+    if(el.type === "checkbox") el.checked = data[k] === true || data[k] === "true";
+    else if(el.type === "radio"){
+      [...f.elements[k]].forEach(r=> r.checked = r.value === data[k]);
     }else{
-      alert("❌ Lỗi: " + (r.message||"Không rõ nguyên nhân"));
+      el.value = data[k];
     }
-  }catch(e){
-    alert("❌ Lỗi kết nối server");
-    console.error(e);
-  }
+  });
 }
 
-/* ================= SEARCH CHUNG ================= */
-async function searchByKey(tag, keyName, keyValue, formId){
-  if(!keyValue) return alert("Thiếu dữ liệu tra cứu");
-
-  try{
-    const res = await fetch(
-      `${SCRIPT_URL}?tag=${tag}&${keyName}=${encodeURIComponent(keyValue)}`
-    );
-    const data = await res.json();
-    if(!data || Object.keys(data).length===0){
-      alert("❌ Không có dữ liệu");
-      return;
-    }
-    fillForm(formId, data);
-  }catch(e){
-    alert("❌ Lỗi tra cứu");
-    console.error(e);
-  }
-}
-
-/* ================= AUTO BIND FORM ================= */
-document.getElementById("xeForm")
-  ?.addEventListener("submit",e=>{
-    e.preventDefault();
-    submitForm("xe", e.target);
-  });
-
-document.getElementById("taixeForm")
-  ?.addEventListener("submit",e=>{
-    e.preventDefault();
-    submitForm("taixe", e.target);
-  });
-
-document.getElementById("nhatkyForm")
-  ?.addEventListener("submit",e=>{
-    e.preventDefault();
-    submitForm("nhatky", e.target);
-  });
-
-document.getElementById("baoduongForm")
-  ?.addEventListener("submit",e=>{
-    e.preventDefault();
-    submitForm("baoduong", e.target);
-  });
-
-document.getElementById("fuelForm")
-  ?.addEventListener("submit",e=>{
-    e.preventDefault();
-    submitForm("fuel", e.target);
-  });
-
-document.getElementById("danhgiaForm")
-  ?.addEventListener("submit",e=>{
-    e.preventDefault();
-    submitForm("danhgia", e.target);
-  });
+/* ================= AUTO BIND SUBMIT ================= */
+document.getElementById("xeForm")?.addEventListener("submit",e=>{
+  e.preventDefault(); submitForm("xe", e.target);
+});
+document.getElementById("taixeForm")?.addEventListener("submit",e=>{
+  e.preventDefault(); submitForm("taixe", e.target);
+});
+document.getElementById("nhatkyForm")?.addEventListener("submit",e=>{
+  e.preventDefault(); submitForm("nhatky", e.target);
+});
+document.getElementById("baoduongForm")?.addEventListener("submit",e=>{
+  e.preventDefault(); submitForm("baoduong", e.target);
+});
+document.getElementById("fuelForm")?.addEventListener("submit",e=>{
+  e.preventDefault(); submitForm("fuel", e.target);
+});
+document.getElementById("danhgiaForm")?.addEventListener("submit",e=>{
+  e.preventDefault(); submitForm("danhgia", e.target);
+});
 
 /* ================= SEARCH BUTTON ================= */
+function searchXe(){
+  searchByKey("xe","bien_so_xe",
+    document.getElementById("search_bien_so_xe").value,
+    "xeForm"
+  );
+}
 function searchTaiXe(){
   searchByKey("taixe","ma_nv",
     document.getElementById("search_mnv").value,
     "taixeForm"
   );
 }
-
 function searchNhatKy(){
   searchByKey("nhatky","nk_id",
     document.getElementById("search_nk_id").value,
     "nhatkyForm"
   );
 }
-
-
 function searchbaoduong(){
   searchByKey("baoduong","bd_id",
     document.getElementById("search_bd_id").value,
     "baoduongForm"
   );
 }
-
 function searchfuel(){
   searchByKey("fuel","nl_id",
     document.getElementById("search_nl_id").value,
     "fuelForm"
   );
 }
-
 function searchdanhgia(){
   searchByKey("danhgia","dg_id",
     document.getElementById("search_dg_id").value,
@@ -958,93 +939,30 @@ function searchdanhgia(){
   );
 }
 
-function calcTheTichThung(){
-  const f = document.getElementById("xeForm");
-  const d = parseFloat(f.thung_dai.value) || 0;
-  const r = parseFloat(f.thung_rong.value) || 0;
-  const c = parseFloat(f.thung_cao.value) || 0;
-
-  if(d && r && c){
-    f.kich_thuoc_thung.value = `${d} x ${r} x ${c}`;
-    f.the_tich_thung.value = (d*r*c).toFixed(2);
-  }else{
-    f.kich_thuoc_thung.value = "";
-    f.the_tich_thung.value = "";
+/* ================= AUTO CALC ================= */
+function calcNhatKy(){
+  const f = document.getElementById("nhatkyForm");
+  if(f.nk_gio_xuat.value && f.nk_gio_ve.value){
+    const x = new Date("1970-01-01T"+f.nk_gio_xuat.value);
+    const v = new Date("1970-01-01T"+f.nk_gio_ve.value);
+    const diff = (v - x)/3600000;
+    f.nk_tong_gio.value = diff > 0 ? diff.toFixed(2) : "";
   }
-}
-
-function calc(input, months, targetName){
-  if(!input.value) return;
-  const d = new Date(input.value);
-  d.setMonth(d.getMonth() + months);
-  const f = input.form;
-  if(f[targetName]){
-    f[targetName].value = d.toISOString().slice(0,10);
-  }
-}
-
-function calcChinhThuc(){
-  const f = document.getElementById("taixeForm");
-  if(!f.ngay_nhan_viec.value || !f.thu_viec.value) return;
-
-  const d = new Date(f.ngay_nhan_viec.value);
-  const thang = parseInt(f.thu_viec.value);
-  d.setMonth(d.getMonth() + thang);
-
-  f.chinh_thuc.value = d.toISOString().slice(0,10);
+  const kmx = parseFloat(f.nk_km_xuat.value)||0;
+  const kmv = parseFloat(f.nk_km_ve.value)||0;
+  if(kmv > kmx) f.nk_tong_km.value = kmv - kmx;
 }
 
 function tinhTienNhienLieu(){
   const f = document.getElementById("fuelForm");
-  const lit = parseFloat(f.nl_so_lit.value) || 0;
-  const gia = parseFloat(f.nl_don_gia.value) || 0;
-  f.nl_thanh_tien.value = lit && gia ? (lit * gia).toFixed(0) : "";
-}
-
-function searchXe(){
-  searchByKey(
-    "xe",
-    "bien_so_xe",
-    document.getElementById("search_bien_so_xe").value,
-    "xeForm"
-  );
-}
-
-function calcNhatKy(){
-  const f = document.getElementById("nhatkyForm");
-
-  if(f.nk_gio_xuat.value && f.nk_gio_ve.value){
-    let x = new Date("1970-01-01T"+f.nk_gio_xuat.value);
-    let v = new Date("1970-01-01T"+f.nk_gio_ve.value);
-    if(v < x) v.setDate(v.getDate()+1); // qua ngày
-    const diff = (v - x)/3600000;
-    f.nk_tong_gio.value = diff.toFixed(2);
-  }
-
-  const kmx = parseFloat(f.nk_km_xuat.value)||0;
-  const kmv = parseFloat(f.nk_km_ve.value)||0;
-  f.nk_tong_km.value = kmv>kmx ? kmv-kmx : "";
-}
-
-
-
-function tinhKetLuanDanhGia(){
-  const f = document.getElementById("danhgiaForm");
-  const lan = parseInt(f.dg_so_lan.value)||0;
-  const muc = f.dg_muc_do.value;
-
-  if(lan>=2){
-    if(muc==="nhe") f.dg_ket_luan.value="Trừ KPI";
-    else if(muc==="trung_binh") f.dg_ket_luan.value="Đào tạo lại";
-    else if(muc==="nang") f.dg_ket_luan.value="Sa thải";
-  }else{
-    f.dg_ket_luan.value="Tiếp tục làm việc";
-  }
+  const lit = parseFloat(f.nl_so_lit.value)||0;
+  const gia = parseFloat(f.nl_don_gia.value)||0;
+  f.nl_thanh_tien.value = lit && gia ? (lit*gia).toFixed(0) : "";
 }
 </script>
 
-
 </body>
 </html>
+
 
 
