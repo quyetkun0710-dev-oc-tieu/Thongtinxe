@@ -1018,40 +1018,6 @@ function calcChinhThuc(){
   f.chinh_thuc.value = `${yyyy}-${mm}-${dd}`;
 }
 
-function loadTable(tag, tableId){
-  const table = document.getElementById(tableId);
-  if(!table) return;
-
-  fetch(`${SCRIPT_URL}?tag=${tag}`)
-    .then(res => res.json())
-    .then(rows => {
-      if(!Array.isArray(rows) || rows.length === 0){
-        table.querySelector("thead").innerHTML = "";
-        table.querySelector("tbody").innerHTML =
-          `<tr><td colspan="99">Không có dữ liệu</td></tr>`;
-        return;
-      }
-
-      // HEADER
-      const headers = Object.keys(rows[0]);
-      table.querySelector("thead").innerHTML =
-        `<tr>${headers.map(h=>`<th>${h}</th>`).join("")}</tr>`;
-
-      // BODY
-      table.querySelector("tbody").innerHTML =
-        rows.map(r=>`
-          <tr>
-            ${headers.map(h=>`<td>${r[h] ?? ""}</td>`).join("")}
-          </tr>
-        `).join("");
-    })
-    .catch(err=>{
-      console.error(err);
-      table.querySelector("tbody").innerHTML =
-        `<tr><td colspan="99">Lỗi tải dữ liệu</td></tr>`;
-    });
-}
-
 function loadTableByKey(tag, keyName, keyValue, tableId){
   const table = document.getElementById(tableId);
   if(!table) return;
