@@ -789,7 +789,7 @@ body { background:#f4f6f8 }
 
 <script>
 /* ================= CONFIG ================= */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbze5X3Qa91-hnJW_KHoqKVrRRaMgQmclN1KUYKDIi4sc6QrWDGxtAbNub7T4PA5B9VT/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwbRYNH4nirwkpeGVijCuJNrVhjQYVc2nPlfIami3v4tegKBgMw3XxNOqb67tUUoqk/exec";
 
 /* ================= UI NAV ================= */
 function openTag(id){
@@ -800,12 +800,6 @@ function openTag(id){
   });
 
   document.getElementById(id).classList.remove("hidden");
-
-  // GỌI LOAD BẢNG THEO TAG – CHỈ KHI MỞ
-  if(id === "nhatky")   loadTable("nhatky","nhatkyTable");
-  if(id === "baoduong") loadTable("baoduong","baoduongTable");
-  if(id === "fuel")     loadTable("fuel","fuelTable");
-  if(id === "danhgia")  loadTable("danhgia","danhgiaTable");
 }
 
 
@@ -919,44 +913,32 @@ function searchTaiXe(){
   );
 }
 function searchNhatKy(){
-  searchByKey(
-    "nhatky",
-    "bien_so_xe",
-    document.getElementById("search_nhatky_bien_so_xe").value,
-    "nhatkyForm"
-  );
-}
+  const key = document.getElementById("search_nk_id").value;
+  if(!key) return alert("Thiếu biển số xe");
 
+  loadTableByKey("nhatky","bien_so_xe",key,"nhatkyTable");
+}
 
 function searchbaoduong(){
-  searchByKey(
-    "baoduong",
-    "bien_so_xe",
-    document.getElementById("search_baoduong_bien_so_xe").value,
-    "baoduongForm"
-  );
-}
+  const key = document.getElementById("search_bd_id").value;
+  if(!key) return alert("Thiếu biển số xe");
 
+  loadTableByKey("baoduong","bien_so_xe",key,"baoduongTable");
+}
 
 function searchfuel(){
-  searchByKey(
-    "fuel",
-    "bien_so_xe",
-    document.getElementById("search_fuel_bien_so_xe").value,
-    "fuelForm"
-  );
-}
+  const key = document.getElementById("search_nl_id").value;
+  if(!key) return alert("Thiếu biển số xe");
 
+  loadTableByKey("fuel","bien_so_xe",key,"fuelTable");
+}
 
 function searchdanhgia(){
-  searchByKey(
-    "danhgia",
-    "ma_nv",
-    document.getElementById("search_danhgia_ma_nv").value,
-    "danhgiaForm"
-  );
-}
+  const key = document.getElementById("search_dg_id").value;
+  if(!key) return alert("Thiếu mã nhân viên");
 
+  loadTableByKey("danhgia","ma_nv",key,"danhgiaTable");
+}
 
 /* ================= AUTO CALC ================= */
 function calcNhatKy(){
@@ -1070,6 +1052,32 @@ function loadTable(tag, tableId){
     });
 }
 
+function loadTableByKey(tag, keyName, keyValue, tableId){
+  const table = document.getElementById(tableId);
+  if(!table) return;
+
+  const url = `${SCRIPT_URL}?tag=${tag}&${keyName}=${encodeURIComponent(keyValue)}`;
+
+  fetch(url)
+    .then(res => res.json())
+    .then(rows=>{
+      if(!Array.isArray(rows) || rows.length === 0){
+        table.querySelector("thead").innerHTML = "";
+        table.querySelector("tbody").innerHTML =
+          `<tr><td colspan="99">Không có dữ liệu</td></tr>`;
+        return;
+      }
+
+      const headers = Object.keys(rows[0]);
+      table.querySelector("thead").innerHTML =
+        `<tr>${headers.map(h=>`<th>${h}</th>`).join("")}</tr>`;
+
+      table.querySelector("tbody").innerHTML =
+        rows.map(r=>`
+          <tr>${headers.map(h=>`<td>${r[h] ?? ""}</td>`).join("")}</tr>
+        `).join("");
+    });
+}
 
 </script>
 
