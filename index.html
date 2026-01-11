@@ -450,15 +450,23 @@ body { background:#f4f6f8 }
 <button class="button mb-4" type="button" onclick="backHome()">⬅ Quay lại</button>
 <h2 class="title is-4">📒 NHẬT KÝ VẬN HÀNH</h2>
 
-<!-- TRA CỨU -->
+<!-- ===== TRA CỨU ===== -->
 <div class="box">
   <h3 class="subtitle">🔍 Tra cứu BIỂN SỐ XE</h3>
   <div class="columns is-vcentered">
     <div class="column is-4">
-      <input class="input" id="search_bien_so_xe" placeholder="Nhập BIỂN SỐ XE">
+      <input
+        class="input"
+        id="search_nhatky_bien_so_xe"
+        placeholder="VD: 51C-12345">
     </div>
     <div class="column">
-      <button class="button is-info" type="button" onclick="searchNhatKy()">Tra cứu</button>
+      <button
+        class="button is-info"
+        type="button"
+        onclick="searchNhatKy()">
+        Tra cứu
+      </button>
     </div>
   </div>
 </div>
@@ -468,48 +476,51 @@ body { background:#f4f6f8 }
 <div class="columns">
   <div class="column">
     <label class="label">Biển số xe</label>
-    <input class="input" name="bien_so_xe">
+    <input class="input" name="bien_so_xe" required>
   </div>
   <div class="column">
     <label class="label">Tài xế</label>
-    <input class="input" name="nk_tai_xe">
+    <input class="input" name="tai_xe">
   </div>
 </div>
 
 <div class="columns">
   <div class="column">
     <label class="label">Giờ xuất</label>
-    <input class="input" type="time" name="nk_gio_xuat" oninput="calcNhatKy()">
+    <input class="input" type="time" name="gio_xuat" oninput="calcNhatKy()">
   </div>
   <div class="column">
     <label class="label">Giờ về</label>
-    <input class="input" type="time" name="nk_gio_ve" oninput="calcNhatKy()">
+    <input class="input" type="time" name="gio_ve" oninput="calcNhatKy()">
   </div>
   <div class="column">
     <label class="label">Tổng giờ</label>
-    <input class="input" name="nk_tong_gio" readonly>
+    <input class="input" name="tong_gio" readonly>
   </div>
 </div>
 
 <div class="columns">
   <div class="column">
     <label class="label">KM xuất</label>
-    <input class="input" name="nk_km_xuat" oninput="calcNhatKy()">
+    <input class="input" type="number" name="km_xuat" oninput="calcNhatKy()">
   </div>
   <div class="column">
     <label class="label">KM về</label>
-    <input class="input" name="nk_km_ve" oninput="calcNhatKy()">
+    <input class="input" type="number" name="km_ve" oninput="calcNhatKy()">
   </div>
   <div class="column">
     <label class="label">Tổng KM</label>
-    <input class="input" name="nk_tong_km" readonly>
+    <input class="input" name="tong_km" readonly>
   </div>
 </div>
 
 <div class="field">
   <label class="label">Ghi chú</label>
-  <textarea class="textarea" name="nk_ghi_chu"></textarea>
+  <textarea class="textarea" name="ghi_chu"></textarea>
 </div>
+
+<!-- hidden -->
+<input type="hidden" name="created_at">
 
 <button class="button is-primary mt-4" type="submit">
 💾 Lưu nhật ký
@@ -517,7 +528,8 @@ body { background:#f4f6f8 }
 
 </form>
 </div>
-<!-- ================= END TAG: NHẬT KÝ ================= -->
+<!-- ================= END TAG NHẬT KÝ ================= -->
+
 
 
 <!-- ================= TAG: BẢO DƯỠNG ================= -->
@@ -903,7 +915,7 @@ function searchNhatKy(){
   searchByKey(
     "nhatky",
     "bien_so_xe",
-    document.getElementById("search_nk_id").value,
+    document.getElementById("search_bien_so_xe").value,
     "nhatkyForm"
   );
 }
@@ -912,7 +924,7 @@ function searchbaoduong(){
   searchByKey(
     "baoduong",
     "bien_so_xe",
-    document.getElementById("search_bd_id").value,
+    document.getElementById("search_bien_so_xe").value,
     "baoduongForm"
   );
 }
@@ -921,7 +933,7 @@ function searchfuel(){
   searchByKey(
     "fuel",
     "bien_so_xe",
-    document.getElementById("search_nl_id").value,
+    document.getElementById("search_bien_so_xe").value,
     "fuelForm"
   );
 }
@@ -930,7 +942,7 @@ function searchdanhgia(){
   searchByKey(
     "danhgia",
     "ma_nv",
-    document.getElementById("search_dg_id").value,
+    document.getElementById("search_mnv").value,
     "danhgiaForm"
   );
 }
@@ -938,15 +950,27 @@ function searchdanhgia(){
 /* ================= AUTO CALC ================= */
 function calcNhatKy(){
   const f = document.getElementById("nhatkyForm");
-  if(f.nk_gio_xuat.value && f.nk_gio_ve.value){
-    const x = new Date("1970-01-01T"+f.nk_gio_xuat.value);
-    const v = new Date("1970-01-01T"+f.nk_gio_ve.value);
-    const diff = (v - x)/3600000;
-    f.nk_tong_gio.value = diff > 0 ? diff.toFixed(2) : "";
+  if(!f) return;
+
+  // ===== TÍNH GIỜ =====
+  if(f.gio_xuat.value && f.gio_ve.value){
+    const x = new Date("1970-01-01T" + f.gio_xuat.value);
+    const v = new Date("1970-01-01T" + f.gio_ve.value);
+    const diff = (v - x) / 3600000;
+    f.tong_gio.value = diff > 0 ? diff.toFixed(2) : "";
+  } else {
+    f.tong_gio.value = "";
   }
-  const kmx = parseFloat(f.nk_km_xuat.value)||0;
-  const kmv = parseFloat(f.nk_km_ve.value)||0;
-  if(kmv > kmx) f.nk_tong_km.value = kmv - kmx;
+
+  // ===== TÍNH KM =====
+  const kmx = parseFloat(f.km_xuat.value) || 0;
+  const kmv = parseFloat(f.km_ve.value) || 0;
+
+  if(kmv >= kmx && kmx > 0){
+    f.tong_km.value = kmv - kmx;
+  } else {
+    f.tong_km.value = "";
+  }
 }
 
 function tinhTienNhienLieu(){
