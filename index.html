@@ -468,6 +468,16 @@ body { background:#f4f6f8 }
 </div>
 
 <form id="nhatkyForm">
+  <hr>
+
+<h3 class="subtitle">📋 Danh sách dữ liệu</h3>
+
+<div class="table-container">
+  <table class="table is-bordered is-striped is-fullwidth" id="nhatkyTable">
+    <thead></thead>
+    <tbody></tbody>
+  </table>
+</div>
 
 <h3 class="subtitle">1️⃣ Thông tin chuyến</h3>
 <div class="columns">
@@ -548,6 +558,17 @@ body { background:#f4f6f8 }
 </div>
 
 <form id="baoduongForm">
+  <hr>
+
+<h3 class="subtitle">📋 Danh sách dữ liệu</h3>
+
+<div class="table-container">
+  <table class="table is-bordered is-striped is-fullwidth" id="baoduongTable">
+    <thead></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
 
 <h3 class="subtitle">1️⃣ Thông tin xe</h3>
 <div class="columns">
@@ -610,6 +631,16 @@ body { background:#f4f6f8 }
 </div>
 
 <form id="fuelForm">
+  <hr>
+
+<h3 class="subtitle">📋 Danh sách dữ liệu</h3>
+
+<div class="table-container">
+  <table class="table is-bordered is-striped is-fullwidth" id="fuelTable">
+    <thead></thead>
+    <tbody></tbody>
+  </table>
+</div>
 
 <h3 class="subtitle">1️⃣ Thông tin xe</h3>
 <div class="columns">
@@ -684,6 +715,17 @@ body { background:#f4f6f8 }
 </div>
 
 <form id="danhgiaForm">
+  <hr>
+
+<h3 class="subtitle">📋 Danh sách dữ liệu</h3>
+
+<div class="table-container">
+  <table class="table is-bordered is-striped is-fullwidth" id="danhgiaTable">
+    <thead></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
 
 <h3 class="subtitle">1️⃣ Thông tin nhân sự</h3>
 <div class="columns">
@@ -747,16 +789,25 @@ body { background:#f4f6f8 }
 
 <script>
 /* ================= CONFIG ================= */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwZHgZKFuzuHmlXyCdJhxcWjDwLAPpRlng8unPfXW-iXdWJvs6kaZG4MNxVUDRJ-I_n/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbze5X3Qa91-hnJW_KHoqKVrRRaMgQmclN1KUYKDIi4sc6QrWDGxtAbNub7T4PA5B9VT/exec";
 
 /* ================= UI NAV ================= */
 function openTag(id){
   document.getElementById("home").classList.add("hidden");
+
   ["xe","taixe","nhatky","baoduong","fuel","danhgia"].forEach(t=>{
     document.getElementById(t)?.classList.add("hidden");
   });
+
   document.getElementById(id).classList.remove("hidden");
+
+  // GỌI LOAD BẢNG THEO TAG – CHỈ KHI MỞ
+  if(id === "nhatky")   loadTable("nhatky","nhatkyTable");
+  if(id === "baoduong") loadTable("baoduong","baoduongTable");
+  if(id === "fuel")     loadTable("fuel","fuelTable");
+  if(id === "danhgia")  loadTable("danhgia","danhgiaTable");
 }
+
 
 function backHome(){
   document.getElementById("home").classList.remove("hidden");
@@ -984,6 +1035,41 @@ function calcChinhThuc(){
 
   f.chinh_thuc.value = `${yyyy}-${mm}-${dd}`;
 }
+
+function loadTable(tag, tableId){
+  const table = document.getElementById(tableId);
+  if(!table) return;
+
+  fetch(`${SCRIPT_URL}?tag=${tag}`)
+    .then(res => res.json())
+    .then(rows => {
+      if(!Array.isArray(rows) || rows.length === 0){
+        table.querySelector("thead").innerHTML = "";
+        table.querySelector("tbody").innerHTML =
+          `<tr><td colspan="99">Không có dữ liệu</td></tr>`;
+        return;
+      }
+
+      // HEADER
+      const headers = Object.keys(rows[0]);
+      table.querySelector("thead").innerHTML =
+        `<tr>${headers.map(h=>`<th>${h}</th>`).join("")}</tr>`;
+
+      // BODY
+      table.querySelector("tbody").innerHTML =
+        rows.map(r=>`
+          <tr>
+            ${headers.map(h=>`<td>${r[h] ?? ""}</td>`).join("")}
+          </tr>
+        `).join("");
+    })
+    .catch(err=>{
+      console.error(err);
+      table.querySelector("tbody").innerHTML =
+        `<tr><td colspan="99">Lỗi tải dữ liệu</td></tr>`;
+    });
+}
+
 
 </script>
 
