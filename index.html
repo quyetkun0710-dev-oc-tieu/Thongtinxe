@@ -341,7 +341,9 @@ body { background:#f4f6f8 }
       <input class="input" id="search_mnv" placeholder="Nhập mã nhân viên">
     </div>
     <div class="column">
-      <button class="button is-info" onclick="searchTaiXe()">Tra cứu</button>
+      <button type="button" class="button is-info" onclick="searchTaiXe()">Tra cứu</button>
+
+    </div>
     </div>
   </div>
 </section>
@@ -456,17 +458,10 @@ body { background:#f4f6f8 }
   <div class="columns is-vcentered">
     <div class="column is-4">
       <input
-        class="input"
-        id="search_nhatky_bien_so_xe"
-        placeholder="VD: 51C-12345">
+        class="input" id="search_nhatky_bien_so_xe" placeholder="VD: 51C-12345">
     </div>
     <div class="column">
-      <button
-        class="button is-info"
-        type="button"
-        onclick="searchNhatKy()">
-        Tra cứu
-      </button>
+     <button type="button" class="button is-info" onclick="searchNhatKy()">Tra cứu</button>
     </div>
   </div>
 </div>
@@ -543,10 +538,10 @@ body { background:#f4f6f8 }
   <h3 class="subtitle">🔍 Tra cứu BIỂN SỐ XE</h3>
   <div class="columns is-vcentered">
     <div class="column is-4">
-      <input class="input" id="search_bien_so_xe" placeholder="Nhập BIỂN SỐ XE">
+      <input class="input" id="search_baoduong_bien_so_xe" placeholder="Nhập BIỂN SỐ XE">
     </div>
     <div class="column">
-      <button class="button is-info" type="button" onclick="searchbaoduong()">Tra cứu</button>
+       <button type="button" class="button is-info" onclick="searchbaoduong()">Tra cứu</button>
     </div>
   </div>
 </div>
@@ -561,30 +556,31 @@ body { background:#f4f6f8 }
   </div>
   <div class="column">
     <label class="label">KM</label>
-    <input class="input" name="bd_km">
+    <input class="input" name="km_truoc">
   </div>
 </div>
 
 <div class="columns">
   <div class="column">
     <label class="label">Hạng mục</label>
-    <input class="input" name="bd_hang_muc">
+    <input class="input" name="hang_muc">
   </div>
   <div class="column">
     <label class="label">Đơn vị sửa</label>
-    <input class="input" name="bd_don_vi">
+    <input class="input" name="don_vi">
   </div>
   <div class="column">
     <label class="label">Tổng tiền</label>
-    <input class="input" name="bd_tong_tien">
+    <input class="input" name="tong_tien">
   </div>
 </div>
 
 <div class="field">
   <label class="label">Ghi chú</label>
-  <textarea class="textarea" name="bd_ghi_chu"></textarea>
+  <textarea class="textarea" name="ghi_chu"></textarea>
 </div>
-
+<!-- hidden -->
+<input type="hidden" name="created_at">
 <button class="button is-primary mt-4" type="submit">
 💾 Lưu bảo dưỡng
 </button>
@@ -603,10 +599,11 @@ body { background:#f4f6f8 }
   <h3 class="subtitle">🔍 Tra cứu BIỂN SỐ XE</h3>
   <div class="columns">
     <div class="column is-4">
-      <input class="input" id="search_bien_so_xe" placeholder="Nhập BIỂN SỐ XE">
+      <input class="input" id="search_fuel_bien_so_xe" placeholder="Nhập BIỂN SỐ XE">
     </div>
     <div class="column">
-      <button class="button is-info" onclick="searchfuel()">Tra cứu</button>
+      <button type="button" class="button is-info" onclick="searchfuel()">Tra cứu</button>
+
     </div>
   </div>
 </div>
@@ -621,7 +618,7 @@ body { background:#f4f6f8 }
   </div>
   <div class="column">
     <label class="label">KM khi bổ sung</label>
-    <input class="input" name="nl_km">
+    <input class="input" name="km">
   </div>
 </div>
 
@@ -633,7 +630,7 @@ body { background:#f4f6f8 }
       <label class="label">Loại nhiên liệu</label>
       <div class="control">
         <div class="select is-fullwidth">
-          <select name="nl_loai" required>
+          <select name="loai" required>
             <option value="">-- Chọn loại --</option>
             <option value="dau">Dầu</option>
             <option value="xang">Xăng</option>
@@ -645,17 +642,17 @@ body { background:#f4f6f8 }
 
   <div class="column">
     <label class="label">Số lít</label>
-    <input class="input" type="number" name="nl_so_lit" oninput="tinhTienNhienLieu()">
+    <input class="input" type="number" name="so_lit" oninput="tinhTienNhienLieu()">
   </div>
 
   <div class="column">
     <label class="label">Đơn giá</label>
-    <input class="input" type="number" name="nl_don_gia" oninput="tinhTienNhienLieu()">
+    <input class="input" type="number" name="don_gia" oninput="tinhTienNhienLieu()">
   </div>
 
   <div class="column">
     <label class="label">Thành tiền</label>
-    <input class="input" name="nl_thanh_tien" readonly>
+    <input class="input" name="thanh_tien" readonly>
   </div>
 
 </div>
@@ -668,7 +665,7 @@ body { background:#f4f6f8 }
       <label class="label">Hình thức thanh toán</label>
       <div class="control">
         <div class="select is-fullwidth">
-          <select name="nl_thanh_toan">
+          <select name="thanh_toan">
             <option value="">-- Chọn --</option>
             <option value="cong_no">Công nợ</option>
             <option value="tien_mat">Thanh toán ngay</option>
@@ -683,7 +680,7 @@ body { background:#f4f6f8 }
       <label class="label">Hóa đơn</label>
       <div class="control">
         <div class="select is-fullwidth">
-          <select name="nl_hoa_don">
+          <select name="hoa_don">
             <option value="">-- Chọn --</option>
             <option value="co">Có</option>
             <option value="khong">Không</option>
@@ -695,13 +692,15 @@ body { background:#f4f6f8 }
 
   <div class="column">
     <label class="label">Ngày thực hiện</label>
-    <input class="input" type="date" name="nl_ngay">
+    <input class="input" type="date" name="ngay">
   </div>
 
 </div>
 
 <h3 class="subtitle">4. Ghi chú</h3>
-<textarea class="textarea" name="nl_ghi_chu"></textarea>
+<textarea class="textarea" name="ghi_chu"></textarea>
+<!-- hidden -->
+<input type="hidden" name="created_at">
 <button class="button is-primary mt-4">💾 Lưu nhiên liệu</button>
 </form>
 </div>
@@ -718,10 +717,11 @@ body { background:#f4f6f8 }
   <h3 class="subtitle">🔍 Tra cứu MÃ NHÂN VIÊN</h3>
   <div class="columns">
     <div class="column is-4">
-      <input class="input" id="search_ma_nv" placeholder="Nhập MÃ NHÂN VIÊN">
+      <input class="input" id="search_danhgia_ma_nv" placeholder="Nhập MÃ NHÂN VIÊN">
     </div>
     <div class="column">
-      <button class="button is-info" onclick="searchdanhgia()">Tra cứu</button>
+      <button type="button" class="button is-info" onclick="searchdanhgia()">Tra cứu</button>
+
     </div>
   </div>
 </div>
@@ -736,12 +736,12 @@ body { background:#f4f6f8 }
   </div>
   <div class="column">
     <label class="label">Ngày đánh giá</label>
-    <input class="input" type="date" name="dg_ngay">
+    <input class="input" type="date" name="ngay">
   </div>
 
   <div class="column">
     <label class="label">Họ và tên</label>
-    <input class="input" name="dg_ho_ten">
+    <input class="input" name="ho_ten">
   </div>
 </div>
 
@@ -749,7 +749,7 @@ body { background:#f4f6f8 }
 <div class="columns">
   <div class="column">
     <label class="label">Lỗi vi phạm</label>
-    <input class="input" name="dg_loi">
+    <input class="input" name="loi">
   </div>
 
  <div class="column">
@@ -757,7 +757,7 @@ body { background:#f4f6f8 }
     <label class="label">Mức độ vi phạm</label>
     <div class="control">
       <div class="select is-fullwidth">
-        <select name="dg_muc_do" required>
+        <select name="muc_do" required>
           <option value="">-- Chọn mức độ --</option>
           <option value="nhe">Nhẹ - Cảnh báo</option>
           <option value="trung_binh">Trung bình - Lập biên bản</option>
@@ -773,17 +773,18 @@ body { background:#f4f6f8 }
 <div class="columns">
   <div class="column">
     <label class="label">Số lần vi phạm</label>
-    <input class="input" type="number" name="dg_so_lan">
+    <input class="input" type="number" name="so_lan">
   </div>
   <div class="column">
     <label class="label">Kết luận</label>
-    <input class="input" name="dg_ket_luan">
+    <input class="input" name="ket_luan">
   </div>
 </div>
 
 <h3 class="subtitle">4. Ghi chú</h3>
-<textarea class="textarea" name="dg_ghi_chu"></textarea>
-
+<textarea class="textarea" name="ghi_chu"></textarea>
+<!-- hidden -->
+<input type="hidden" name="created_at">
 <button class="button is-primary mt-4">💾 Lưu đánh giá</button>
 </form>
 </div>
@@ -915,37 +916,41 @@ function searchNhatKy(){
   searchByKey(
     "nhatky",
     "bien_so_xe",
-    document.getElementById("search_bien_so_xe").value,
+    document.getElementById("search_nhatky_bien_so_xe").value,
     "nhatkyForm"
   );
 }
+
 
 function searchbaoduong(){
   searchByKey(
     "baoduong",
     "bien_so_xe",
-    document.getElementById("search_bien_so_xe").value,
+    document.getElementById("search_baoduong_bien_so_xe").value,
     "baoduongForm"
   );
 }
+
 
 function searchfuel(){
   searchByKey(
     "fuel",
     "bien_so_xe",
-    document.getElementById("search_bien_so_xe").value,
+    document.getElementById("search_fuel_bien_so_xe").value,
     "fuelForm"
   );
 }
+
 
 function searchdanhgia(){
   searchByKey(
     "danhgia",
     "ma_nv",
-    document.getElementById("search_mnv").value,
+    document.getElementById("search_danhgia_ma_nv").value,
     "danhgiaForm"
   );
 }
+
 
 /* ================= AUTO CALC ================= */
 function calcNhatKy(){
@@ -975,10 +980,11 @@ function calcNhatKy(){
 
 function tinhTienNhienLieu(){
   const f = document.getElementById("fuelForm");
-  const lit = parseFloat(f.nl_so_lit.value)||0;
-  const gia = parseFloat(f.nl_don_gia.value)||0;
-  f.nl_thanh_tien.value = lit && gia ? (lit*gia).toFixed(0) : "";
+  const lit = parseFloat(f.so_lit.value)||0;
+  const gia = parseFloat(f.don_gia.value)||0;
+  f.thanh_tien.value = lit && gia ? (lit*gia).toFixed(0) : "";
 }
+
 </script>
 
 </body>
