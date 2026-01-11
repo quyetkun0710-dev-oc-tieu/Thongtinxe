@@ -452,10 +452,10 @@ body { background:#f4f6f8 }
 
 <!-- TRA CỨU -->
 <div class="box">
-  <h3 class="subtitle">🔍 Tra cứu NK ID</h3>
+  <h3 class="subtitle">🔍 Tra cứu BIỂN SỐ XE</h3>
   <div class="columns is-vcentered">
     <div class="column is-4">
-      <input class="input" id="search_nk_id" placeholder="VD: NK001">
+      <input class="input" id="search_nk_id" placeholder="Nhập BIỂN SỐ XE">
     </div>
     <div class="column">
       <button class="button is-info" type="button" onclick="searchNhatKy()">Tra cứu</button>
@@ -466,10 +466,6 @@ body { background:#f4f6f8 }
 <form id="nhatkyForm">
 
 <div class="columns">
-  <div class="column">
-    <label class="label">NK ID</label>
-    <input class="input" name="nk_id">
-  </div>
   <div class="column">
     <label class="label">Biển số xe</label>
     <input class="input" name="nk_bien_so_xe">
@@ -532,10 +528,10 @@ body { background:#f4f6f8 }
 
 <!-- TRA CỨU -->
 <div class="box">
-  <h3 class="subtitle">🔍 Tra cứu BD ID</h3>
+  <h3 class="subtitle">🔍 Tra cứu BIỂN SỐ XE</h3>
   <div class="columns is-vcentered">
     <div class="column is-4">
-      <input class="input" id="search_bd_id" placeholder="VD: BD001">
+      <input class="input" id="search_bd_id" placeholder="Nhập BIỂN SỐ XE">
     </div>
     <div class="column">
       <button class="button is-info" type="button" onclick="searchbaoduong()">Tra cứu</button>
@@ -595,10 +591,10 @@ body { background:#f4f6f8 }
 
 <!-- TRA CỨU -->
 <div class="box">
-  <h3 class="subtitle">🔍 Tra cứu theo NL ID</h3>
+  <h3 class="subtitle">🔍 Tra cứu BIỂN SỐ XE</h3>
   <div class="columns">
     <div class="column is-4">
-      <input class="input" id="search_nl_id" placeholder="VD: NL001">
+      <input class="input" id="search_nl_id" placeholder="Nhập BIỂN SỐ XE">
     </div>
     <div class="column">
       <button class="button is-info" onclick="searchfuel()">Tra cứu</button>
@@ -610,11 +606,6 @@ body { background:#f4f6f8 }
 
 <h3 class="subtitle">1. Thông tin chính</h3>
 <div class="columns">
-  <div class="column">
-    <label class="label">NL ID</label>
-    <input class="input" name="nl_id" required>
-
-  </div>
   <div class="column">
     <label class="label">Biển số xe</label>
     <input class="input" name="nl_bien_so_xe">
@@ -715,10 +706,10 @@ body { background:#f4f6f8 }
 
 <!-- TRA CỨU -->
 <div class="box">
-  <h3 class="subtitle">🔍 Tra cứu theo DG ID</h3>
+  <h3 class="subtitle">🔍 Tra cứu MÃ NHÂN VIÊN</h3>
   <div class="columns">
     <div class="column is-4">
-      <input class="input" id="search_dg_id" placeholder="VD: DG001">
+      <input class="input" id="search_dg_id" placeholder="Nhập MÃ NHÂN VIÊN">
     </div>
     <div class="column">
       <button class="button is-info" onclick="searchdanhgia()">Tra cứu</button>
@@ -731,17 +722,14 @@ body { background:#f4f6f8 }
 <h3 class="subtitle">1. Thông tin nhân sự</h3>
 <div class="columns">
   <div class="column">
-    <label class="label">DG ID</label>
-    <input class="input" name="dg_id" required>
+    <label class="label">Mã nhân viên</label>
+    <input class="input" name="dg_ma_nv">
   </div>
   <div class="column">
     <label class="label">Ngày đánh giá</label>
     <input class="input" type="date" name="dg_ngay">
   </div>
-  <div class="column">
-    <label class="label">Mã nhân viên</label>
-    <input class="input" name="dg_ma_nv">
-  </div>
+
   <div class="column">
     <label class="label">Họ và tên</label>
     <input class="input" name="dg_ho_ten">
@@ -794,7 +782,7 @@ body { background:#f4f6f8 }
 
 <script>
 /* ================= CONFIG ================= */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbykuNTd6d292UvwiJdXIryztAnKpBgoEzZbF7hAwnD_4X_E-HPeCyzQITocEyIiU8Sx/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxvwZFwruXEqN0MZIaBT2rChi3CwkizzdK5c2N8a2kYjwRJGjdnPWHHarFn2cZoZNUQ/exec";
 
 /* ================= UI NAV ================= */
 function openTag(id){
@@ -915,25 +903,36 @@ function searchTaiXe(){
   );
 }
 function searchNhatKy(){
-  searchByKey("nhatky","nk_id",
+  searchByKey(
+    "nhatky",
+    "bien_so_xe",
     document.getElementById("search_nk_id").value,
     "nhatkyForm"
   );
 }
+
 function searchbaoduong(){
-  searchByKey("baoduong","bd_id",
+  searchByKey(
+    "baoduong",
+    "bien_so_xe",
     document.getElementById("search_bd_id").value,
     "baoduongForm"
   );
 }
+
 function searchfuel(){
-  searchByKey("fuel","nl_id",
+  searchByKey(
+    "fuel",
+    "bien_so_xe",
     document.getElementById("search_nl_id").value,
     "fuelForm"
   );
 }
+
 function searchdanhgia(){
-  searchByKey("danhgia","dg_id",
+  searchByKey(
+    "danhgia",
+    "ma_nv",
     document.getElementById("search_dg_id").value,
     "danhgiaForm"
   );
@@ -963,7 +962,6 @@ function tinhTienNhienLieu(){
 
 </body>
 </html>
-
 
 
 
