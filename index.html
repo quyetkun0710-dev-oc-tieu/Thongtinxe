@@ -469,17 +469,19 @@ body { background:#f4f6f8 }
 
 <form id="nhatkyForm">
 
+<h3 class="subtitle">1️⃣ Thông tin chuyến</h3>
 <div class="columns">
-  <div class="column">
+  <div class="column is-4">
     <label class="label">Biển số xe</label>
     <input class="input" name="bien_so_xe" required>
   </div>
-  <div class="column">
+  <div class="column is-4">
     <label class="label">Tài xế</label>
     <input class="input" name="tai_xe">
   </div>
 </div>
 
+<h3 class="subtitle">2️⃣ Thời gian</h3>
 <div class="columns">
   <div class="column">
     <label class="label">Giờ xuất</label>
@@ -495,6 +497,7 @@ body { background:#f4f6f8 }
   </div>
 </div>
 
+<h3 class="subtitle">3️⃣ Quãng đường</h3>
 <div class="columns">
   <div class="column">
     <label class="label">KM xuất</label>
@@ -510,15 +513,12 @@ body { background:#f4f6f8 }
   </div>
 </div>
 
-<div class="field">
-  <label class="label">Ghi chú</label>
-  <textarea class="textarea" name="ghi_chu"></textarea>
-</div>
+<h3 class="subtitle">4️⃣ Ghi chú</h3>
+<textarea class="textarea" name="ghi_chu"></textarea>
 
-<!-- hidden -->
 <input type="hidden" name="created_at">
 
-<button class="button is-primary mt-4" type="submit">
+<button class="button is-primary is-fullwidth mt-4">
 💾 Lưu nhật ký
 </button>
 
@@ -549,18 +549,19 @@ body { background:#f4f6f8 }
 
 <form id="baoduongForm">
 
+<h3 class="subtitle">1️⃣ Thông tin xe</h3>
 <div class="columns">
-
-  <div class="column">
+  <div class="column is-4">
     <label class="label">Biển số xe</label>
     <input class="input" name="bien_so_xe">
   </div>
-  <div class="column">
-    <label class="label">KM</label>
+  <div class="column is-4">
+    <label class="label">KM tại thời điểm</label>
     <input class="input" name="km_truoc">
   </div>
 </div>
 
+<h3 class="subtitle">2️⃣ Nội dung bảo dưỡng</h3>
 <div class="columns">
   <div class="column">
     <label class="label">Hạng mục</label>
@@ -576,13 +577,12 @@ body { background:#f4f6f8 }
   </div>
 </div>
 
-<div class="field">
-  <label class="label">Ghi chú</label>
-  <textarea class="textarea" name="ghi_chu"></textarea>
-</div>
-<!-- hidden -->
+<h3 class="subtitle">3️⃣ Ghi chú</h3>
+<textarea class="textarea" name="ghi_chu"></textarea>
+
 <input type="hidden" name="created_at">
-<button class="button is-primary mt-4" type="submit">
+
+<button class="button is-primary is-fullwidth mt-4">
 💾 Lưu bảo dưỡng
 </button>
 
@@ -611,99 +611,55 @@ body { background:#f4f6f8 }
 
 <form id="fuelForm">
 
-<h3 class="subtitle">1. Thông tin chính</h3>
+<h3 class="subtitle">1️⃣ Thông tin xe</h3>
 <div class="columns">
-  <div class="column">
+  <div class="column is-4">
     <label class="label">Biển số xe</label>
     <input class="input" name="bien_so_xe">
   </div>
-  <div class="column">
-    <label class="label">KM khi bổ sung</label>
+  <div class="column is-4">
+    <label class="label">KM</label>
     <input class="input" name="km">
   </div>
 </div>
 
-<h3 class="subtitle">2. Chi tiết nhiên liệu</h3>
+<h3 class="subtitle">2️⃣ Chi tiết nhiên liệu</h3>
 <div class="columns">
-
   <div class="column">
-    <div class="field">
-      <label class="label">Loại nhiên liệu</label>
-      <div class="control">
-        <div class="select is-fullwidth">
-          <select name="loai" required>
-            <option value="">-- Chọn loại --</option>
-            <option value="dau">Dầu</option>
-            <option value="xang">Xăng</option>
-          </select>
-        </div>
-      </div>
+    <label class="label">Loại</label>
+    <div class="select is-fullwidth">
+      <select name="loai">
+        <option value="">-- Chọn --</option>
+        <option value="dau">Dầu</option>
+        <option value="xang">Xăng</option>
+      </select>
     </div>
   </div>
-
   <div class="column">
     <label class="label">Số lít</label>
     <input class="input" type="number" name="so_lit" oninput="tinhTienNhienLieu()">
   </div>
-
   <div class="column">
     <label class="label">Đơn giá</label>
     <input class="input" type="number" name="don_gia" oninput="tinhTienNhienLieu()">
   </div>
-
   <div class="column">
     <label class="label">Thành tiền</label>
     <input class="input" name="thanh_tien" readonly>
   </div>
-
 </div>
 
-<h3 class="subtitle">3. Thanh toán</h3>
-<div class="columns">
-
-  <div class="column">
-    <div class="field">
-      <label class="label">Hình thức thanh toán</label>
-      <div class="control">
-        <div class="select is-fullwidth">
-          <select name="thanh_toan">
-            <option value="">-- Chọn --</option>
-            <option value="cong_no">Công nợ</option>
-            <option value="tien_mat">Thanh toán ngay</option>
-          </select>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="column">
-    <div class="field">
-      <label class="label">Hóa đơn</label>
-      <div class="control">
-        <div class="select is-fullwidth">
-          <select name="hoa_don">
-            <option value="">-- Chọn --</option>
-            <option value="co">Có</option>
-            <option value="khong">Không</option>
-          </select>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="column">
-    <label class="label">Ngày thực hiện</label>
-    <input class="input" type="date" name="ngay">
-  </div>
-
-</div>
-
-<h3 class="subtitle">4. Ghi chú</h3>
+<h3 class="subtitle">3️⃣ Ghi chú</h3>
 <textarea class="textarea" name="ghi_chu"></textarea>
-<!-- hidden -->
+
 <input type="hidden" name="created_at">
-<button class="button is-primary mt-4">💾 Lưu nhiên liệu</button>
+
+<button class="button is-primary is-fullwidth mt-4">
+💾 Lưu nhiên liệu
+</button>
+
 </form>
+
 </div>
 
 <!-- ================== END TAG NHIÊN LIỆU ================== -->
@@ -729,53 +685,45 @@ body { background:#f4f6f8 }
 
 <form id="danhgiaForm">
 
-<h3 class="subtitle">1. Thông tin nhân sự</h3>
+<h3 class="subtitle">1️⃣ Thông tin nhân sự</h3>
 <div class="columns">
   <div class="column">
-    <label class="label">Mã nhân viên</label>
+    <label class="label">Mã NV</label>
     <input class="input" name="ma_nv">
+  </div>
+  <div class="column">
+    <label class="label">Họ tên</label>
+    <input class="input" name="ho_ten">
   </div>
   <div class="column">
     <label class="label">Ngày đánh giá</label>
     <input class="input" type="date" name="ngay">
   </div>
-
-  <div class="column">
-    <label class="label">Họ và tên</label>
-    <input class="input" name="ho_ten">
-  </div>
 </div>
 
-<!-- 2. Lỗi vi phạm -->
 <h3 class="subtitle">2️⃣ Lỗi vi phạm</h3>
-
 <div class="columns">
-
-  <div class="column is-6">
-    <label class="label">Lỗi vi phạm</label>
+  <div class="column">
+    <label class="label">Lỗi</label>
     <input class="input" name="loi">
   </div>
-
-  <div class="column is-6">
-    <label class="label">Mức độ vi phạm</label>
+  <div class="column">
+    <label class="label">Mức độ</label>
     <div class="select is-fullwidth">
-      <select name="muc_do" required>
-        <option value="">-- Chọn mức độ --</option>
-        <option value="nhe">Nhẹ - Cảnh báo</option>
-        <option value="trung_binh">Trung bình - Lập biên bản</option>
-        <option value="nang">Nặng - Kỷ luật</option>
+      <select name="muc_do">
+        <option value="">-- Chọn --</option>
+        <option value="nhe">Nhẹ</option>
+        <option value="trung_binh">Trung bình</option>
+        <option value="nang">Nặng</option>
       </select>
     </div>
   </div>
-
 </div>
 
-
-
-<h3 class="subtitle">3. Theo dõi vi phạm</h3>
+<h3 class="subtitle">3️⃣ Kết luận</h3>
 <div class="columns">
-  <div class="column">
-    <label class="label">Số lần vi phạm</label>
+  <div class="column is-4">
+    <label class="label">Số lần</label>
     <input class="input" type="number" name="so_lan">
   </div>
   <div class="column">
@@ -784,11 +732,15 @@ body { background:#f4f6f8 }
   </div>
 </div>
 
-<h3 class="subtitle">4. Ghi chú</h3>
+<h3 class="subtitle">4️⃣ Ghi chú</h3>
 <textarea class="textarea" name="ghi_chu"></textarea>
-<!-- hidden -->
+
 <input type="hidden" name="created_at">
-<button class="button is-primary mt-4">💾 Lưu đánh giá</button>
+
+<button class="button is-primary is-fullwidth mt-4">
+💾 Lưu đánh giá
+</button>
+
 </form>
 </div>
 <!-- ===== END TAG ĐÁNH GIÁ ===== -->
