@@ -375,9 +375,9 @@ body { background:#f4f6f8 }
 </div>
 
 <div class="columns">
-  <div class="column"><input type="date" class="input" name="ngay_trung_tuyen"></div>
-  <div class="column"><input class="input" name="noi_cap"></div>
-  <div class="column"><input type="date" class="input" name="han_gplx"></div>
+  <div class="column"><input type="date" class="input" name="ngay_trung_tuyen" placeholder="Ngày trúng tuyển"></div>
+  <div class="column"><input class="input" name="noi_cap" placeholder="Nơi cấp"></div>
+  <div class="column"><input type="date" class="input" name="han_gplx" placeholder="Hạn GPLX"></div>
 </div>
 
 <!-- 3. QUÁ TRÌNH LÀM VIỆC -->
@@ -1003,6 +1003,34 @@ function calcTheTichThung(){
     f.kich_thuoc_thung.value = "";
     f.the_tich_thung.value = "";
   }
+}
+
+function calcChinhThuc(){
+  const f = document.getElementById("taixeForm");
+  if(!f) return;
+
+  const ngayNhan = f.ngay_nhan_viec.value;
+  const thuViec  = f.thu_viec.value;
+
+  if(!ngayNhan || !thuViec){
+    f.chinh_thuc.value = "";
+    return;
+  }
+
+  const d = new Date(ngayNhan);
+
+  let soThang = 0;
+  if(thuViec === "1") soThang = 1;
+  else if(thuViec === "2") soThang = 2;
+  else if(thuViec === "3") soThang = 2; // gia hạn thêm → mặc định 2 tháng
+
+  d.setMonth(d.getMonth() + soThang);
+
+  const yyyy = d.getFullYear();
+  const mm   = String(d.getMonth() + 1).padStart(2, "0");
+  const dd   = String(d.getDate()).padStart(2, "0");
+
+  f.chinh_thuc.value = `${yyyy}-${mm}-${dd}`;
 }
 
 </script>
