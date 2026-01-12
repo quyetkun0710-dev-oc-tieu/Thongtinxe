@@ -148,11 +148,16 @@ body { background:#f4f6f8 }
     <button class="button is-info mt-5" type="button" onclick="searchXe()">Tra cứu</button>
   </div>
 </div>
-<div id="xe_result" class="mt-4"></div>
+<h3 class="subtitle">📋 Danh sách dữ liệu</h3>
+<div class="table-container">
+  <table class="table is-bordered is-striped is-fullwidth" id="xeTable">
+    <thead></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
 </section>
-
 <form id="xeForm">
-
 <!-- ========= 1. THÔNG TIN CƠ BẢN ========= -->
 <h3 class="subtitle">1️⃣ Thông tin cơ bản</h3>
 <div class="columns">
@@ -342,9 +347,16 @@ body { background:#f4f6f8 }
     </div>
     <div class="column">
       <button type="button" class="button is-info" onclick="searchTaiXe()">Tra cứu</button>
-
     </div>
   </div>
+  <h3 class="subtitle">📋 Danh sách dữ liệu</h3>
+<div class="table-container">
+  <table class="table is-bordered is-striped is-fullwidth" id="taixeTable">
+    <thead></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
 </section>
 
 <form id="taixeForm">
@@ -789,7 +801,7 @@ body { background:#f4f6f8 }
 
 <script>
 /* ================= CONFIG ================= */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwbRYNH4nirwkpeGVijCuJNrVhjQYVc2nPlfIami3v4tegKBgMw3XxNOqb67tUUoqk/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby0It02s5qIRzvMJCXTB7pLxwbd7SoDQqqcp_-9NFsIIwLQ-EbwRC7O61ISvO1WAHvQ/exec";
 
 /* ================= UI NAV ================= */
 function openTag(id){
@@ -901,17 +913,19 @@ document.getElementById("danhgiaForm")?.addEventListener("submit",e=>{
 
 /* ================= SEARCH BUTTON ================= */
 function searchXe(){
-  searchByKey("xe","bien_so_xe",
-    document.getElementById("search_bien_so_xe").value,
-    "xeForm"
-  );
+  const key = document.getElementById("search_bien_so_xe").value;
+  if(!key) return alert("Thiếu biển số xe");
+
+  loadTableByKey("xe","bien_so_xe",key,"xeTable");
 }
+
 function searchTaiXe(){
-  searchByKey("taixe","ma_nv",
-    document.getElementById("search_mnv").value,
-    "taixeForm"
-  );
+  const key = document.getElementById("search_mnv").value;
+  if(!key) return alert("Thiếu mã nhân viên");
+
+  loadTableByKey("taixe","ma_nv",key,"taixeTable");
 }
+
 function searchNhatKy(){
   const key = document.getElementById("search_nhatky_bien_so_xe").value;
   if(!key) return alert("Thiếu biển số xe");
