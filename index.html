@@ -473,13 +473,23 @@ body { background:#f4f6f8 }
         class="input" id="search_nhatky_bien_so_xe" placeholder="VD: 51C-12345">
     </div>
     <div class="column">
-     <button type="button" class="button is-info" onclick="searchNhatKy()">Tra cứu</button>
+      <button type="button" class="button is-info" onclick="searchNhatKy()">Tra cứu</button>
     </div>
   </div>
 </div>
 
+<!-- BẢNG TRA CỨU -->
+<div class="table-container">
+  <table class="table is-bordered is-striped is-fullwidth" id="table-nhatky">
+    <thead>
+      <tr id="thead-table-nhatky"></tr>
+    </thead>
+    <tbody id="tbody-table-nhatky"></tbody>
+  </table>
+</div>
+
 <form id="nhatkyForm">
-  <hr>
+<hr>
 
 <h3 class="subtitle">📋 Danh sách dữ liệu</h3>
 
@@ -537,6 +547,7 @@ body { background:#f4f6f8 }
 <h3 class="subtitle">4️⃣ Ghi chú</h3>
 <textarea class="textarea" name="ghi_chu"></textarea>
 
+<input type="hidden" name="tag" value="nhatky">
 <input type="hidden" name="created_at">
 
 <button class="button is-primary is-fullwidth mt-4">
@@ -566,9 +577,21 @@ body { background:#f4f6f8 }
   </div>
 </div>
 
+<!-- BẢNG TRA CỨU -->
+<div class="table-container">
+  <table class="table is-bordered is-striped is-fullwidth" id="table-baoduong">
+    <thead>
+      <tr id="thead-table-baoduong"></tr>
+    </thead>
+    <tbody id="tbody-table-baoduong"></tbody>
+  </table>
+</div>
+
 <form id="baoduongForm">
 
 <h3 class="subtitle">📋 Danh sách bảo dưỡng</h3>
+
+<!-- BẢNG DANH SÁCH -->
 <div class="table-container">
   <table class="table is-bordered is-striped is-fullwidth" id="baoduongTable">
     <thead></thead>
@@ -596,10 +619,10 @@ body { background:#f4f6f8 }
     <label class="label">Mốc bảo dưỡng</label>
     <div class="select is-fullwidth">
       <select name="moc_bao_duong">
-        <option value="">-- Chọn --</option>
-        <option value="5000">5000 km</option>
-        <option value="7000">7000 km</option>
-        <option value="10000">10000 km</option>
+        <option value=""></option>
+        <option value="5000 km">5000 km</option>
+        <option value="7000 km">7000 km</option>
+        <option value="10000 km">10000 km</option>
       </select>
     </div>
   </div>
@@ -619,10 +642,10 @@ body { background:#f4f6f8 }
     <label class="label">Kết quả</label>
     <div class="select is-fullwidth">
       <select name="ket_qua">
-        <option value="">-- Chọn --</option>
-        <option value="da_hoan_thanh">Đã hoàn thành</option>
-        <option value="dang_thuc_hien">Đang thực hiện</option>
-        <option value="cho_xu_ly">Chờ xử lý</option>
+        <option value=""></option>
+        <option value="Đã hoàn thành">Đã hoàn thành</option>
+        <option value="Đang thực hiện">Đang thực hiện</option>
+        <option value="Chờ xử lý">Chờ xử lý</option>
       </select>
     </div>
   </div>
@@ -654,9 +677,9 @@ body { background:#f4f6f8 }
     <label class="label">Loại đơn vị</label>
     <div class="select is-fullwidth">
       <select name="loai_don_vi">
-        <option value="">-- Chọn --</option>
-        <option value="gara_hop_dong">Gara hợp đồng</option>
-        <option value="gara_ngoai">Gara ngoài</option>
+        <option value=""></option>
+        <option value="Gara hợp đồng">Gara hợp đồng</option>
+        <option value="Gara ngoài">Gara ngoài</option>
       </select>
     </div>
   </div>
@@ -664,9 +687,9 @@ body { background:#f4f6f8 }
     <label class="label">Thanh toán</label>
     <div class="select is-fullwidth">
       <select name="thanh_toan">
-        <option value="">-- Chọn --</option>
-        <option value="cong_no">Công nợ</option>
-        <option value="thanh_toan_ngay">Thanh toán ngay</option>
+        <option value=""></option>
+        <option value="Công nợ">Công nợ</option>
+        <option value="Thanh toán ngay">Thanh toán ngay</option>
       </select>
     </div>
   </div>
@@ -689,11 +712,11 @@ body { background:#f4f6f8 }
 </div>
 <!-- ================= END TAG: BẢO DƯỠNG ================= -->
 
-
 <!-- ================= TAG QUẢN LÝ NHIÊN LIỆU ================= -->
 <div id="fuel" class="hidden form-box">
-<button class="button mb-4" onclick="backHome()">⬅ Quay lại</button>
-<h2 class="title is-4">NHIÊN LIỆU</h2>
+
+<button class="button mb-4" type="button" onclick="backHome()">⬅ Quay lại</button>
+<h2 class="title is-4">⛽ NHIÊN LIỆU</h2>
 
 <!-- TRA CỨU -->
 <div class="box">
@@ -704,16 +727,26 @@ body { background:#f4f6f8 }
     </div>
     <div class="column">
       <button type="button" class="button is-info" onclick="searchfuel()">Tra cứu</button>
-
     </div>
   </div>
 </div>
 
+<!-- BẢNG TRA CỨU -->
+<div class="table-container">
+  <table class="table is-bordered is-striped is-fullwidth" id="table-fuel">
+    <thead>
+      <tr id="thead-table-fuel"></tr>
+    </thead>
+    <tbody id="tbody-table-fuel"></tbody>
+  </table>
+</div>
+
 <form id="fuelForm">
-  <hr>
+<hr>
 
-<h3 class="subtitle">📋 Danh sách dữ liệu</h3>
+<h3 class="subtitle">📋 Danh sách nhiên liệu</h3>
 
+<!-- BẢNG DANH SÁCH -->
 <div class="table-container">
   <table class="table is-bordered is-striped is-fullwidth" id="fuelTable">
     <thead></thead>
@@ -729,19 +762,19 @@ body { background:#f4f6f8 }
   </div>
   <div class="column is-4">
     <label class="label">KM</label>
-    <input class="input" name="km">
+    <input class="input" name="km" type="number">
   </div>
 </div>
 
 <h3 class="subtitle">2️⃣ Chi tiết nhiên liệu</h3>
 <div class="columns">
   <div class="column">
-    <label class="label">Loại</label>
+    <label class="label">Loại nhiên liệu</label>
     <div class="select is-fullwidth">
       <select name="loai">
-        <option value="">-- Chọn --</option>
-        <option value="dau">Dầu</option>
-        <option value="xang">Xăng</option>
+        <option value=""></option>
+        <option value="Dầu">Dầu</option>
+        <option value="Xăng">Xăng</option>
       </select>
     </div>
   </div>
@@ -762,22 +795,21 @@ body { background:#f4f6f8 }
 <h3 class="subtitle">3️⃣ Ghi chú</h3>
 <textarea class="textarea" name="ghi_chu"></textarea>
 
-<input type="hidden" name="created_at">
+<input type="hidden" name="tag" value="fuel">
 
 <button class="button is-primary is-fullwidth mt-4">
 💾 Lưu nhiên liệu
 </button>
 
 </form>
-
 </div>
-
 <!-- ================== END TAG NHIÊN LIỆU ================== -->
 
 <!-- ================= TAG ĐÁNH GIÁ NHÂN SỰ ================= -->
 <div id="danhgia" class="hidden form-box">
-<button class="button mb-4" onclick="backHome()">⬅ Quay lại</button>
-<h2 class="title is-4">ĐÁNH GIÁ NHÂN SỰ</h2>
+
+<button class="button mb-4" type="button" onclick="backHome()">⬅ Quay lại</button>
+<h2 class="title is-4">📝 ĐÁNH GIÁ NHÂN SỰ</h2>
 
 <!-- TRA CỨU -->
 <div class="box">
@@ -788,16 +820,26 @@ body { background:#f4f6f8 }
     </div>
     <div class="column">
       <button type="button" class="button is-info" onclick="searchdanhgia()">Tra cứu</button>
-
     </div>
   </div>
 </div>
 
+<!-- BẢNG TRA CỨU -->
+<div class="table-container">
+  <table class="table is-bordered is-striped is-fullwidth" id="table-danhgia">
+    <thead>
+      <tr id="thead-table-danhgia"></tr>
+    </thead>
+    <tbody id="tbody-table-danhgia"></tbody>
+  </table>
+</div>
+
 <form id="danhgiaForm">
-  <hr>
+<hr>
 
 <h3 class="subtitle">📋 Danh sách dữ liệu</h3>
 
+<!-- BẢNG DANH SÁCH -->
 <div class="table-container">
   <table class="table is-bordered is-striped is-fullwidth" id="danhgiaTable">
     <thead></thead>
@@ -805,12 +847,11 @@ body { background:#f4f6f8 }
   </table>
 </div>
 
-
 <h3 class="subtitle">1️⃣ Thông tin nhân sự</h3>
 <div class="columns">
   <div class="column">
     <label class="label">Mã NV</label>
-    <input class="input" name="ma_nv">
+    <input class="input" name="ma_nv" required>
   </div>
   <div class="column">
     <label class="label">Họ tên</label>
@@ -832,7 +873,7 @@ body { background:#f4f6f8 }
     <label class="label">Mức độ</label>
     <div class="select is-fullwidth">
       <select name="muc_do">
-        <option value="">-- Chọn --</option>
+        <option value=""></option>
         <option value="nhe">Nhẹ</option>
         <option value="trung_binh">Trung bình</option>
         <option value="nang">Nặng</option>
@@ -856,6 +897,7 @@ body { background:#f4f6f8 }
 <h3 class="subtitle">4️⃣ Ghi chú</h3>
 <textarea class="textarea" name="ghi_chu"></textarea>
 
+<input type="hidden" name="tag" value="danhgia">
 <input type="hidden" name="created_at">
 
 <button class="button is-primary is-fullwidth mt-4">
@@ -868,7 +910,7 @@ body { background:#f4f6f8 }
 
 <script>
 /* ================= CONFIG ================= */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwFbcOkepoLhTY7IYz9SdSbAz9KO9xKJFlTW4EFTlweruu19LV5JtAcdK_GDjbjNR9p/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxMiUXCEfGgeR6qcahXQyrwm0QOnpL8X7LmbY9r4t-YO9H7HinmMH7norqtNzEiHiEz/exec";
 
 /* ================= UI NAV ================= */
 function openTag(id){
@@ -1156,9 +1198,127 @@ function calc(el, soNgay, targetField){
     f.elements[targetField].value = conLai;
   }
 }
+/* ================== UTILS ================== */
+function backHome(){
+  document.querySelectorAll('.form-box').forEach(f => f.classList.add('hidden'));
+}
+
+function showForm(tag){
+  backHome();
+  document.getElementById(tag).classList.remove('hidden');
+}
+
+/* ===== TÍNH TOÁN & UPDATE ===== */
+function calcRemainDays(dateStr){
+  if(!dateStr) return "";
+  const d = new Date(dateStr);
+  if(isNaN(d)) return "";
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  d.setHours(0,0,0,0);
+  return Math.round((d - today)/86400000);
+}
+
+function calcNhatKy(){
+  const form = document.getElementById('nhatkyForm');
+  const gx = form.gio_xuat.value;
+  const gv = form.gio_ve.value;
+  const kx = parseFloat(form.km_xuat.value) || 0;
+  const kv = parseFloat(form.km_ve.value) || 0;
+
+  if(gx && gv){
+    const [h1,m1] = gx.split(':').map(Number);
+    const [h2,m2] = gv.split(':').map(Number);
+    let diff = (h2*60 + m2) - (h1*60 + m1);
+    if(diff < 0) diff += 24*60;
+    form.tong_gio.value = (diff/60).toFixed(2);
+  }
+  if(kx && kv) form.tong_km.value = (kv - kx).toFixed(2);
+}
+
+function tinhTienNhienLieu(){
+  const form = document.getElementById('fuelForm');
+  const so_lit = parseFloat(form.so_lit.value) || 0;
+  const don_gia = parseFloat(form.don_gia.value) || 0;
+  form.thanh_tien.value = (so_lit*don_gia).toFixed(0);
+}
+
+/* ================== TRA CỨU ================== */
+function getData(tag, keyName, keyValue, callback){
+  if(!keyValue) return callback([]);
+  const url = `https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?tag=${tag}&${keyName}=${keyValue}`;
+  fetch(url)
+    .then(res => res.json())
+    .then(data => callback(data))
+    .catch(err => {
+      console.error(err);
+      callback([]);
+    });
+}
+
+function renderTable(tableId, data){
+  const table = document.getElementById(tableId);
+  if(!data.length){
+    table.querySelector('thead').innerHTML = '';
+    table.querySelector('tbody').innerHTML = '';
+    return;
+  }
+  const headers = Object.keys(data[0]);
+  const thead = `<tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr>`;
+  const tbody = data.map(row => 
+    `<tr>${headers.map(h=>`<td>${row[h]||''}</td>`).join('')}</tr>`
+  ).join('');
+  table.querySelector('thead').innerHTML = thead;
+  table.querySelector('tbody').innerHTML = tbody;
+}
+
+/* ================== SEARCH FUNCTIONS ================== */
+function searchbaoduong(){
+  const val = document.getElementById('search_baoduong_bien_so_xe').value.trim();
+  getData('baoduong','bien_so_xe', val, data => renderTable('table-baoduong', data));
+}
+function searchfuel(){
+  const val = document.getElementById('search_fuel_bien_so_xe').value.trim();
+  getData('fuel','bien_so_xe', val, data => renderTable('table-fuel', data));
+}
+function searchdanhgia(){
+  const val = document.getElementById('search_danhgia_ma_nv').value.trim();
+  getData('danhgia','ma_nv', val, data => renderTable('table-danhgia', data));
+}
+function searchNhatKy(){
+  const val = document.getElementById('search_nhatky_bien_so_xe').value.trim();
+  getData('nhatky','bien_so_xe', val, data => renderTable('table-nhatky', data));
+}
+
+/* ================== FORM SUBMIT ================== */
+function bindFormSubmit(formId){
+  const form = document.getElementById(formId);
+  form.addEventListener('submit', e=>{
+    e.preventDefault();
+    const data = {};
+    new FormData(form).forEach((v,k)=> data[k]=v);
+    const url = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+    fetch(url, {
+      method:'POST',
+      body: new URLSearchParams(data)
+    })
+    .then(res=>res.json())
+    .then(r=>{
+      alert(`✅ Lưu thành công (${r.mode})`);
+      form.reset();
+      // Nếu là fuel hoặc nhatky hoặc baoduong, có thể gọi lại search để refresh bảng
+    })
+    .catch(err=>{
+      console.error(err);
+      alert('❌ Lỗi lưu dữ liệu');
+    });
+  });
+}
+
+/* ================== BIND ALL FORMS ================== */
+['baoduongForm','fuelForm','danhgiaForm','nhatkyForm'].forEach(bindFormSubmit);
+
 </script>
 
 </body>
 </html>
-
-
