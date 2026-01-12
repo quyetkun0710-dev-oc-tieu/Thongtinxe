@@ -1060,24 +1060,17 @@ function loadTableByKey(tag, keyName, keyValue, tableId){
 }
 function calcRemainDays(dateStr){
   if(!dateStr) return "";
-
-  // parse dd/MM/yyyy
-  const p = dateStr.split("/");
-  if(p.length !== 3) return "";
-
-  const d = new Date(p[2], p[1]-1, p[0]);
+  const d = new Date(dateStr);
   if(isNaN(d)) return "";
-
   const today = new Date();
   today.setHours(0,0,0,0);
   d.setHours(0,0,0,0);
-
-  return Math.floor((d - today) / 86400000);
+  return Math.round((d - today) / 86400000);
 }
+
 </script>
 
 </body>
 </html>
-
 
 
