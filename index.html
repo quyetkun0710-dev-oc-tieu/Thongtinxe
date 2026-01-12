@@ -801,7 +801,7 @@ body { background:#f4f6f8 }
 
 <script>
 /* ================= CONFIG ================= */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby0It02s5qIRzvMJCXTB7pLxwbd7SoDQqqcp_-9NFsIIwLQ-EbwRC7O61ISvO1WAHvQ/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzFkiPJCpky8l3WYxbIkmJyq0xB4HAD8B33fXuhKNKRmwH529aNAbMUiOB_yTZM0L1m/exec";
 
 /* ================= UI NAV ================= */
 function openTag(id){
@@ -1058,6 +1058,16 @@ function loadTableByKey(tag, keyName, keyValue, tableId){
         `).join("");
     });
 }
+function calcRemainDays(dateStr){
+  if(!dateStr) return "";
+  const d = new Date(dateStr);
+  if(isNaN(d)) return "";
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  d.setHours(0,0,0,0);
+  return Math.round((d - today) / 86400000);
+}
+
 
 </script>
 
