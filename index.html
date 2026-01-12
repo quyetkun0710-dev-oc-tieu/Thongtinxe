@@ -913,28 +913,28 @@ function searchTaiXe(){
   );
 }
 function searchNhatKy(){
-  const key = document.getElementById("search_nk_id").value;
+  const key = document.getElementById("search_nhatky_bien_so_xe").value;
   if(!key) return alert("Thiếu biển số xe");
 
   loadTableByKey("nhatky","bien_so_xe",key,"nhatkyTable");
 }
 
 function searchbaoduong(){
-  const key = document.getElementById("search_bd_id").value;
+  const key = document.getElementById("search_baoduong_bien_so_xe").value;
   if(!key) return alert("Thiếu biển số xe");
 
   loadTableByKey("baoduong","bien_so_xe",key,"baoduongTable");
 }
 
 function searchfuel(){
-  const key = document.getElementById("search_nl_id").value;
+  const key = document.getElementById("search_fuel_bien_so_xe").value;
   if(!key) return alert("Thiếu biển số xe");
 
   loadTableByKey("fuel","bien_so_xe",key,"fuelTable");
 }
 
 function searchdanhgia(){
-  const key = document.getElementById("search_dg_id").value;
+  const key = document.getElementById("search_danhgia_ma_nv").value;
   if(!key) return alert("Thiếu mã nhân viên");
 
   loadTableByKey("danhgia","ma_nv",key,"danhgiaTable");
