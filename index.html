@@ -547,8 +547,6 @@ body { background:#f4f6f8 }
 </div>
 <!-- ================= END TAG NHẬT KÝ ================= -->
 
-
-
 <!-- ================= TAG: BẢO DƯỠNG ================= -->
 <div id="baoduong" class="hidden form-box">
 
@@ -563,16 +561,14 @@ body { background:#f4f6f8 }
       <input class="input" id="search_baoduong_bien_so_xe" placeholder="Nhập BIỂN SỐ XE">
     </div>
     <div class="column">
-       <button type="button" class="button is-info" onclick="searchbaoduong()">Tra cứu</button>
+      <button type="button" class="button is-info" onclick="searchbaoduong()">Tra cứu</button>
     </div>
   </div>
 </div>
 
 <form id="baoduongForm">
-  <hr>
 
-<h3 class="subtitle">📋 Danh sách dữ liệu</h3>
-
+<h3 class="subtitle">📋 Danh sách bảo dưỡng</h3>
 <div class="table-container">
   <table class="table is-bordered is-striped is-fullwidth" id="baoduongTable">
     <thead></thead>
@@ -580,39 +576,110 @@ body { background:#f4f6f8 }
   </table>
 </div>
 
+<hr>
 
 <h3 class="subtitle">1️⃣ Thông tin xe</h3>
 <div class="columns">
-  <div class="column is-4">
+  <div class="column is-3">
     <label class="label">Biển số xe</label>
-    <input class="input" name="bien_so_xe">
+    <input class="input" name="bien_so_xe" required>
   </div>
-  <div class="column is-4">
-    <label class="label">KM tại thời điểm</label>
-    <input class="input" name="km_truoc">
+  <div class="column is-3">
+    <label class="label">KM trước</label>
+    <input class="input" name="km_truoc" type="number">
+  </div>
+  <div class="column is-3">
+    <label class="label">KM sau</label>
+    <input class="input" name="km_sau" type="number">
+  </div>
+  <div class="column is-3">
+    <label class="label">Mốc bảo dưỡng</label>
+    <div class="select is-fullwidth">
+      <select name="moc_bao_duong">
+        <option value="">-- Chọn --</option>
+        <option value="5000">5000 km</option>
+        <option value="7000">7000 km</option>
+        <option value="10000">10000 km</option>
+      </select>
+    </div>
   </div>
 </div>
 
-<h3 class="subtitle">2️⃣ Nội dung bảo dưỡng</h3>
+<h3 class="subtitle">2️⃣ Thời gian & kết quả</h3>
+<div class="columns">
+  <div class="column is-3">
+    <label class="label">Bắt đầu</label>
+    <input class="input" type="date" name="bd_bat_dau">
+  </div>
+  <div class="column is-3">
+    <label class="label">Kết thúc</label>
+    <input class="input" type="date" name="bd_ket_thuc">
+  </div>
+  <div class="column is-3">
+    <label class="label">Kết quả</label>
+    <div class="select is-fullwidth">
+      <select name="ket_qua">
+        <option value="">-- Chọn --</option>
+        <option value="da_hoan_thanh">Đã hoàn thành</option>
+        <option value="dang_thuc_hien">Đang thực hiện</option>
+        <option value="cho_xu_ly">Chờ xử lý</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<h3 class="subtitle">3️⃣ Nội dung bảo dưỡng</h3>
 <div class="columns">
   <div class="column">
     <label class="label">Hạng mục</label>
     <input class="input" name="hang_muc">
   </div>
   <div class="column">
-    <label class="label">Đơn vị sửa</label>
-    <input class="input" name="don_vi">
+    <label class="label">Phát sinh</label>
+    <input class="input" name="phat_sinh">
   </div>
   <div class="column">
-    <label class="label">Tổng tiền</label>
-    <input class="input" name="tong_tien">
+    <label class="label">Thay thế</label>
+    <input class="input" name="thay_the">
   </div>
 </div>
 
-<h3 class="subtitle">3️⃣ Ghi chú</h3>
+<h3 class="subtitle">4️⃣ Đơn vị & thanh toán</h3>
+<div class="columns">
+  <div class="column is-3">
+    <label class="label">Đơn vị</label>
+    <input class="input" name="don_vi">
+  </div>
+  <div class="column is-3">
+    <label class="label">Loại đơn vị</label>
+    <div class="select is-fullwidth">
+      <select name="loai_don_vi">
+        <option value="">-- Chọn --</option>
+        <option value="gara_hop_dong">Gara hợp đồng</option>
+        <option value="gara_ngoai">Gara ngoài</option>
+      </select>
+    </div>
+  </div>
+  <div class="column is-3">
+    <label class="label">Thanh toán</label>
+    <div class="select is-fullwidth">
+      <select name="thanh_toan">
+        <option value="">-- Chọn --</option>
+        <option value="cong_no">Công nợ</option>
+        <option value="thanh_toan_ngay">Thanh toán ngay</option>
+      </select>
+    </div>
+  </div>
+  <div class="column is-3">
+    <label class="label">Tổng tiền</label>
+    <input class="input" name="tong_tien" type="number">
+  </div>
+</div>
+
+<h3 class="subtitle">5️⃣ Ghi chú</h3>
 <textarea class="textarea" name="ghi_chu"></textarea>
 
-<input type="hidden" name="created_at">
+<input type="hidden" name="tag" value="baoduong">
 
 <button class="button is-primary is-fullwidth mt-4">
 💾 Lưu bảo dưỡng
@@ -621,6 +688,7 @@ body { background:#f4f6f8 }
 </form>
 </div>
 <!-- ================= END TAG: BẢO DƯỠNG ================= -->
+
 
 <!-- ================= TAG QUẢN LÝ NHIÊN LIỆU ================= -->
 <div id="fuel" class="hidden form-box">
@@ -800,7 +868,7 @@ body { background:#f4f6f8 }
 
 <script>
 /* ================= CONFIG ================= */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxjJQhts1GovhTAlG6-1rqy3tJvvki6VXx9ud-4HIjdbacC22ErhoIh53dU8EN39y4C/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwFbcOkepoLhTY7IYz9SdSbAz9KO9xKJFlTW4EFTlweruu19LV5JtAcdK_GDjbjNR9p/exec";
 
 /* ================= UI NAV ================= */
 function openTag(id){
@@ -1088,13 +1156,9 @@ function calc(el, soNgay, targetField){
     f.elements[targetField].value = conLai;
   }
 }
-
 </script>
 
 </body>
 </html>
-
-
-
 
 
