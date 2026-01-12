@@ -314,7 +314,6 @@ body { background:#f4f6f8 }
 </div>
 
 <!-- ========= HIDDEN ========= -->
-<input type="hidden" name="cb_dk">
 <input type="hidden" name="cb_dkiem">
 <input type="hidden" name="cb_ph">
 <input type="hidden" name="cb_bh">
@@ -801,7 +800,7 @@ body { background:#f4f6f8 }
 
 <script>
 /* ================= CONFIG ================= */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxgkTJJSBNnChuthglWZIFvWca8q2Jl5XK5oTyZlGcpwQCzUJ53vXDxC9BxYzGHnG4m/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw0OEWtqsjOudkuOWYznfFBdhmN5l_RCOoxZ7iEmQ0qPt70-zWMPy87ahYiA1W89t5n/exec";
 
 /* ================= UI NAV ================= */
 function openTag(id){
@@ -1067,11 +1066,32 @@ function calcRemainDays(dateStr){
   d.setHours(0,0,0,0);
   return Math.round((d - today) / 86400000);
 }
+function calc(el, soNgay, targetField){
+  const f = el.closest("form");
+  if(!f) return;
+
+  if(!el.value){
+    if(f.elements[targetField]) f.elements[targetField].value = "";
+    return;
+  }
+
+  const ngayHetHan = new Date(el.value);
+  ngayHetHan.setDate(ngayHetHan.getDate() + soNgay);
+
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  ngayHetHan.setHours(0,0,0,0);
+
+  const conLai = Math.round((ngayHetHan - today) / 86400000);
+
+  if(f.elements[targetField]){
+    f.elements[targetField].value = conLai;
+  }
+}
 
 </script>
 
 </body>
 </html>
-
 
 
