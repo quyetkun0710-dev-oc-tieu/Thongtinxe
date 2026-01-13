@@ -1142,50 +1142,84 @@ function searchdanhgia(){
     f.chinh_thuc.value = `${yyyy}-${mm}-${dd}`;
   }
 
-  function loadTableByKey(tag, keyName, keyValue, tableId) {
-  if (!keyValue) return alert("⚠️ Thiếu dữ liệu tra cứu");
+function loadTableByKey(tag, keyName, keyValue, tableId, formId){
+  if(!keyValue) return alert("⚠️ Thiếu dữ liệu tra cứu");
 
   const table = document.getElementById(tableId);
-  if (!table) return;
+  const form  = formId ? document.getElementById(formId) : null;
 
   const url = `${SCRIPT_URL}?tag=${encodeURIComponent(tag)}&${encodeURIComponent(keyName)}=${encodeURIComponent(keyValue)}`;
 
   fetch(url)
     .then(res => res.json())
     .then(rows => {
-      if (!Array.isArray(rows) || rows.length === 0) {
-        table.querySelector("thead").innerHTML = "";
-        table.querySelector("tbody").innerHTML =
-          `<tr><td colspan="99" class="has-text-centered">Không có dữ liệu</td></tr>`;
+      if(!rows || rows.length === 0){
+        table.querySelector("tbody").innerHTML = `<tr><td colspan="99" class="has-text-centered">Không có dữ liệu</td></tr>`;
         return;
       }
 
-      // Lấy tất cả header từ tất cả object để đảm bảo không mất cột
+      // Lấy tất cả header
       const headersSet = new Set();
-      rows.forEach(row => Object.keys(row).forEach(k => headersSet.add(k)));
+      rows.forEach(r => Object.keys(r).forEach(k=>headersSet.add(k)));
       const headers = Array.from(headersSet);
 
-      // Tạo thead
-      table.querySelector("thead").innerHTML =
-        `<tr>${headers.map(h => `<th>${h}</th>`).join("")}</tr>`;
+      // ==== TẠO THEAD ====
+      table.querySelector("thead").innerHTML = "<tr>" + headers.map(h=>`<th>${h}</th>`).join("") + "<th>Chọn</th></tr>";
 
-      // Tạo tbody
-      table.querySelector("tbody").innerHTML = rows.map(row => {
-        return `<tr>${headers.map(h => {
-          let v = row[h] ?? "";
-          // Nếu là boolean thì hiển thị ✅/❌
-          if (typeof v === "boolean") v = v ? "✅" : "❌";
-          return `<td>${v}</td>`;
-        }).join("")}</tr>`;
-      }).join("");
+      // ==== TẠO TBODY ====
+      const tbody = table.querySelector("tbody");
+      tbody.innerHTML = "";
+
+      rows.forEach(r=>{
+        const tr = document.createElement("tr");
+        tr.innerHTML = headers.map(h=>`<td>${r[h]??""}</td>`).join("");
+
+        // Thêm nút chọn
+        const tdSelect = document.createElement("td");
+        const btn = document.createElement("button");
+        btn.textContent = "Chọn";
+        btn.className = "button is-small is-info";
+        btn.onclick = ()=>fillForm(formId, r);
+        tdSelect.appendChild(btn);
+        tr.appendChild(tdSelect);
+
+        // ==== Xử lý append hay update ====
+        if(tag === "xe" || tag === "taixe"){
+          // Key duy nhất → chỉ update nếu dòng đã tồn tại key
+          const keyValueExist = [...tbody.rows].find(trRow => trRow.cells[0].textContent === r[keyName]);
+          if(keyValueExist){
+            [...tr.cells].forEach((c,i)=> keyValueExist.cells[i].innerHTML = c.innerHTML);
+          } else {
+            // Nếu chưa có key thì append 1 dòng mới
+            tbody.appendChild(tr);
+          }
+        } else {
+          // Các TAG còn lại → append luôn
+          tbody.appendChild(tr);
+        }
+      });
     })
-    .catch(err => {
+    .catch(err=>{
       console.error(err);
-      table.querySelector("thead").innerHTML = "";
-      table.querySelector("tbody").innerHTML =
-        `<tr><td colspan="99" class="has-text-centered">❌ Lỗi tải dữ liệu</td></tr>`;
-      alert("❌ Lỗi kết nối server");
+      alert("❌ Lỗi tra cứu dữ liệu");
     });
+}
+
+/* ================= FILL FORM ================= */
+function fillForm(formId, data){
+  const f = document.getElementById(formId);
+  if(!f) return;
+
+  Object.keys(data).forEach(k=>{
+    const el = f.elements[k];
+    if(!el) return;
+
+    if(el.type === "checkbox") el.checked = data[k] === true || data[k] === "true";
+    else if(el.type === "radio" || el instanceof RadioNodeList) {
+      [...f.elements[k]].forEach(r => r.checked = r.value === data[k]);
+    }
+    else el.value = data[k];
+  });
 }
 
   function calcRemainDays(dateStr){
