@@ -470,20 +470,18 @@ body { background:#f4f6f8 }
   <h3 class="subtitle">🔍 Tra cứu BIỂN SỐ XE</h3>
   <div class="columns is-vcentered">
     <div class="column is-4">
-      <input
-        class="input" id="search_nhatky_bien_so_xe" placeholder="VD: 51C-12345">
+      <input class="input" id="search_nhatky_bien_so_xe" placeholder="VD: 51C-12345">
     </div>
     <div class="column">
-     <button type="button" class="button is-info" onclick="searchNhatKy()">Tra cứu</button>
+      <button type="button" class="button is-info" onclick="searchNhatKy()">Tra cứu</button>
     </div>
   </div>
 </div>
 
 <form id="nhatkyForm">
-  <hr>
+<hr>
 
 <h3 class="subtitle">📋 Danh sách dữ liệu</h3>
-
 <div class="table-container">
   <table class="table is-bordered is-striped is-fullwidth" id="nhatkyTable">
     <thead></thead>
@@ -491,51 +489,130 @@ body { background:#f4f6f8 }
   </table>
 </div>
 
+<!-- ================= 1️⃣ THÔNG TIN CHUYẾN ================= -->
 <h3 class="subtitle">1️⃣ Thông tin chuyến</h3>
+
 <div class="columns">
   <div class="column is-4">
     <label class="label">Biển số xe</label>
     <input class="input" name="bien_so_xe" required>
   </div>
+
+  <div class="column is-4">
+    <label class="label">MNV</label>
+    <input class="input" name="mnv">
+  </div>
+
   <div class="column is-4">
     <label class="label">Tài xế</label>
     <input class="input" name="tai_xe">
   </div>
 </div>
 
+<div class="columns">
+  <div class="column is-4">
+    <label class="label">Ngày vận hành</label>
+    <input class="input" type="date" name="ngay_van_hanh">
+  </div>
+
+  <div class="column is-4">
+    <label class="label">Chuyến số</label>
+    <div class="select is-fullwidth">
+      <select name="chuyen_so">
+        <option value=""></option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="column is-4">
+    <label class="label">Loại chuyến</label>
+    <div class="select is-fullwidth">
+      <select name="loai_chuyen">
+        <option value=""></option>
+        <option>Tuyến chính</option>
+        <option>Tuyến nhánh</option>
+        <option>Tuyến tăng cường</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 2️⃣ THỜI GIAN ================= -->
 <h3 class="subtitle">2️⃣ Thời gian</h3>
+
 <div class="columns">
   <div class="column">
     <label class="label">Giờ xuất</label>
     <input class="input" type="time" name="gio_xuat" oninput="calcNhatKy()">
   </div>
+
   <div class="column">
     <label class="label">Giờ về</label>
     <input class="input" type="time" name="gio_ve" oninput="calcNhatKy()">
   </div>
+
   <div class="column">
     <label class="label">Tổng giờ</label>
     <input class="input" name="tong_gio" readonly>
   </div>
 </div>
 
+<!-- ================= 3️⃣ QUÃNG ĐƯỜNG ================= -->
 <h3 class="subtitle">3️⃣ Quãng đường</h3>
+
 <div class="columns">
   <div class="column">
     <label class="label">KM xuất</label>
     <input class="input" type="number" name="km_xuat" oninput="calcNhatKy()">
   </div>
+
   <div class="column">
     <label class="label">KM về</label>
     <input class="input" type="number" name="km_ve" oninput="calcNhatKy()">
   </div>
+
   <div class="column">
     <label class="label">Tổng KM</label>
     <input class="input" name="tong_km" readonly>
   </div>
 </div>
 
-<h3 class="subtitle">4️⃣ Ghi chú</h3>
+<!-- ================= 4️⃣ SỰ CỐ PHÁT SINH ================= -->
+<h3 class="subtitle">4️⃣ Sự cố phát sinh</h3>
+
+<div class="columns">
+  <div class="column">
+    <label class="label">Vấn đề</label>
+    <input class="input" name="van_de_phat_sinh">
+  </div>
+</div>
+
+<div class="columns">
+  <div class="column is-4">
+    <label class="label">Đánh giá</label>
+    <div class="select is-fullwidth">
+      <select name="tu_danh_gia">
+        <option value=""></option>
+        <option>Nhẹ</option>
+        <option>Trung Bình</option>
+        <option>Nặng</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="column">
+    <label class="label">Đề xuất phương án xử lý</label>
+    <input class="input" name="de_xuat_pa">
+  </div>
+</div>
+
+<!-- ================= 5️⃣ GHI CHÚ ================= -->
+<h3 class="subtitle">5️⃣ Ghi chú</h3>
 <textarea class="textarea" name="ghi_chu"></textarea>
 
 <input type="hidden" name="created_at">
@@ -547,8 +624,6 @@ body { background:#f4f6f8 }
 </form>
 </div>
 <!-- ================= END TAG NHẬT KÝ ================= -->
-
-
 
 <!-- ================= TAG: BẢO DƯỠNG ================= -->
 <div id="baoduong" class="hidden form-box">
@@ -1040,15 +1115,17 @@ function loadTableByKey(tag, keyName, keyValue, tableId){
 
   fetch(url)
     .then(res => res.json())
-    .then(rows=>{
-      if(!Array.isArray(rows) || rows.length === 0){
+    .then(res=>{
+      if(!res || !Array.isArray(res.data) || res.data.length === 0){
         table.querySelector("thead").innerHTML = "";
         table.querySelector("tbody").innerHTML =
           `<tr><td colspan="99">Không có dữ liệu</td></tr>`;
         return;
       }
 
-      const headers = Object.keys(rows[0]);
+      const headers = res.headers;
+      const rows = res.data;
+
       table.querySelector("thead").innerHTML =
         `<tr>${headers.map(h=>`<th>${h}</th>`).join("")}</tr>`;
 
@@ -1056,8 +1133,13 @@ function loadTableByKey(tag, keyName, keyValue, tableId){
         rows.map(r=>`
           <tr>${headers.map(h=>`<td>${r[h] ?? ""}</td>`).join("")}</tr>
         `).join("");
+    })
+    .catch(err=>{
+      console.error(err);
+      alert("❌ Lỗi tải dữ liệu");
     });
 }
+
 function calcRemainDays(dateStr){
   if(!dateStr) return "";
   const d = new Date(dateStr);
@@ -1089,14 +1171,10 @@ function calc(el, soNgay, targetField){
     f.elements[targetField].value = conLai;
   }
 }
-
 </script>
 
 </body>
 </html>
-
-
-
 
 
 
