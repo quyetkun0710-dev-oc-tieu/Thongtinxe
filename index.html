@@ -1273,15 +1273,16 @@ function loadTableByKey(tag, keyName, keyValue, tableId){
         return;
       }
   // ===== SET KM TRƯỚC CHO NHIÊN LIỆU =====
-  if(tag === "fuel"){
-    const f = document.getElementById("fuelForm");
-    if(f){
-      const lastRow = rows[rows.length - 1];
-      if(lastRow.km_sau){
-        f.km_truoc.value = lastRow.km_sau;
-      }
+if(tag === "fuel"){
+  const f = document.getElementById("fuelForm");
+  if(f){
+    const lastRow = rows[rows.length - 1];
+    if(lastRow.km_sau){
+      f.km_truoc.value = lastRow.km_sau;
+      calcFuelKM(); // ← DÁN DÒNG NÀY
     }
   }
+}
       const headers = Object.keys(rows[0]);
 
       table.querySelector("thead").innerHTML =
