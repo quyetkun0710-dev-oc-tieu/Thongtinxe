@@ -1033,7 +1033,7 @@ body { background:#f4f6f8 }
 
 <script>
 /* ================= CONFIG ================= */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxWiMPQHLtMiA5NgfjV-QuVXf8joQQ1Iv69ekRVyLn3fG59C21G0_iiBcAVLegE3u1u/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxYbkdqwdjzkjdW5rjyRQ7S_h7wPSV-Xi_j9kioVvLRnGdJKBrECp4xmvrpEoFSK08n/exec";
 
 /* ================= UI NAV ================= */
 function openTag(id){
@@ -1272,7 +1272,16 @@ function loadTableByKey(tag, keyName, keyValue, tableId){
           `<tr><td colspan="99">Không có dữ liệu</td></tr>`;
         return;
       }
-
+  // ===== SET KM TRƯỚC CHO NHIÊN LIỆU =====
+  if(tag === "fuel"){
+    const f = document.getElementById("fuelForm");
+    if(f){
+      const lastRow = rows[rows.length - 1];
+      if(lastRow.km_sau){
+        f.km_truoc.value = lastRow.km_sau;
+      }
+    }
+  }
       const headers = Object.keys(rows[0]);
 
       table.querySelector("thead").innerHTML =
