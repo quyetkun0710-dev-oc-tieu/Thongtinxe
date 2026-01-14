@@ -1295,9 +1295,10 @@ function loadTableByKey(tag, keyName, keyValue, tableId){
 
         const lastRow = rows[rows.length - 1];
 
-        const kmTruoc =
-          Number(lastRow.km_sau || lastRow.km_luc_do || lastRow.km || 0);
-
+const kmTruoc = parseFloat(
+  String(lastRow.km_sau || lastRow.km_luc_do || lastRow.km || "0")
+  .replace(/,/g,"")
+) || 0;
         f.km_truoc.value = kmTruoc;
 
         // reset khi tra cứu mới
@@ -1406,8 +1407,8 @@ function calcFuelKM(){
   const f = document.getElementById("fuelForm");
   if(!f) return;
 
-  const kmTruoc = Number(f.km_truoc.value || 0);
-  const kmSau   = Number(f.km_sau.value || 0);
+const kmTruoc = parseFloat((f.km_truoc.value || "0").replace(/,/g,"")) || 0;
+const kmSau   = parseFloat((f.km_sau.value || "0").replace(/,/g,"")) || 0;
 
   if(kmSau && kmSau >= kmTruoc){
     f.km_chenh_lech.value = kmSau - kmTruoc;
