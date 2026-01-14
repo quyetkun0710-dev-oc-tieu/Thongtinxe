@@ -1403,14 +1403,23 @@ function toggleFuelHoaDon(){
   }
 }
 
+function toNumber(v){
+  if(!v) return 0;
+  return Number(
+    String(v)
+      .replace(/\./g, "")   // bỏ dấu phân cách nghìn VN
+      .replace(/,/g, ".")   // đổi , thành . nếu có
+  ) || 0;
+}
+
 function calcFuelKM(){
   const f = document.getElementById("fuelForm");
   if(!f) return;
 
-const kmTruoc = parseFloat((f.km_truoc.value || "0").replace(/,/g,"")) || 0;
-const kmSau   = parseFloat((f.km_sau.value || "0").replace(/,/g,"")) || 0;
+  const kmTruoc = toNumber(f.km_truoc.value);
+  const kmSau   = toNumber(f.km_sau.value);
 
-  if(kmSau && kmSau >= kmTruoc){
+  if(kmSau >= kmTruoc && kmTruoc > 0){
     f.km_chenh_lech.value = kmSau - kmTruoc;
   }else{
     f.km_chenh_lech.value = "";
