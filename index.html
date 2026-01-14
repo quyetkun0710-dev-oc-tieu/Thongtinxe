@@ -624,7 +624,6 @@ body { background:#f4f6f8 }
 </form>
 </div>
 <!-- ================= END TAG NHẬT KÝ ================= -->
-
 <!-- ================= TAG: BẢO DƯỠNG ================= -->
 <div id="baoduong" class="hidden form-box">
 
@@ -645,10 +644,9 @@ body { background:#f4f6f8 }
 </div>
 
 <form id="baoduongForm">
-  <hr>
+<hr>
 
 <h3 class="subtitle">📋 Danh sách dữ liệu</h3>
-
 <div class="table-container">
   <table class="table is-bordered is-striped is-fullwidth" id="baoduongTable">
     <thead></thead>
@@ -656,36 +654,133 @@ body { background:#f4f6f8 }
   </table>
 </div>
 
-
+<!-- ================= 1️⃣ THÔNG TIN XE ================= -->
 <h3 class="subtitle">1️⃣ Thông tin xe</h3>
 <div class="columns">
   <div class="column is-4">
     <label class="label">Biển số xe</label>
     <input class="input" name="bien_so_xe">
   </div>
+
   <div class="column is-4">
-    <label class="label">KM tại thời điểm</label>
-    <input class="input" name="km_truoc">
+    <label class="label">KM trước</label>
+    <input class="input" name="km_truoc" readonly>
+  </div>
+
+  <div class="column is-4">
+    <label class="label">KM sau</label>
+    <input class="input" name="km_sau" oninput="calcBaoDuongKM()">
   </div>
 </div>
 
-<h3 class="subtitle">2️⃣ Nội dung bảo dưỡng</h3>
 <div class="columns">
-  <div class="column">
+  <div class="column is-4">
+    <label class="label">KM chênh lệch</label>
+    <input class="input" name="km_chenh_lech" readonly>
+  </div>
+
+  <div class="column is-4">
+    <label class="label">Mốc bảo dưỡng</label>
+    <div class="select is-fullwidth">
+      <select name="moc_bao_duong">
+        <option value=""></option>
+        <option>5000</option>
+        <option>7000</option>
+        <option>10000</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 2️⃣ NỘI DUNG ================= -->
+<h3 class="subtitle">2️⃣ Nội dung</h3>
+
+<div class="columns">
+  <div class="column is-4">
+    <label class="label">Ngày bắt đầu</label>
+    <input type="date" class="input" name="ngay_bat_dau" onchange="calcBaoDuongNgay()">
+  </div>
+
+  <div class="column is-4">
+    <label class="label">Ngày kết thúc</label>
+    <input type="date" class="input" name="ngay_ket_thuc" onchange="calcBaoDuongNgay()">
+  </div>
+
+  <div class="column is-4">
+    <label class="label">Tổng ngày</label>
+    <input class="input" name="tong_ngay" readonly>
+  </div>
+</div>
+
+<div class="columns">
+  <div class="column is-4">
+    <label class="label">Đơn vị</label>
+    <input class="input" name="don_vi">
+  </div>
+
+  <div class="column is-4">
+    <label class="label">Loại đơn vị</label>
+    <div class="select is-fullwidth">
+      <select name="loai_don_vi">
+        <option value=""></option>
+        <option>Gara hợp đồng</option>
+        <option>Gara ngoài</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="columns">
+  <div class="column is-4">
     <label class="label">Hạng mục</label>
     <input class="input" name="hang_muc">
   </div>
-  <div class="column">
-    <label class="label">Đơn vị sửa</label>
-    <input class="input" name="don_vi">
+
+  <div class="column is-4">
+    <label class="label">Phát sinh / Thay thế</label>
+    <input class="input" name="phat_sinh">
   </div>
-  <div class="column">
+
+  <div class="column is-4">
+    <label class="label">Kết quả</label>
+    <input class="input" name="ket_qua">
+  </div>
+</div>
+
+<!-- ================= 3️⃣ THANH TOÁN ================= -->
+<h3 class="subtitle">3️⃣ Thanh toán</h3>
+
+<div class="columns">
+  <div class="column is-4">
+    <label class="label">Loại thanh toán</label>
+    <div class="select is-fullwidth">
+      <select name="loai_thanh_toan" onchange="toggleHoaDon()">
+        <option value=""></option>
+        <option>Công nợ</option>
+        <option>Thanh toán ngay</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="column is-4">
+    <label class="label">Hoá đơn</label>
+    <div class="select is-fullwidth">
+      <select name="hoa_don" id="hoa_don">
+        <option value=""></option>
+        <option>Có</option>
+        <option>Không</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="column is-4">
     <label class="label">Tổng tiền</label>
     <input class="input" name="tong_tien">
   </div>
 </div>
 
-<h3 class="subtitle">3️⃣ Ghi chú</h3>
+<!-- ================= 4️⃣ GHI CHÚ ================= -->
+<h3 class="subtitle">4️⃣ Ghi chú</h3>
 <textarea class="textarea" name="ghi_chu"></textarea>
 
 <input type="hidden" name="created_at">
@@ -1170,8 +1265,56 @@ function calc(el, soNgay, targetField){
     f.elements[targetField].value = conLai;
   }
 }
-</script>
+function calcBaoDuongKM(){
+  const f = document.getElementById("baoduongForm");
+  if(!f) return;
 
+  const kmTruoc = parseFloat(f.km_truoc.value) || 0;
+  const kmSau   = parseFloat(f.km_sau.value) || 0;
+
+  if(kmTruoc === 0){
+    f.km_truoc.value = kmSau;
+    f.km_chenh_lech.value = 0;
+    return;
+  }
+
+  if(kmSau >= kmTruoc){
+    f.km_chenh_lech.value = kmSau - kmTruoc;
+  }else{
+    f.km_chenh_lech.value = "";
+  }
+}
+
+function calcBaoDuongNgay(){
+  const f = document.getElementById("baoduongForm");
+  if(!f) return;
+
+  if(!f.ngay_bat_dau.value || !f.ngay_ket_thuc.value){
+    f.tong_ngay.value = "";
+    return;
+  }
+
+  const start = new Date(f.ngay_bat_dau.value);
+  const end   = new Date(f.ngay_ket_thuc.value);
+
+  const diff = Math.round((end - start) / 86400000) + 1;
+  f.tong_ngay.value = diff > 0 ? diff : "";
+}
+
+function toggleHoaDon(){
+  const f = document.getElementById("baoduongForm");
+  const loai = f.loai_thanh_toan.value;
+  const hoaDon = document.getElementById("hoa_don");
+
+  if(loai === "Công nợ"){
+    hoaDon.value = "";
+    hoaDon.disabled = true;
+  }else{
+    hoaDon.disabled = false;
+  }
+}
+
+</script>
 </body>
 </html>
 
