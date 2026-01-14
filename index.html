@@ -1272,23 +1272,22 @@ function loadTableByKey(tag, keyName, keyValue, tableId){
           `<tr><td colspan="99">Không có dữ liệu</td></tr>`;
         return;
       }
-// ===== SET KM TRƯỚC CHO NHIÊN LIỆU (FIX CHUẨN) =====
+// ===== SET KM TRƯỚC + TÍNH CHÊNH LỆCH (FIX DỨT ĐIỂM) =====
 if(tag === "fuel"){
   const f = document.getElementById("fuelForm");
-  if(f && rows.length > 0){
-    const lastRow = rows[rows.length - 1];
+  if(f && rows.length){
+    const last = rows[rows.length - 1];
+    const kmLast = Number(last.km_sau);
 
-    const kmLast = parseFloat(lastRow.km_sau || lastRow.km_luc_do || 0);
-    if(kmLast > 0){
-      f.km_truoc.value = kmLast;
-    }else{
-      f.km_truoc.value = "";
-    }
+    f.km_truoc.value = isNaN(kmLast) ? "" : kmLast;
 
-    // 🔴 BẮT BUỘC gọi lại để tính chênh lệch
-    calcFuelKM();
+    // 🔴 ÉP TÍNH SAU KHI DOM NHẬN GIÁ TRỊ
+    setTimeout(() => {
+      calcFuelKM();
+    }, 0);
   }
 }
+
       const headers = Object.keys(rows[0]);
 
       table.querySelector("thead").innerHTML =
