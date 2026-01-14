@@ -1032,7 +1032,7 @@ body { background:#f4f6f8 }
 
 <script>
 /* ================= CONFIG ================= */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyyYrbZ6mIjHylr0M4gF1x2KinGIyVPStpLErbfbhgD9ktQOW--cwCjfg1viSDx3lG_/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxYbkdqwdjzkjdW5rjyRQ7S_h7wPSV-Xi_j9kioVvLRnGdJKBrECp4xmvrpEoFSK08n/exec";
 
 /* ================= UI NAV ================= */
 function openTag(id){
@@ -1402,12 +1402,18 @@ function toggleFuelHoaDon(){
   }
 }
 
-/* ===== KM CHÊNH LỆCH ===== */
 function calcFuelKM(){
-  const f = document.getElementById('fuelForm');
-  const truoc = parseFloat(f.km_truoc.value) || 0;
-  const sau   = parseFloat(f.km_sau.value)   || 0;
-  f.km_chenh_lech.value = sau >= truoc ? (sau - truoc) : '';
+  const f = document.getElementById("fuelForm");
+  if(!f) return;
+
+  const kmTruoc = Number(f.km_truoc.value || 0);
+  const kmSau   = Number(f.km_sau.value || 0);
+
+  if(kmSau && kmSau >= kmTruoc){
+    f.km_chenh_lech.value = kmSau - kmTruoc;
+  }else{
+    f.km_chenh_lech.value = "";
+  }
 }
 
 /* ===== TÍNH TIỀN ===== */
@@ -1421,4 +1427,3 @@ function calcFuelMoney(){
 </script>
 </body>
 </html>
-
