@@ -825,8 +825,28 @@ body { background:#f4f6f8 }
   </div>
 
   <div class="column is-12-mobile is-6-tablet">
-    <label class="label">KM</label>
-    <input class="input" type="number" name="km">
+    <label class="label">KM lần trước</label>
+    <input class="input" name="km_truoc" readonly>
+  </div>
+
+  <div class="column is-12-mobile is-6-tablet">
+    <label class="label">KM lúc đổ</label>
+    <input class="input" type="number" name="km_sau" oninput="calcFuelKM()">
+  </div>
+
+  <div class="column is-12-mobile is-6-tablet">
+    <label class="label">KM chênh lệch</label>
+    <input class="input" name="km_chenh_lech" readonly>
+  </div>
+
+  <div class="column is-12-mobile is-6-tablet">
+    <label class="label">Ngày thực hiện</label>
+    <input class="input" type="date" name="ngay_thuc_hien">
+  </div>
+
+  <div class="column is-12-mobile is-6-tablet">
+    <label class="label">Giờ thực hiện</label>
+    <input class="input" type="time" name="gio_thuc_hien">
   </div>
 
 </div>
@@ -840,20 +860,21 @@ body { background:#f4f6f8 }
     <div class="select is-fullwidth">
       <select name="loai">
         <option value=""></option>
-        <option value="dau">Dầu</option>
-        <option value="xang">Xăng</option>
+        <option>Dầu</option>
+        <option>Ure</option>
+        <option>Xăng</option>
       </select>
     </div>
   </div>
 
   <div class="column is-6-mobile is-3-tablet">
     <label class="label">Số lít</label>
-    <input class="input" type="number" name="so_lit" oninput="tinhTienNhienLieu()">
+    <input class="input" type="number" name="so_lit" oninput="calcFuelMoney()">
   </div>
 
   <div class="column is-6-mobile is-3-tablet">
     <label class="label">Đơn giá</label>
-    <input class="input" type="number" name="don_gia" oninput="tinhTienNhienLieu()">
+    <input class="input" type="number" name="don_gia" oninput="calcFuelMoney()">
   </div>
 
   <div class="column is-12-mobile is-3-tablet">
@@ -863,8 +884,36 @@ body { background:#f4f6f8 }
 
 </div>
 
-<!-- ================= 3️⃣ GHI CHÚ ================= -->
-<h3 class="subtitle">3️⃣ Ghi chú</h3>
+<!-- ================= 3️⃣ ĐƠN VỊ CUNG CẤP ================= -->
+<h3 class="subtitle">3️⃣ Đơn vị cung cấp</h3>
+<div class="columns is-mobile is-multiline">
+
+  <div class="column is-12-mobile is-6-tablet">
+    <label class="label">Đơn vị</label>
+    <div class="select is-fullwidth">
+      <select name="don_vi" onchange="toggleFuelHoaDon()">
+        <option value=""></option>
+        <option>Cây dầu hợp đồng</option>
+        <option>Cây dầu ngoài</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="column is-12-mobile is-6-tablet">
+    <label class="label">Hoá đơn</label>
+    <div class="select is-fullwidth">
+      <select name="hoa_don" id="fuel_hoa_don">
+        <option value=""></option>
+        <option>Có</option>
+        <option>Không</option>
+      </select>
+    </div>
+  </div>
+
+</div>
+
+<!-- ================= 4️⃣ GHI CHÚ ================= -->
+<h3 class="subtitle">4️⃣ Ghi chú</h3>
 <textarea class="textarea" name="ghi_chu"></textarea>
 
 <input type="hidden" name="created_at">
@@ -984,7 +1033,7 @@ body { background:#f4f6f8 }
 
 <script>
 /* ================= CONFIG ================= */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwsOuiAvwo7Sag_Jmh48nB9x3STOfMTIyCRLy4agwfK9Ys512XSUf35b1fOxfFsjtab/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxWiMPQHLtMiA5NgfjV-QuVXf8joQQ1Iv69ekRVyLn3fG59C21G0_iiBcAVLegE3u1u/exec";
 
 /* ================= UI NAV ================= */
 function openTag(id){
@@ -1163,13 +1212,6 @@ function calcNhatKy(){
   }
 }
 
-function tinhTienNhienLieu(){
-  const f = document.getElementById("fuelForm");
-  const lit = parseFloat(f.so_lit.value)||0;
-  const gia = parseFloat(f.don_gia.value)||0;
-  f.thanh_tien.value = lit && gia ? (lit*gia).toFixed(0) : "";
-}
-
 function calcTheTichThung(){
   const f = document.getElementById("xeForm");
   if(!f) return;
@@ -1314,21 +1356,35 @@ function calcBaoDuongNgay(){
   f.tong_ngay.value = diff > 0 ? diff : "";
 }
 
-function toggleHoaDon(){
-  const f = document.getElementById("baoduongForm");
-  const loai = f.loai_thanh_toan.value;
-  const hoaDon = document.getElementById("hoa_don");
+/* ===== HOÁ ĐƠN ===== */
+function toggleFuelHoaDon(){
+  const f = document.getElementById('fuelForm');
+  const hoaDon = document.getElementById('fuel_hoa_don');
 
-  if(loai === "Công nợ"){
-    hoaDon.value = "";
+  if(f.don_vi.value === 'Cây dầu hợp đồng'){
+    hoaDon.value = 'Có';
     hoaDon.disabled = true;
   }else{
     hoaDon.disabled = false;
   }
 }
 
+/* ===== KM CHÊNH LỆCH ===== */
+function calcFuelKM(){
+  const f = document.getElementById('fuelForm');
+  const truoc = parseFloat(f.km_truoc.value) || 0;
+  const sau   = parseFloat(f.km_sau.value)   || 0;
+  f.km_chenh_lech.value = sau >= truoc ? (sau - truoc) : '';
+}
+
+/* ===== TÍNH TIỀN ===== */
+function calcFuelMoney(){
+  const f = document.getElementById('fuelForm');
+  const lit = parseFloat(f.so_lit.value) || 0;
+  const gia = parseFloat(f.don_gia.value) || 0;
+  f.thanh_tien.value = lit * gia;
+}
+
 </script>
 </body>
 </html>
-
-
