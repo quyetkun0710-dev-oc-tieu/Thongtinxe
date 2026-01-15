@@ -647,7 +647,7 @@ body { background:#f4f6f8 }
       <input class="input" id="search_baoduong_bien_so_xe" placeholder="Nhập BIỂN SỐ XE">
     </div>
     <div class="column is-4-mobile">
-      <button type="button" class="button is-info is-fullwidth" onclick="searchbaoduong()">Tra cứu</button>
+      <button type="button" class="button is-info is-fullwidth" onclick="searchBaoDuong()">Tra cứu</button>
     </div>
   </div>
 </section>
@@ -1239,8 +1239,10 @@ function searchBaoDuong(){
   const key = document.getElementById("search_baoduong_bien_so_xe").value;
   if(!key) return alert("Thiếu biển số xe");
 
-  // Ẩn form, mở TAG bảng
+  // Ẩn TAG form
   document.getElementById("baoduong")?.classList.add("hidden");
+
+  // Hiện TAG bảng
   document.getElementById("baoduong_table")?.classList.remove("hidden");
 
   loadBaoDuongTableByKey(
@@ -1250,6 +1252,7 @@ function searchBaoDuong(){
     "baoduongResultTable"
   );
 }
+
 
 function searchfuel(){
   const key = document.getElementById("search_fuel_bien_so_xe").value;
