@@ -1048,43 +1048,56 @@ body { background:#f4f6f8 }
 <script>
 /* ================= CONFIG ================= */
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxYbkdqwdjzkjdW5rjyRQ7S_h7wPSV-Xi_j9kioVvLRnGdJKBrECp4xmvrpEoFSK08n/exec";
+const ALL_TAGS = [
+  "home",
+
+  "xe",
+  "taixe",
+
+  "nhatky",
+  "nhatky_table",
+
+  "baoduong",
+  "fuel",
+  "danhgia"
+];
 
 /* ================= UI NAV ================= */
 function openTag(id){
-  document.getElementById("home").classList.add("hidden");
-
-  ["xe","taixe","nhatky","baoduong","fuel","danhgia"].forEach(t=>{
-    document.getElementById(t)?.classList.add("hidden");
+  // Ẩn tất cả
+  ALL_TAGS.forEach(t=>{
+    const el = document.getElementById(t);
+    if(el) el.classList.add("hidden");
   });
 
-  document.getElementById(id).classList.remove("hidden");
-}
+  // Hiện đúng TAG
+  const target = document.getElementById(id);
+  if(target){
+    target.classList.remove("hidden");
+  }
 
+  window.scrollTo({ top: 0 });
+}
 
 function backHome(){
-  document.getElementById("home").classList.remove("hidden");
-  ["xe","taixe","nhatky","baoduong","fuel","danhgia"].forEach(t=>{
+  ALL_TAGS.forEach(t=>{
+    const el = document.getElementById(t);
+    if(el) el.classList.add("hidden");
+  });
+
+  document.getElementById("home")?.classList.remove("hidden");
+
+  window.scrollTo({ top: 0 });
+}
+
+function backToNhatKy(){
+  ALL_TAGS.forEach(t=>{
     document.getElementById(t)?.classList.add("hidden");
   });
-}
-function backToNhatKy(){
-  const form = document.getElementById("nhatky");
-  const table = document.getElementById("nhatky_table");
 
-  if(table){
-    table.classList.add("hidden");
-  }
+  document.getElementById("nhatky")?.classList.remove("hidden");
 
-  if(form){
-    form.classList.remove("hidden");
-
-    // ép hiển thị cho desktop
-    form.style.display = "block";
-    form.style.height = "auto";
-    form.style.overflow = "visible";
-  }
-
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  window.scrollTo({ top: 0 });
 }
 
 /* ================= SUBMIT FORM (FormData) ================= */
@@ -1195,11 +1208,17 @@ function searchNhatKy(){
   const key = document.getElementById("search_nhatky_bien_so_xe").value;
   if(!key) return alert("Thiếu biển số xe");
 
-  // Ẩn form nhật ký, mở TAG bảng
-  document.getElementById("nhatky")?.classList.add("hidden");
+  // Ẩn tất cả
+  ALL_TAGS.forEach(t=>{
+    document.getElementById(t)?.classList.add("hidden");
+  });
+
+  // Mở bảng kết quả
   document.getElementById("nhatky_table")?.classList.remove("hidden");
 
   loadNhatKyTableByKey("nhatky", "bien_so_xe", key, "nhatkyResultTable");
+
+  window.scrollTo({ top: 0 });
 }
 
 function searchbaoduong(){
