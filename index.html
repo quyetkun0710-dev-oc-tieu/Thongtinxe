@@ -615,6 +615,22 @@ body { background:#f4f6f8 }
 
 </form>
 </div>
+<!-- ================= TAG: BẢNG KẾT QUẢ NHẬT KÝ ================= -->
+<div id="nhatky_table" class="hidden form-box">
+
+<button class="button mb-4" type="button" onclick="backToNhatKy()">⬅ Quay lại Nhật ký</button>
+
+<h2 class="title is-4">📋 KẾT QUẢ NHẬT KÝ VẬN HÀNH</h2>
+
+<div class="table-container">
+  <table class="table is-bordered is-striped is-fullwidth" id="nhatkyResultTable">
+    <thead></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+</div>
+<!-- ================= END TAG BẢNG NHẬT KÝ ================= -->
 <!-- ================= END TAG NHẬT KÝ ================= -->
 
 <!-- ================= TAG: BẢO DƯỠNG ================= -->
@@ -1032,7 +1048,7 @@ body { background:#f4f6f8 }
 
 <script>
 /* ================= CONFIG ================= */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxj9ZT5DqG8jI-kuW--hO597GpNtm5ZK56RWZ1TMJCRPBTOdB6uCrBcwl_Z3ldFW2-R/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxYbkdqwdjzkjdW5rjyRQ7S_h7wPSV-Xi_j9kioVvLRnGdJKBrECp4xmvrpEoFSK08n/exec";
 
 /* ================= UI NAV ================= */
 function openTag(id){
@@ -1161,7 +1177,11 @@ function searchNhatKy(){
   const key = document.getElementById("search_nhatky_bien_so_xe").value;
   if(!key) return alert("Thiếu biển số xe");
 
-  loadTableByKey("nhatky","bien_so_xe",key,"nhatkyTable");
+  // Ẩn form nhật ký, mở TAG bảng
+  document.getElementById("nhatky")?.classList.add("hidden");
+  document.getElementById("nhatky_table")?.classList.remove("hidden");
+
+  loadNhatKyTableByKey("nhatky", "bien_so_xe", key, "nhatkyResultTable");
 }
 
 function searchbaoduong(){
@@ -1433,10 +1453,44 @@ function calcFuelMoney(){
   const gia = parseFloat(f.don_gia.value) || 0;
   f.thanh_tien.value = lit * gia;
 }
+function loadNhatKyTableByKey(tag, keyName, keyValue, tableId){
+  const table = document.getElementById(tableId);
+  if(!table) return;
 
+  const thead = table.querySelector("thead");
+  const tbody = table.querySelector("tbody");
+  thead.innerHTML = "";
+  tbody.innerHTML = "";
+
+  const url =
+    `${SCRIPT_URL}?tag=${encodeURIComponent(tag)}&` +
+    `${encodeURIComponent(keyName)}=${encodeURIComponent(keyValue)}`;
+
+  fetch(url)
+    .then(res => res.json())
+    .then(rows => {
+      if(!rows || !rows.length){
+        alert("❌ Không có dữ liệu");
+        return;
+      }
+
+      const headers = Object.keys(rows[0]);
+
+      // header
+      thead.innerHTML =
+        `<tr>${headers.map(h=>`<th>${h}</th>`).join("")}</tr>`;
+
+      // body
+      tbody.innerHTML =
+        rows.map(r =>
+          `<tr>${headers.map(h=>`<td>${r[h] ?? ""}</td>`).join("")}</tr>`
+        ).join("");
+    })
+    .catch(err=>{
+      console.error(err);
+      alert("❌ Lỗi tải dữ liệu nhật ký");
+    });
+}
 </script>
 </body>
 </html>
-
-
-
