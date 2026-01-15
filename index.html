@@ -486,7 +486,7 @@ body { background:#f4f6f8 }
     </div>
   </div>
 
-  <h3 class="subtitle">📋 Danh sách dữ liệu</h3>
+  <h3 class="subtitle">📋 Danh sách sẽ hiển thị sau khi bấm tra cứu</h3>
   <div class="table-container">
     <table class="table is-bordered is-striped is-fullwidth" id="nhatkyTable">
       <thead></thead>
@@ -655,7 +655,7 @@ body { background:#f4f6f8 }
 <form id="baoduongForm">
 <hr>
 
-<h3 class="subtitle">📋 Danh sách dữ liệu</h3>
+<h3 class="subtitle">📋 Danh sách sẽ hiển thị sau khi bấm tra cứu</h3>
 <div class="table-container">
   <table class="table is-bordered is-striped is-fullwidth" id="baoduongTable">
     <thead></thead>
@@ -797,6 +797,23 @@ body { background:#f4f6f8 }
 </button>
 </form>
 </div>
+<!-- ================= TAG: BẢNG KẾT QUẢ BẢO DƯỠNG ================= -->
+<div id="baoduong_table" class="hidden form-box">
+
+<button class="button mb-4" type="button" onclick="backToBaoDuong()">
+⬅ Quay lại Bảo dưỡng
+</button>
+
+<h2 class="title is-4">📋 KẾT QUẢ BẢO DƯỠNG</h2>
+
+<div class="table-container">
+  <table class="table is-bordered is-striped is-fullwidth" id="baoduongResultTable">
+    <thead></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+</div>
 <!-- ================= END TAG: BẢO DƯỠNG ================= -->
 
 <!-- ================= TAG QUẢN LÝ NHIÊN LIỆU ================= -->
@@ -813,7 +830,7 @@ body { background:#f4f6f8 }
       <input class="input" id="search_fuel_bien_so_xe" placeholder="Nhập BIỂN SỐ XE">
     </div>
     <div class="column is-4-mobile">
-      <button type="button" class="button is-info is-fullwidth" onclick="searchfuel()">Tra cứu</button>
+      <button type="button" class="button is-info is-fullwidth" onclick="searchFuel()">Tra cứu</button>
     </div>
   </div>
 </section>
@@ -821,7 +838,7 @@ body { background:#f4f6f8 }
 <form id="fuelForm">
 <hr>
 
-<h3 class="subtitle">📋 Danh sách dữ liệu</h3>
+<h3 class="subtitle">📋 Danh sách sẽ hiển thị sau khi bấm tra cứu</h3>
 <div class="table-container">
   <table class="table is-bordered is-striped is-fullwidth" id="fuelTable">
     <thead></thead>
@@ -938,6 +955,22 @@ body { background:#f4f6f8 }
 
 </form>
 </div>
+<!-- ================= TAG: BẢNG KẾT QUẢ NHIÊN LIỆU ================= -->
+<div id="fuel_table" class="hidden form-box">
+
+<button class="button mb-4" onclick="backToFuel()">⬅ Quay lại Nhiên liệu</button>
+
+<h2 class="title is-4">📋 KẾT QUẢ NHIÊN LIỆU</h2>
+
+<div class="table-container">
+  <table class="table is-bordered is-striped is-fullwidth" id="fuelResultTable">
+    <thead></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+</div>
+
 <!-- ================= END TAG NHIÊN LIỆU ================= -->
 
 <!-- ================= TAG ĐÁNH GIÁ NHÂN SỰ ================= -->
@@ -954,7 +987,7 @@ body { background:#f4f6f8 }
       <input class="input" id="search_danhgia_ma_nv" placeholder="Nhập MÃ NHÂN VIÊN">
     </div>
     <div class="column is-4-mobile">
-      <button type="button" class="button is-info is-fullwidth" onclick="searchdanhgia()">Tra cứu</button>
+      <button type="button" class="button is-info is-fullwidth" onclick="searchDanhGia()">Tra cứu</button>
     </div>
   </div>
 </section>
@@ -962,7 +995,7 @@ body { background:#f4f6f8 }
 <form id="danhgiaForm">
 <hr>
 
-<h3 class="subtitle">📋 Danh sách dữ liệu</h3>
+<h3 class="subtitle">📋 Danh sách sẽ hiển thị sau khi bấm tra cứu</h3>
 <div class="table-container">
   <table class="table is-bordered is-striped is-fullwidth" id="danhgiaTable">
     <thead></thead>
@@ -1042,6 +1075,26 @@ body { background:#f4f6f8 }
 
 </form>
 </div>
+<!-- ================= TAG: BẢNG KẾT QUẢ ĐÁNH GIÁ ================= -->
+<div id="danhgia_table" class="hidden form-box">
+
+<button class="button mb-4" onclick="backToDanhGia()">
+⬅ Quay lại Đánh giá
+</button>
+
+<h2 class="title is-4">📋 KẾT QUẢ ĐÁNH GIÁ</h2>
+
+<div class="table-container">
+  <table
+    class="table is-bordered is-striped is-fullwidth"
+    id="danhgiaResultTable">
+    <thead></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+</div>
+
 <!-- ================= END TAG ĐÁNH GIÁ ================= -->
 </section>
 
@@ -1058,9 +1111,15 @@ const ALL_TAGS = [
   "nhatky_table",
 
   "baoduong",
+  "baoduong_table",
+
   "fuel",
-  "danhgia"
+  "fuel_table",
+
+  "danhgia",
+  "danhgia_table"
 ];
+
 
 /* ================= UI NAV ================= */
 function openTag(id){
@@ -1096,6 +1155,34 @@ function backToNhatKy(){
   });
 
   document.getElementById("nhatky")?.classList.remove("hidden");
+
+  window.scrollTo({ top: 0 });
+}
+function backToBaoDuong(){
+  ALL_TAGS.forEach(t=>{
+    document.getElementById(t)?.classList.add("hidden");
+  });
+
+  document.getElementById("baoduong")?.classList.remove("hidden");
+
+  window.scrollTo({ top: 0 });
+}
+function backToFuel(){
+  ALL_TAGS.forEach(t=>{
+    document.getElementById(t)?.classList.add("hidden");
+  });
+
+  document.getElementById("fuel")?.classList.remove("hidden");
+
+  window.scrollTo({ top: 0 });
+}
+function backToDanhGia(){
+  ALL_TAGS.forEach(t=>{
+    document.getElementById(t)?.classList.add("hidden");
+  });
+
+  document.getElementById("danhgia")
+    ?.classList.remove("hidden");
 
   window.scrollTo({ top: 0 });
 }
@@ -1225,21 +1312,68 @@ function searchbaoduong(){
   const key = document.getElementById("search_baoduong_bien_so_xe").value;
   if(!key) return alert("Thiếu biển số xe");
 
-  loadTableByKey("baoduong","bien_so_xe",key,"baoduongTable");
+  // Ẩn toàn bộ TAG
+  ALL_TAGS.forEach(t=>{
+    document.getElementById(t)?.classList.add("hidden");
+  });
+
+  // Hiện bảng kết quả
+  document.getElementById("baoduong_table")?.classList.remove("hidden");
+
+  loadTableByKey(
+    "baoduong",
+    "bien_so_xe",
+    key,
+    "baoduongResultTable"
+  );
+
+  window.scrollTo({ top: 0 });
 }
 
-function searchfuel(){
+function searchFuel(){
   const key = document.getElementById("search_fuel_bien_so_xe").value;
   if(!key) return alert("Thiếu biển số xe");
 
-  loadTableByKey("fuel","bien_so_xe",key,"fuelTable");
+  // Ẩn toàn bộ TAG
+  ALL_TAGS.forEach(t=>{
+    document.getElementById(t)?.classList.add("hidden");
+  });
+
+  // Hiện bảng kết quả
+  document.getElementById("fuel_table")?.classList.remove("hidden");
+
+  loadTableByKey(
+    "fuel",
+    "bien_so_xe",
+    key,
+    "fuelResultTable"
+  );
+
+  window.scrollTo({ top: 0 });
 }
 
-function searchdanhgia(){
-  const key = document.getElementById("search_danhgia_ma_nv").value;
+function searchDanhGia(){
+  const key =
+    document.getElementById("search_danhgia_ma_nv").value;
   if(!key) return alert("Thiếu mã nhân viên");
 
-  loadTableByKey("danhgia","ma_nv",key,"danhgiaTable");
+  // Ẩn toàn bộ TAG
+  ALL_TAGS.forEach(t=>{
+    document.getElementById(t)?.classList.add("hidden");
+  });
+
+  // Hiện bảng kết quả
+  document.getElementById("danhgia_table")
+    ?.classList.remove("hidden");
+
+  loadTableByKey(
+    "danhgia",
+    "ma_nv",
+    key,
+    "danhgiaResultTable"
+  );
+
+  window.scrollTo({ top: 0 });
 }
 
 /* ================= AUTO CALC ================= */
