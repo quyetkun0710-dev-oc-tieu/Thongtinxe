@@ -795,10 +795,27 @@ body { background:#f4f6f8 }
 <button class="button is-primary is-fullwidth mt-4">
 💾 Lưu bảo dưỡng
 </button>
-
 </form>
 </div>
 <!-- ================= END TAG: BẢO DƯỠNG ================= -->
+<!-- ================= TAG: BẢNG KẾT QUẢ BẢO DƯỠNG ================= -->
+<div id="baoduong_table" class="hidden form-box">
+
+  <button class="button mb-4" type="button" onclick="backToBaoDuong()">
+    ⬅ Quay lại Bảo dưỡng
+  </button>
+
+  <h2 class="title is-4">🛠️ KẾT QUẢ BẢO DƯỠNG</h2>
+
+  <div class="table-container">
+    <table class="table is-bordered is-striped is-fullwidth" id="baoduongResultTable">
+      <thead></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+</div>
+<!-- ================= END TAG BẢNG BẢO DƯỠNG ================= -->
 
 <!-- ================= TAG QUẢN LÝ NHIÊN LIỆU ================= -->
 <div id="fuel" class="hidden form-box">
@@ -1087,6 +1104,21 @@ function backToNhatKy(){
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
+function backToBaoDuong(){
+  const form = document.getElementById("baoduong");
+  const table = document.getElementById("baoduong_table");
+
+  if(table) table.classList.add("hidden");
+
+  if(form){
+    form.classList.remove("hidden");
+    form.style.display = "block";
+    form.style.height = "auto";
+    form.style.overflow = "visible";
+  }
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
 /* ================= SUBMIT FORM (FormData) ================= */
 function submitForm(tag, form){
@@ -1203,11 +1235,20 @@ function searchNhatKy(){
   loadNhatKyTableByKey("nhatky", "bien_so_xe", key, "nhatkyResultTable");
 }
 
-function searchbaoduong(){
+function searchBaoDuong(){
   const key = document.getElementById("search_baoduong_bien_so_xe").value;
   if(!key) return alert("Thiếu biển số xe");
 
-  loadTableByKey("baoduong","bien_so_xe",key,"baoduongTable");
+  // Ẩn form, mở TAG bảng
+  document.getElementById("baoduong")?.classList.add("hidden");
+  document.getElementById("baoduong_table")?.classList.remove("hidden");
+
+  loadBaoDuongTableByKey(
+    "baoduong",
+    "bien_so_xe",
+    key,
+    "baoduongResultTable"
+  );
 }
 
 function searchfuel(){
