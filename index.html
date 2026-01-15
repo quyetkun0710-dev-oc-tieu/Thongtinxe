@@ -801,12 +801,7 @@ body { background:#f4f6f8 }
     </button>
 
   </form>
-  <!-- ================= END FORM ================= -->
-
 </div>
-<!-- ================= END TAG: BẢO DƯỠNG ================= -->
-
-
 <!-- ================= TAG: BẢNG KẾT QUẢ BẢO DƯỠNG ================= -->
 <div id="baoduong_table" class="hidden form-box">
 
@@ -1087,13 +1082,25 @@ function openTag(id){
   document.getElementById(id).classList.remove("hidden");
 }
 
-
 function backHome(){
+  CURRENT_VIEW = "home";
+  
   document.getElementById("home").classList.remove("hidden");
-  ["xe","taixe","nhatky","baoduong","fuel","danhgia"].forEach(t=>{
-    document.getElementById(t)?.classList.add("hidden");
+
+  [
+    "xe",
+    "taixe",
+    "nhatky",
+    "nhatky_table",
+    "baoduong",
+    "baoduong_table",
+    "fuel",
+    "danhgia"
+  ].forEach(id=>{
+    document.getElementById(id)?.classList.add("hidden");
   });
 }
+
 function backToNhatKy(){
   const form = document.getElementById("nhatky");
   const table = document.getElementById("nhatky_table");
@@ -1248,18 +1255,13 @@ function searchBaoDuong(){
   const key = document.getElementById("search_baoduong_bien_so_xe").value;
   if(!key) return alert("Thiếu biển số xe");
 
-  document.getElementById("baoduong")?.classList.add("hidden");
-  document.getElementById("baoduong_table")?.classList.remove("hidden");
+  CURRENT_VIEW = "baoduong_table";
 
-  // DÙNG CHUNG LOADER VỚI NHẬT KÝ
-  loadNhatKyTableByKey(
-    "baoduong",
-    "bien_so_xe",
-    key,
-    "baoduongResultTable"
-  );
+  document.getElementById("baoduong").classList.add("hidden");
+  document.getElementById("baoduong_table").classList.remove("hidden");
+
+  loadBaoDuongTableByKey(key);
 }
-
 
 function searchfuel(){
   const key = document.getElementById("search_fuel_bien_so_xe").value;
