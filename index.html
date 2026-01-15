@@ -1069,8 +1069,23 @@ function backHome(){
   });
 }
 function backToNhatKy(){
-  document.getElementById("nhatky_table")?.classList.add("hidden");
-  document.getElementById("nhatky")?.classList.remove("hidden");
+  const form = document.getElementById("nhatky");
+  const table = document.getElementById("nhatky_table");
+
+  if(table){
+    table.classList.add("hidden");
+  }
+
+  if(form){
+    form.classList.remove("hidden");
+
+    // ép hiển thị cho desktop
+    form.style.display = "block";
+    form.style.height = "auto";
+    form.style.overflow = "visible";
+  }
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 /* ================= SUBMIT FORM (FormData) ================= */
