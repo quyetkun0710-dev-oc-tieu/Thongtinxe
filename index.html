@@ -1239,20 +1239,20 @@ function searchBaoDuong(){
   const key = document.getElementById("search_baoduong_bien_so_xe").value;
   if(!key) return alert("Thiếu biển số xe");
 
-  // Ẩn TAG form
+  // Ẩn form bảo dưỡng
   document.getElementById("baoduong")?.classList.add("hidden");
 
-  // Hiện TAG bảng
+  // Hiện bảng kết quả
   document.getElementById("baoduong_table")?.classList.remove("hidden");
 
-  loadBaoDuongTableByKey(
+  // DÙNG CHUNG LOADER VỚI NHẬT KÝ
+  loadNhatKyTableByKey(
     "baoduong",
     "bien_so_xe",
     key,
     "baoduongResultTable"
   );
 }
-
 
 function searchfuel(){
   const key = document.getElementById("search_fuel_bien_so_xe").value;
