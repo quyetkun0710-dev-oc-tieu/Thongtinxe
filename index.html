@@ -636,168 +636,177 @@ body { background:#f4f6f8 }
 <!-- ================= TAG: BẢO DƯỠNG ================= -->
 <div id="baoduong" class="hidden form-box">
 
-<button class="button mb-4" type="button" onclick="backHome()">⬅ Quay lại</button>
-<h2 class="title is-4">🛠️ BẢO DƯỠNG – SỬA CHỮA</h2>
+  <button class="button mb-4" type="button" onclick="backHome()">⬅ Quay lại</button>
+  <h2 class="title is-4">🛠️ BẢO DƯỠNG – SỬA CHỮA</h2>
 
-<!-- ===== TRA CỨU ===== -->
-<section class="box">
-  <h3 class="subtitle">🔍 Tra cứu BIỂN SỐ XE</h3>
-  <div class="columns is-mobile">
-    <div class="column is-8-mobile">
-      <input class="input" id="search_baoduong_bien_so_xe" placeholder="Nhập BIỂN SỐ XE">
+  <!-- ===== TRA CỨU ===== -->
+  <section class="box">
+    <h3 class="subtitle">🔍 Tra cứu BIỂN SỐ XE</h3>
+    <div class="columns is-mobile">
+      <div class="column is-8-mobile">
+        <input class="input" id="search_baoduong_bien_so_xe" placeholder="Nhập BIỂN SỐ XE">
+      </div>
+      <div class="column is-4-mobile">
+        <button type="button" class="button is-info is-fullwidth" onclick="searchBaoDuong()">
+          Tra cứu
+        </button>
+      </div>
     </div>
-    <div class="column is-4-mobile">
-      <button type="button" class="button is-info is-fullwidth" onclick="searchBaoDuong()">Tra cứu</button>
+  </section>
+
+  <!-- ================= FORM ================= -->
+  <form id="baoduongForm">
+
+    <hr>
+
+    <h3 class="subtitle">📋 Danh sách dữ liệu</h3>
+    <div class="table-container">
+      <table class="table is-bordered is-striped is-fullwidth" id="baoduongTable">
+        <thead></thead>
+        <tbody></tbody>
+      </table>
     </div>
-  </div>
-</section>
 
-<form id="baoduongForm">
-<hr>
+    <!-- ================= 1️⃣ THÔNG TIN XE ================= -->
+    <h3 class="subtitle">1️⃣ Thông tin xe</h3>
+    <div class="columns is-mobile is-multiline">
 
-<h3 class="subtitle">📋 Danh sách dữ liệu</h3>
-<div class="table-container">
-  <table class="table is-bordered is-striped is-fullwidth" id="baoduongTable">
-    <thead></thead>
-    <tbody></tbody>
-  </table>
-</div>
+      <div class="column is-12-mobile is-4-tablet">
+        <label class="label">Biển số xe</label>
+        <input class="input" name="bien_so_xe">
+      </div>
 
-<!-- ================= 1️⃣ THÔNG TIN XE ================= -->
-<h3 class="subtitle">1️⃣ Thông tin xe</h3>
-<div class="columns is-mobile is-multiline">
+      <div class="column is-6-mobile is-4-tablet">
+        <label class="label">KM trước</label>
+        <input class="input" name="km_truoc" readonly>
+      </div>
 
-  <div class="column is-12-mobile is-4-tablet">
-    <label class="label">Biển số xe</label>
-    <input class="input" name="bien_so_xe">
-  </div>
+      <div class="column is-6-mobile is-4-tablet">
+        <label class="label">KM sau</label>
+        <input class="input" name="km_sau" oninput="calcBaoDuongKM()">
+      </div>
 
-  <div class="column is-6-mobile is-4-tablet">
-    <label class="label">KM trước</label>
-    <input class="input" name="km_truoc" readonly>
-  </div>
+      <div class="column is-6-mobile is-4-tablet">
+        <label class="label">KM chênh lệch</label>
+        <input class="input" name="km_chenh_lech" readonly>
+      </div>
 
-  <div class="column is-6-mobile is-4-tablet">
-    <label class="label">KM sau</label>
-    <input class="input" name="km_sau" oninput="calcBaoDuongKM()">
-  </div>
+      <div class="column is-6-mobile is-4-tablet">
+        <label class="label">Mốc bảo dưỡng</label>
+        <div class="select is-fullwidth">
+          <select name="moc_bao_duong">
+            <option value=""></option>
+            <option>5000</option>
+            <option>7000</option>
+            <option>10000</option>
+          </select>
+        </div>
+      </div>
 
-  <div class="column is-6-mobile is-4-tablet">
-    <label class="label">KM chênh lệch</label>
-    <input class="input" name="km_chenh_lech" readonly>
-  </div>
-
-  <div class="column is-6-mobile is-4-tablet">
-    <label class="label">Mốc bảo dưỡng</label>
-    <div class="select is-fullwidth">
-      <select name="moc_bao_duong">
-        <option value=""></option>
-        <option>5000</option>
-        <option>7000</option>
-        <option>10000</option>
-      </select>
     </div>
-  </div>
 
-</div>
+    <!-- ================= 2️⃣ NỘI DUNG ================= -->
+    <h3 class="subtitle">2️⃣ Nội dung</h3>
+    <div class="columns is-mobile is-multiline">
 
-<!-- ================= 2️⃣ NỘI DUNG ================= -->
-<h3 class="subtitle">2️⃣ Nội dung</h3>
-<div class="columns is-mobile is-multiline">
+      <div class="column is-6-mobile is-4-tablet">
+        <label class="label">Ngày bắt đầu</label>
+        <input type="date" class="input" name="ngay_bat_dau" onchange="calcBaoDuongNgay()">
+      </div>
 
-  <div class="column is-6-mobile is-4-tablet">
-    <label class="label">Ngày bắt đầu</label>
-    <input type="date" class="input" name="ngay_bat_dau" onchange="calcBaoDuongNgay()">
-  </div>
+      <div class="column is-6-mobile is-4-tablet">
+        <label class="label">Ngày kết thúc</label>
+        <input type="date" class="input" name="ngay_ket_thuc" onchange="calcBaoDuongNgay()">
+      </div>
 
-  <div class="column is-6-mobile is-4-tablet">
-    <label class="label">Ngày kết thúc</label>
-    <input type="date" class="input" name="ngay_ket_thuc" onchange="calcBaoDuongNgay()">
-  </div>
+      <div class="column is-12-mobile is-4-tablet">
+        <label class="label">Tổng ngày</label>
+        <input class="input" name="tong_ngay" readonly>
+      </div>
 
-  <div class="column is-12-mobile is-4-tablet">
-    <label class="label">Tổng ngày</label>
-    <input class="input" name="tong_ngay" readonly>
-  </div>
+      <div class="column is-12-mobile is-6-tablet">
+        <label class="label">Đơn vị</label>
+        <input class="input" name="don_vi">
+      </div>
 
-  <div class="column is-12-mobile is-6-tablet">
-    <label class="label">Đơn vị</label>
-    <input class="input" name="don_vi">
-  </div>
+      <div class="column is-12-mobile is-6-tablet">
+        <label class="label">Loại đơn vị</label>
+        <div class="select is-fullwidth">
+          <select name="loai_don_vi">
+            <option value=""></option>
+            <option>Gara hợp đồng</option>
+            <option>Gara ngoài</option>
+          </select>
+        </div>
+      </div>
 
-  <div class="column is-12-mobile is-6-tablet">
-    <label class="label">Loại đơn vị</label>
-    <div class="select is-fullwidth">
-      <select name="loai_don_vi">
-        <option value=""></option>
-        <option>Gara hợp đồng</option>
-        <option>Gara ngoài</option>
-      </select>
+      <div class="column is-12-mobile is-4-tablet">
+        <label class="label">Hạng mục</label>
+        <input class="input" name="hang_muc">
+      </div>
+
+      <div class="column is-12-mobile is-4-tablet">
+        <label class="label">Phát sinh / Thay thế</label>
+        <input class="input" name="phat_sinh">
+      </div>
+
+      <div class="column is-12-mobile is-4-tablet">
+        <label class="label">Kết quả</label>
+        <input class="input" name="ket_qua">
+      </div>
+
     </div>
-  </div>
 
-  <div class="column is-12-mobile is-4-tablet">
-    <label class="label">Hạng mục</label>
-    <input class="input" name="hang_muc">
-  </div>
+    <!-- ================= 3️⃣ THANH TOÁN ================= -->
+    <h3 class="subtitle">3️⃣ Thanh toán</h3>
+    <div class="columns is-mobile is-multiline">
 
-  <div class="column is-12-mobile is-4-tablet">
-    <label class="label">Phát sinh / Thay thế</label>
-    <input class="input" name="phat_sinh">
-  </div>
+      <div class="column is-12-mobile is-4-tablet">
+        <label class="label">Loại thanh toán</label>
+        <div class="select is-fullwidth">
+          <select name="loai_thanh_toan" onchange="toggleHoaDon()">
+            <option value=""></option>
+            <option>Công nợ</option>
+            <option>Thanh toán ngay</option>
+          </select>
+        </div>
+      </div>
 
-  <div class="column is-12-mobile is-4-tablet">
-    <label class="label">Kết quả</label>
-    <input class="input" name="ket_qua">
-  </div>
+      <div class="column is-12-mobile is-4-tablet">
+        <label class="label">Hoá đơn</label>
+        <div class="select is-fullwidth">
+          <select name="hoa_don" id="hoa_don">
+            <option value=""></option>
+            <option>Có</option>
+            <option>Không</option>
+          </select>
+        </div>
+      </div>
 
-</div>
+      <div class="column is-12-mobile is-4-tablet">
+        <label class="label">Tổng tiền</label>
+        <input class="input" name="tong_tien">
+      </div>
 
-<!-- ================= 3️⃣ THANH TOÁN ================= -->
-<h3 class="subtitle">3️⃣ Thanh toán</h3>
-<div class="columns is-mobile is-multiline">
-
-  <div class="column is-12-mobile is-4-tablet">
-    <label class="label">Loại thanh toán</label>
-    <div class="select is-fullwidth">
-      <select name="loai_thanh_toan" onchange="toggleHoaDon()">
-        <option value=""></option>
-        <option>Công nợ</option>
-        <option>Thanh toán ngay</option>
-      </select>
     </div>
-  </div>
 
-  <div class="column is-12-mobile is-4-tablet">
-    <label class="label">Hoá đơn</label>
-    <div class="select is-fullwidth">
-      <select name="hoa_don" id="hoa_don">
-        <option value=""></option>
-        <option>Có</option>
-        <option>Không</option>
-      </select>
-    </div>
-  </div>
+    <!-- ================= 4️⃣ GHI CHÚ ================= -->
+    <h3 class="subtitle">4️⃣ Ghi chú</h3>
+    <textarea class="textarea" name="ghi_chu"></textarea>
 
-  <div class="column is-12-mobile is-4-tablet">
-    <label class="label">Tổng tiền</label>
-    <input class="input" name="tong_tien">
-  </div>
+    <input type="hidden" name="created_at">
 
-</div>
+    <button class="button is-primary is-fullwidth mt-4">
+      💾 Lưu bảo dưỡng
+    </button>
 
-<!-- ================= 4️⃣ GHI CHÚ ================= -->
-<h3 class="subtitle">4️⃣ Ghi chú</h3>
-<textarea class="textarea" name="ghi_chu"></textarea>
+  </form>
+  <!-- ================= END FORM ================= -->
 
-<input type="hidden" name="created_at">
-
-<button class="button is-primary is-fullwidth mt-4">
-💾 Lưu bảo dưỡng
-</button>
-</form>
 </div>
 <!-- ================= END TAG: BẢO DƯỠNG ================= -->
+
+
 <!-- ================= TAG: BẢNG KẾT QUẢ BẢO DƯỠNG ================= -->
 <div id="baoduong_table" class="hidden form-box">
 
