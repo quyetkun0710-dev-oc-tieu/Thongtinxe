@@ -1239,10 +1239,7 @@ function searchBaoDuong(){
   const key = document.getElementById("search_baoduong_bien_so_xe").value;
   if(!key) return alert("Thiếu biển số xe");
 
-  // Ẩn form bảo dưỡng
   document.getElementById("baoduong")?.classList.add("hidden");
-
-  // Hiện bảng kết quả
   document.getElementById("baoduong_table")?.classList.remove("hidden");
 
   // DÙNG CHUNG LOADER VỚI NHẬT KÝ
@@ -1253,6 +1250,7 @@ function searchBaoDuong(){
     "baoduongResultTable"
   );
 }
+
 
 function searchfuel(){
   const key = document.getElementById("search_fuel_bien_so_xe").value;
