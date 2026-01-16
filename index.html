@@ -1285,6 +1285,7 @@ function fillForm(formId, data){
       el.value = data[k];
     }
   });
+updateRemainFields();
 }
 
 /* ================= AUTO BIND SUBMIT ================= */
@@ -1406,7 +1407,43 @@ function searchDanhGia(){
 
   window.scrollTo({ top: 0 });
 }
+/* ===== TÍNH SỐ NGÀY CÒN LẠI ===== */
+function calcRemainDays(dateStr){
+  if(!dateStr) return "";
 
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  const target = new Date(dateStr);
+  target.setHours(0,0,0,0);
+
+  const diff = Math.ceil(
+    (target - today) / (1000 * 60 * 60 * 24)
+  );
+
+  return diff >= 0 ? diff : 0;
+}
+
+/* ===== UPDATE CÁC FIELD CÒN LẠI ===== */
+function updateRemainFields(){
+  const f = document.getElementById("xeForm");
+  if(!f) return;
+
+  if(f.ngay_dang_kiem.value){
+    f.cb_dkiem.value =
+      calcRemainDays(f.ngay_dang_kiem.value);
+  }
+
+  if(f.ngay_phu_hieu.value){
+    f.cb_ph.value =
+      calcRemainDays(f.ngay_phu_hieu.value);
+  }
+
+  if(f.ngay_bao_hiem.value){
+    f.cb_bh.value =
+      calcRemainDays(f.ngay_bao_hiem.value);
+  }
+}
 /* ================= AUTO CALC ================= */
 function calcNhatKy(){
   const f = document.getElementById("nhatkyForm");
@@ -1449,33 +1486,35 @@ function calcTheTichThung(){
     f.the_tich_thung.value = "";
   }
 }
-
 function calcChinhThuc(){
   const f = document.getElementById("taixeForm");
-  if(!f) return;
+  if (!f) return;
 
   const ngayNhan = f.ngay_nhan_viec.value;
-  const thuViec  = f.thu_viec.value;
+  const soThang  = parseInt(f.thu_viec.value, 10);
 
-  if(!ngayNhan || !thuViec){
+  // Thiếu dữ liệu
+  if (!ngayNhan || isNaN(soThang)) {
     f.chinh_thuc.value = "";
     return;
   }
 
+  // Parse ngày nhận việc
   const d = new Date(ngayNhan);
+  if (isNaN(d.getTime())) {
+    f.chinh_thuc.value = "";
+    return;
+  }
 
-  let soThang = 0;
-  if(thuViec === "1") soThang = 1;
-  else if(thuViec === "2") soThang = 2;
-  else if(thuViec === "3") soThang = 2; // gia hạn thêm → mặc định 2 tháng
-
+  // Cộng số tháng thử việc
   d.setMonth(d.getMonth() + soThang);
 
+  // Format dd/mm/yyyy (đúng với input text readonly của bạn)
+  const dd = String(d.getDate()).padStart(2, "0");
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
   const yyyy = d.getFullYear();
-  const mm   = String(d.getMonth() + 1).padStart(2, "0");
-  const dd   = String(d.getDate()).padStart(2, "0");
 
-  f.chinh_thuc.value = `${yyyy}-${mm}-${dd}`;
+  f.chinh_thuc.value = `${dd}/${mm}/${yyyy}`;
 }
 
 function loadTableByKey(tag, keyName, keyValue, tableId){
@@ -1702,10 +1741,9 @@ function loadNhatKyTableByKey(tag, keyName, keyValue, tableId){
     block: "start"
   });
 }
+window.addEventListener("load", () => {
+  updateRemainFields();
+});
 </script>
 </body>
 </html>
-
-
-
-
