@@ -59,6 +59,36 @@ body { background:#f4f6f8 }
     text-align: center;
   }
 }
+  /* ===== AUTO SCROLL TABLE – GLOBAL ===== */
+
+/* Khung scroll cho mọi bảng */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+/* Bảng tự giãn theo nội dung */
+.table {
+  width: max-content;
+  min-width: 100%;
+  table-layout: auto;
+  white-space: nowrap;
+}
+
+/* Ô không bị bó chiều rộng */
+.table th,
+.table td {
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+/* Mobile: cho phép scroll mượt */
+@media (max-width: 768px) {
+  .table-container {
+    -webkit-overflow-scrolling: touch;
+  }
+}
 </style>
 </head>
 
@@ -1665,4 +1695,5 @@ function loadNhatKyTableByKey(tag, keyName, keyValue, tableId){
 </script>
 </body>
 </html>
+
 
