@@ -1444,6 +1444,9 @@ function updateRemainFields(){
       calcRemainDays(f.ngay_bao_hiem.value);
   }
 }
+  window.addEventListener("load", () => {
+  updateRemainFields();
+});
 /* ================= AUTO CALC ================= */
 function calcNhatKy(){
   const f = document.getElementById("nhatkyForm");
@@ -1741,9 +1744,7 @@ function loadNhatKyTableByKey(tag, keyName, keyValue, tableId){
     block: "start"
   });
 }
-window.addEventListener("load", () => {
-  updateRemainFields();
-});
 </script>
 </body>
 </html>
+
