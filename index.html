@@ -1692,8 +1692,18 @@ function loadNhatKyTableByKey(tag, keyName, keyValue, tableId){
       alert("❌ Lỗi tải dữ liệu nhật ký");
     });
 }
+  function scrollToTable(tableId){
+  const el = document.getElementById(tableId);
+  if(!el) return;
+
+  el.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
 </script>
 </body>
 </html>
+
 
 
