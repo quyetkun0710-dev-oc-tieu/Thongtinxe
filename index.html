@@ -353,6 +353,7 @@ body { background:#f4f6f8 }
 
   <div class="columns is-mobile">
     <div class="column is-8-mobile is-4-tablet">
+      <label class="label">Mã nhân viên</label>
       <input class="input" id="search_mnv" placeholder="Nhập mã nhân viên">
     </div>
     <div class="column is-4-mobile is-2-tablet">
@@ -375,26 +376,33 @@ body { background:#f4f6f8 }
 <h3 class="subtitle">1️⃣ Thông tin cá nhân</h3>
 <div class="columns is-mobile is-multiline">
   <div class="column is-6-mobile is-4-tablet">
+    <label class="label">Họ và tên</label>
     <input class="input" name="ho_ten" placeholder="Họ và tên">
   </div>
   <div class="column is-6-mobile is-4-tablet">
+    <label class="label">Mã nhân viên</label>
     <input class="input" name="ma_nv" placeholder="Mã nhân viên">
   </div>
   <div class="column is-6-mobile is-4-tablet">
+    <label class="label">Năm sinh</label>
     <input class="input" name="nam_sinh" placeholder="Năm sinh">
   </div>
 
   <div class="column is-6-mobile is-4-tablet">
+    <label class="label">Giới tính</label>
     <input class="input" name="gioi_tinh" placeholder="Giới tính">
   </div>
   <div class="column is-6-mobile is-4-tablet">
+    <label class="label">Số CCCD/Hộ chiếu</label>
     <input class="input" name="cccd" placeholder="CCCD / Hộ chiếu">
   </div>
   <div class="column is-6-mobile is-4-tablet">
+    <label class="label">Số điện thoại</label>
     <input class="input" name="sdt" placeholder="Số điện thoại">
   </div>
 
   <div class="column is-12-mobile is-8-tablet">
+    <label class="label">Quê quán</label>
     <input class="input" name="que_quan" placeholder="Quê quán">
   </div>
 </div>
@@ -403,19 +411,24 @@ body { background:#f4f6f8 }
 <h3 class="subtitle">2️⃣ Giấy phép lái xe</h3>
 <div class="columns is-mobile is-multiline">
   <div class="column is-6-mobile is-4-tablet">
+    <label class="label">Hạng GPLX</label>
     <input class="input" name="hang_gplx" placeholder="Hạng GPLX">
   </div>
   <div class="column is-6-mobile is-4-tablet">
+    <label class="label">Số GPLX</label>
     <input class="input" name="so_gplx" placeholder="Số GPLX">
   </div>
 
   <div class="column is-6-mobile is-4-tablet">
+      <label class="label">Ngày trúng tuyển</label>
     <input type="date" class="input" name="ngay_trung_tuyen">
   </div>
   <div class="column is-6-mobile is-4-tablet">
+      <label class="label">Nơi cấp</label>
     <input class="input" name="noi_cap" placeholder="Nơi cấp">
   </div>
   <div class="column is-6-mobile is-4-tablet">
+      <label class="label">Hạn GPLX</label>
     <input type="date" class="input" name="han_gplx">
   </div>
 </div>
@@ -425,6 +438,7 @@ body { background:#f4f6f8 }
 <div class="columns is-mobile is-multiline">
 
   <div class="column is-6-mobile is-4-tablet">
+      <label class="label">Ngày nhận việc</label>
     <label class="label">Ngày nhận việc</label>
     <input type="date" class="input" name="ngay_nhan_viec" onchange="calcChinhThuc()">
   </div>
@@ -456,9 +470,11 @@ body { background:#f4f6f8 }
 <h3 class="subtitle">4️⃣ Phân công</h3>
 <div class="columns is-mobile">
   <div class="column is-6-mobile is-4-tablet">
+      <label class="label">Xe phụ trách</label>
     <input class="input" name="xe_phu_trach" placeholder="Xe phụ trách">
   </div>
   <div class="column is-6-mobile is-4-tablet">
+      <label class="label">Tuyến phụ trách</label>
     <input class="input" name="tuyen_phu_trach" placeholder="Tuyến phụ trách">
   </div>
 </div>
@@ -467,16 +483,20 @@ body { background:#f4f6f8 }
 <h3 class="subtitle">5️⃣ Bảo lãnh</h3>
 <div class="columns is-mobile is-multiline">
   <div class="column is-6-mobile is-4-tablet">
+      <label class="label">Họ tên người bảo lãnh</label>
     <input class="input" name="bl_ho_ten" placeholder="Họ tên người bảo lãnh">
   </div>
   <div class="column is-6-mobile is-4-tablet">
+      <label class="label">Mối quan hệ</label>
     <input class="input" name="bl_quan_he" placeholder="Mối quan hệ">
   </div>
   <div class="column is-6-mobile is-4-tablet">
+      <label class="label">Số điện thoại liên hệ</label>
     <input class="input" name="bl_sdt" placeholder="SĐT liên hệ">
   </div>
   <div class="column is-12-mobile is-8-tablet">
-    <input class="input" name="bl_que_quan" placeholder="Quê quán">
+      <label class="label">Nơi ở</label>
+    <input class="input" name="bl_que_quan" placeholder="Nơi ở">
   </div>
 </div>
 
@@ -709,7 +729,7 @@ body { background:#f4f6f8 }
   </div>
 
   <div class="column is-6-mobile is-4-tablet">
-    <label class="label">KM sau</label>
+    <label class="label">KM hiện tại</label>
     <input class="input" name="km_sau" oninput="calcBaoDuongKM()">
   </div>
 
@@ -1131,7 +1151,7 @@ body { background:#f4f6f8 }
 
 <script>
 /* ================= CONFIG ================= */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbycppmC0u3-Ht1JOnbLjnnHGxyV0cjUV2pHtTflG-DHnKTxTJ_PsphQH-AOnhNSUXKl/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyYBeHPvfHLeeLK5PoPyPkpMvPkjZDKTRVctzW7EYmnicMMCjVqM_ekliZPtXri8h2f/exec";
 const ALL_TAGS = [
   "home",
 
@@ -1747,8 +1767,3 @@ function loadNhatKyTableByKey(tag, keyName, keyValue, tableId){
 </script>
 </body>
 </html>
-
-
-
-
-
