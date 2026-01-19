@@ -722,18 +722,8 @@ body { background:#f4f6f8 }
   </div>
 
   <div class="column is-6-mobile is-4-tablet">
-    <label class="label">KM trước</label>
-    <input class="input" name="km_truoc" readonly>
-  </div>
-
-  <div class="column is-6-mobile is-4-tablet">
     <label class="label">KM hiện tại</label>
     <input class="input" name="km_sau" oninput="calcBaoDuongKM()">
-  </div>
-
-  <div class="column is-6-mobile is-4-tablet">
-    <label class="label">KM chênh lệch</label>
-    <input class="input" name="km_chenh_lech" readonly>
   </div>
 
   <div class="column is-6-mobile is-4-tablet">
@@ -1149,7 +1139,7 @@ body { background:#f4f6f8 }
 
 <script>
 /* ================= CONFIG ================= */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyYBeHPvfHLeeLK5PoPyPkpMvPkjZDKTRVctzW7EYmnicMMCjVqM_ekliZPtXri8h2f/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxvkcq5BzIGcESuw1Uio2Sz4aExiPxsBRSN9UPBsx7fEFjUiO602c2DU091QOle5CU3/exec";
 const ALL_TAGS = [
   "home",
 
@@ -1640,14 +1630,8 @@ function calcBaoDuongKM(){
   const f = document.getElementById("baoduongForm");
   if(!f) return;
 
-  const kmTruoc = parseFloat(f.km_truoc.value) || 0;
-  const kmSau   = parseFloat(f.km_sau.value) || 0;
-
-  if(kmTruoc === 0){
-    f.km_truoc.value = kmSau;
-    f.km_chenh_lech.value = 0;
-    return;
-  }
+  const kmTruoc = Number(f.km_truoc.value || 0);
+  const kmSau   = Number(f.km_sau.value || 0);
 
   if(kmSau >= kmTruoc){
     f.km_chenh_lech.value = kmSau - kmTruoc;
@@ -1765,4 +1749,3 @@ function loadNhatKyTableByKey(tag, keyName, keyValue, tableId){
 </script>
 </body>
 </html>
-
