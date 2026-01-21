@@ -1555,10 +1555,28 @@ function loadTableByKey(tag, keyName, keyValue, tableId){
         `<tr>${headers.map(h=>`<th>${h}</th>`).join("")}</tr>`;
 
       /* ===== BODY ===== */
-      tbody.innerHTML =
-        rows.map(r =>
-          `<tr>${headers.map(h=>`<td>${r[h] ?? ""}</td>`).join("")}</tr>`
-        ).join("");
+if(tag === "xe" || tag === "taixe"){
+  thead.innerHTML =
+    `<tr>
+      <th>Chọn</th>
+      ${headers.map(h=>`<th>${h}</th>`).join("")}
+    </tr>`;
+
+  tbody.innerHTML =
+    rows.map(r => `
+      <tr>
+        <td>
+          <button type="button"
+            onclick='fillFormByRow("${tag}", ${JSON.stringify(r)})'>
+            Chọn
+          </button>
+        </td>
+        ${headers.map(h=>`<td>${r[h] ?? ""}</td>`).join("")}
+      </tr>
+    `).join("");
+
+  return; // ⛔ rất quan trọng: không render kiểu cũ nữa
+}
 
       /* ===== RIÊNG TAG NHIÊN LIỆU ===== */
       if(tag === "fuel"){
@@ -1759,7 +1777,32 @@ function loadNhatKyTableByKey(tag, keyName, keyValue, tableId){
     block: "start"
   });
 }
+function fillFormByRow(tag, row){
+  let formId = "";
+
+  if(tag === "xe")    formId = "xeForm";
+  if(tag === "taixe") formId = "taixeForm";
+
+  if(!formId) return;
+
+  const f = document.getElementById(formId);
+  if(!f) return;
+
+  Object.keys(row).forEach(k=>{
+    if(!f.elements[k]) return;
+    f.elements[k].value = row[k];
+  });
+
+  // chạy lại các phép tính sẵn có của bạn
+  if(tag === "xe" && typeof updateRemainFields === "function"){
+    updateRemainFields();
+  }
+
+  if(tag === "taixe" && typeof calcChinhThuc === "function"){
+    calcChinhThuc();
+  }
+}
+
 </script>
 </body>
 </html>
-
