@@ -1579,15 +1579,28 @@ const kmTruoc = parseFloat(
       }
 
       /* ===== RIÊNG TAG BẢO DƯỠNG ===== */
-      if(tag === "baoduong"){
-        const f = document.getElementById("baoduongForm");
-        if(!f) return;
+/* ===== RIÊNG TAG BẢO DƯỠNG ===== */
+if(tag === "baoduong"){
+  const f = document.getElementById("baoduongForm");
+  if(!f) return;
 
-        const lastRow = rows[rows.length - 1];
-        f.km_truoc.value = Number(lastRow.km_sau || lastRow.km || 0);
-        f.km_sau.value = "";
-        f.km_chenh_lech.value = "";
-      }
+  const lastRow = rows[rows.length - 1];
+
+  // km_truoc
+  if(f.km_truoc){
+    f.km_truoc.value = Number(lastRow.km_sau || lastRow.km || 0);
+  }
+
+  // km_sau
+  if(f.km_sau){
+    f.km_sau.value = "";
+  }
+
+  // km_chenh_lech
+  if(f.km_chenh_lech){
+    f.km_chenh_lech.value = "";
+  }
+}
     })
     .catch(err=>{
       console.error(err);
@@ -1749,11 +1762,3 @@ function loadNhatKyTableByKey(tag, keyName, keyValue, tableId){
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
