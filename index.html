@@ -91,10 +91,10 @@ body { background:#f4f6f8 }
   }
 }
     /* 🔒 KHÓA FIELD KHI AUTO-SET */
-    .is-locked{
-      pointer-events: none;
-      background: #f5f5f5;
-    }
+.is-locked {
+  pointer-events: none;
+  background-color: #f5f5f5;
+}
     /* Ẩn hiển thị nhưng vẫn submit */
 .fuel-hidden {
   display: none;
@@ -1721,8 +1721,8 @@ function toggleFuelHoaDon(){
   const hoaDon = document.getElementById('fuel_hoa_don');
 
   if(f.don_vi.value === 'Cây dầu hợp đồng'){
-    hoaDon.value = 'Có';
-    hoaDon.disabled = true;
+hoaDon.value = "Có";
+hoaDon.classList.add("is-locked");
   }else{
     hoaDon.disabled = false;
   }
