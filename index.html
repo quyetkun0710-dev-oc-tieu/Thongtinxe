@@ -635,31 +635,55 @@ body { background:#f4f6f8 }
 
 <!-- ================= 4️⃣ SỰ CỐ ================= -->
 <h3 class="subtitle">4️⃣ Sự cố phát sinh</h3>
-<div class="columns">
-  <div class="column">
-    <label class="label">Vấn đề</label>
-    <input class="input" name="van_de_phat_sinh">
+
+<!-- Toggle Có / Không (chỉ dùng điều kiện, không gửi sheet) -->
+<div class="columns is-mobile">
+  <div class="column is-6-mobile is-6">
+    <label class="radio">
+      <input type="radio" name="suco_toggle" value="co"
+             onchange="toggleSuCo(this.value)">
+      Có
+    </label>
+  </div>
+  <div class="column is-6-mobile is-6">
+    <label class="radio">
+      <input type="radio" name="suco_toggle" value="khong"
+             onchange="toggleSuCo(this.value)">
+      Không
+    </label>
   </div>
 </div>
 
-<div class="columns">
-  <div class="column is-4">
-    <label class="label">Đánh giá</label>
-    <div class="select is-fullwidth">
-      <select name="tu_danh_gia">
-        <option value=""></option>
-        <option>Nhẹ</option>
-        <option>Trung bình</option>
-        <option>Nặng</option>
-      </select>
+<!-- Các field sự cố (giữ nguyên name để submit) -->
+<div id="sucoFields">
+
+  <div class="columns">
+    <div class="column">
+      <label class="label">Vấn đề</label>
+      <input class="input" name="van_de_phat_sinh">
     </div>
   </div>
-  <div class="column">
-    <label class="label">Đề xuất xử lý</label>
-    <input class="input" name="de_xuat_pa">
-  </div>
-</div>
 
+  <div class="columns">
+    <div class="column is-4">
+      <label class="label">Đánh giá</label>
+      <div class="select is-fullwidth">
+        <select name="tu_danh_gia">
+          <option value=""></option>
+          <option>Nhẹ</option>
+          <option>Trung bình</option>
+          <option>Nặng</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="column">
+      <label class="label">Đề xuất xử lý</label>
+      <input class="input" name="de_xuat_pa">
+    </div>
+  </div>
+
+</div>
 <!-- ================= 5️⃣ GHI CHÚ ================= -->
 <h3 class="subtitle">5️⃣ Ghi chú</h3>
 <textarea class="textarea" name="ghi_chu"></textarea>
@@ -673,7 +697,7 @@ body { background:#f4f6f8 }
 </form>
 </div>
 <!-- ================= TAG: BẢNG KẾT QUẢ NHẬT KÝ ================= -->
-  <div id="nhatky_table" class="hidden form-box">
+<div id="nhatky_table" class="hidden form-box">
 
 <button class="button mb-4" type="button" onclick="backToNhatKy()">⬅ Quay lại Nhật ký</button>
 
@@ -730,11 +754,22 @@ body { background:#f4f6f8 }
   </div>
 
   <div class="column is-6-mobile is-4-tablet">
+    <label class="label">Loại hình</label>
+    <div class="select is-fullwidth">
+      <select name="loai_hinh" onchange="toggleLoaiHinh(this.value)">
+        <option value=""></option>
+        <option>Bảo dưỡng</option>
+        <option>Sửa chữa</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="column is-6-mobile is-4-tablet">
     <label class="label">KM hiện tại</label>
     <input class="input" name="km_sau" oninput="calcBaoDuongKM()">
   </div>
 
-  <div class="column is-6-mobile is-4-tablet">
+  <div class="column is-12-mobile is-4-tablet" id="mocBaoDuongBox">
     <label class="label">Mốc bảo dưỡng</label>
     <div class="select is-fullwidth">
       <select name="moc_bao_duong">
@@ -752,6 +787,7 @@ body { background:#f4f6f8 }
 <h3 class="subtitle">2️⃣ Nội dung</h3>
 <div class="columns is-mobile is-multiline">
 
+  <!-- Ngày bắt đầu - Ngày kết thúc - Tổng ngày -->
   <div class="column is-6-mobile is-4-tablet">
     <label class="label">Ngày bắt đầu</label>
     <input type="date" class="input" name="ngay_bat_dau" onchange="calcBaoDuongNgay()">
@@ -767,6 +803,7 @@ body { background:#f4f6f8 }
     <input class="input" name="tong_ngay" readonly>
   </div>
 
+  <!-- Đơn vị - Loại đơn vị -->
   <div class="column is-12-mobile is-6-tablet">
     <label class="label">Đơn vị</label>
     <input class="input" name="don_vi">
@@ -775,7 +812,7 @@ body { background:#f4f6f8 }
   <div class="column is-12-mobile is-6-tablet">
     <label class="label">Loại đơn vị</label>
     <div class="select is-fullwidth">
-      <select name="loai_don_vi">
+      <select name="loai_don_vi" onchange="handleLoaiDonVi(this.value)">
         <option value=""></option>
         <option>Gara hợp đồng</option>
         <option>Gara ngoài</option>
@@ -783,17 +820,20 @@ body { background:#f4f6f8 }
     </div>
   </div>
 
-  <div class="column is-12-mobile is-4-tablet">
+  <!-- Hạng mục -->
+  <div class="column is-12">
     <label class="label">Hạng mục</label>
     <input class="input" name="hang_muc">
   </div>
 
-  <div class="column is-12-mobile is-4-tablet">
+  <!-- Phát sinh / Thay thế -->
+  <div class="column is-12">
     <label class="label">Phát sinh / Thay thế</label>
     <input class="input" name="phat_sinh">
   </div>
 
-  <div class="column is-12-mobile is-4-tablet">
+  <!-- Kết quả -->
+  <div class="column is-12">
     <label class="label">Kết quả</label>
     <input class="input" name="ket_qua">
   </div>
@@ -804,10 +844,11 @@ body { background:#f4f6f8 }
 <h3 class="subtitle">3️⃣ Thanh toán</h3>
 <div class="columns is-mobile is-multiline">
 
-  <div class="column is-12-mobile is-4-tablet">
+  <!-- Loại thanh toán - Hoá đơn -->
+  <div class="column is-12-mobile is-6-tablet">
     <label class="label">Loại thanh toán</label>
     <div class="select is-fullwidth">
-      <select name="loai_thanh_toan" onchange="toggleHoaDon()">
+      <select name="loai_thanh_toan">
         <option value=""></option>
         <option>Công nợ</option>
         <option>Thanh toán ngay</option>
@@ -815,10 +856,10 @@ body { background:#f4f6f8 }
     </div>
   </div>
 
-  <div class="column is-12-mobile is-4-tablet">
+  <div class="column is-12-mobile is-6-tablet">
     <label class="label">Hoá đơn</label>
     <div class="select is-fullwidth">
-      <select name="hoa_don" id="hoa_don">
+      <select name="hoa_don">
         <option value=""></option>
         <option>Có</option>
         <option>Không</option>
@@ -826,13 +867,13 @@ body { background:#f4f6f8 }
     </div>
   </div>
 
-  <div class="column is-12-mobile is-4-tablet">
+  <!-- Tổng tiền -->
+  <div class="column is-12">
     <label class="label">Tổng tiền</label>
     <input class="input" name="tong_tien">
   </div>
 
 </div>
-
 <!-- ================= 4️⃣ GHI CHÚ ================= -->
 <h3 class="subtitle">4️⃣ Ghi chú</h3>
 <textarea class="textarea" name="ghi_chu"></textarea>
@@ -1810,9 +1851,65 @@ function fillFormByRow(tag, row){
     calcChinhThuc();
   }
 }
+function toggleSuCo(value){
+  const vanDe   = document.querySelector('[name="van_de_phat_sinh"]');
+  const danhGia = document.querySelector('[name="tu_danh_gia"]');
+  const deXuat  = document.querySelector('[name="de_xuat_pa"]');
+
+  if(value === "co"){
+    // BẮT BUỘC NHẬP
+    vanDe.required = true;
+    danhGia.required = true;
+    deXuat.required = true;
+
+    // Nếu trước đó là "Không" thì xóa giá trị mặc định
+    if(vanDe.value === "Hoạt động bình thường"){
+      vanDe.value = "";
+      danhGia.value = "";
+      deXuat.value = "";
+    }
+
+  } else {
+    // KHÔNG BẮT BUỘC
+    vanDe.required = false;
+    danhGia.required = false;
+    deXuat.required = false;
+
+    // TỰ ĐIỀN ĐỂ GỬI SHEET
+    vanDe.value = "Hoạt động bình thường";
+    danhGia.value = "Nhẹ";
+    deXuat.value = "Hoạt động bình thường";
+  }
+}
+function toggleLoaiHinh(value){
+  const moc = document.querySelector('[name="moc_bao_duong"]');
+  const box = document.getElementById('mocBaoDuongBox');
+
+  if(value === "Bảo dưỡng"){
+    box.style.display = "";
+    moc.required = true;
+  } else {
+    box.style.display = "none";
+    moc.required = false;
+    moc.value = "";
+  }
+}
+function handleLoaiDonVi(value){
+  const loaiTT = document.querySelector('[name="loai_thanh_toan"]');
+  const hoaDon = document.querySelector('[name="hoa_don"]');
+
+  if(value === "Gara hợp đồng"){
+    loaiTT.value = "Công nợ";
+    hoaDon.value = "Có";
+
+    loaiTT.disabled = true;
+    hoaDon.disabled = true;
+  } else {
+    loaiTT.disabled = false;
+    hoaDon.disabled = false;
+  }
+}
 
 </script>
 </body>
 </html>
-
-
