@@ -553,11 +553,13 @@ body { background:#f4f6f8 }
     <label class="label">Biển số xe</label>
     <input class="input" name="bien_so_xe" required>
   </div>
-  <div class="column is-4">
+  </div>
+<div class="columns">
+  <div class="column is-6">
     <label class="label">MNV</label>
     <input class="input" name="mnv">
   </div>
-  <div class="column is-4">
+  <div class="column is-6">
     <label class="label">Tài xế</label>
     <input class="input" name="tai_xe">
   </div>
@@ -568,6 +570,7 @@ body { background:#f4f6f8 }
     <label class="label">Ngày vận hành</label>
     <input class="input" type="date" name="ngay_van_hanh">
   </div>
+
   <div class="column is-4">
     <label class="label">Chuyến số</label>
     <div class="select is-fullwidth">
@@ -578,6 +581,7 @@ body { background:#f4f6f8 }
       </select>
     </div>
   </div>
+
   <div class="column is-4">
     <label class="label">Loại chuyến</label>
     <div class="select is-fullwidth">
@@ -594,15 +598,17 @@ body { background:#f4f6f8 }
 <!-- ================= 2️⃣ THỜI GIAN ================= -->
 <h3 class="subtitle">2️⃣ Thời gian</h3>
 <div class="columns">
-  <div class="column">
+  <div class="column is-4">
     <label class="label">Giờ xuất</label>
     <input class="input" type="time" name="gio_xuat" oninput="calcNhatKy()">
   </div>
-  <div class="column">
+
+  <div class="column is-4">
     <label class="label">Giờ về</label>
     <input class="input" type="time" name="gio_ve" oninput="calcNhatKy()">
   </div>
-  <div class="column">
+
+  <div class="column is-4">
     <label class="label">Tổng giờ</label>
     <input class="input" name="tong_gio" readonly>
   </div>
@@ -611,15 +617,17 @@ body { background:#f4f6f8 }
 <!-- ================= 3️⃣ QUÃNG ĐƯỜNG ================= -->
 <h3 class="subtitle">3️⃣ Quãng đường</h3>
 <div class="columns">
-  <div class="column">
+  <div class="column is-4">
     <label class="label">KM xuất</label>
     <input class="input" type="number" name="km_xuat" oninput="calcNhatKy()">
   </div>
-  <div class="column">
+
+  <div class="column is-4">
     <label class="label">KM về</label>
     <input class="input" type="number" name="km_ve" oninput="calcNhatKy()">
   </div>
-  <div class="column">
+
+  <div class="column is-4">
     <label class="label">Tổng KM</label>
     <input class="input" name="tong_km" readonly>
   </div>
@@ -665,7 +673,7 @@ body { background:#f4f6f8 }
 </form>
 </div>
 <!-- ================= TAG: BẢNG KẾT QUẢ NHẬT KÝ ================= -->
-<div id="nhatky_table" class="hidden form-box">
+  <div id="nhatky_table" class="hidden form-box">
 
 <button class="button mb-4" type="button" onclick="backToNhatKy()">⬅ Quay lại Nhật ký</button>
 
@@ -1806,3 +1814,4 @@ function fillFormByRow(tag, row){
 </script>
 </body>
 </html>
+
