@@ -1200,7 +1200,7 @@ body { background:#f4f6f8 }
 
 <script>
 /* ================= CONFIG ================= */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxDRgQq7W75fLqyCj_eC3wlsz34WDg938ZbC7axj6_HP08Tw4OTzUkYA4TpLTL3WfOE/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzkN9XCeS_n-yUjq1iHAyHqwNYuOrzcjlDBMYmazsXRWQHnvEOUQJqA9lDZHpVFsov_/exec";
 const ALL_TAGS = [
   "home",
 
@@ -1385,17 +1385,27 @@ document.getElementById("danhgiaForm")?.addEventListener("submit",e=>{
 
 /* ================= SEARCH BUTTON ================= */
 function searchXe(){
-  const key = document.getElementById("search_bien_so_xe").value;
-  if(!key) return alert("Thiếu biển số xe");
+  const bienSo =
+    document.getElementById("search_bien_so_xe").value.trim();
 
-  loadTableByKey("xe","bien_so_xe",key,"xeTable");
+  loadTableByKey(
+    "xe",
+    "bien_so_xe",
+    bienSo,        // có hoặc rỗng đều OK
+    "xeTable"
+  );
 }
 
 function searchTaiXe(){
-  const key = document.getElementById("search_mnv").value;
-  if(!key) return alert("Thiếu mã nhân viên");
+  const maNV =
+    document.getElementById("search_mnv").value.trim();
 
-  loadTableByKey("taixe","ma_nv",key,"taixeTable");
+  loadTableByKey(
+    "taixe",
+    "ma_nv",
+    maNV,
+    "taixeTable"
+  );
 }
 
 function searchNhatKy(){
@@ -1596,8 +1606,6 @@ function calcChinhThuc(){
 }
 
 function loadTableByKey(tag, keyName, keyValue, tableId){
-  if(!keyValue) return;
-
   const table = document.getElementById(tableId);
   if(!table) return;
 
@@ -1607,52 +1615,65 @@ function loadTableByKey(tag, keyName, keyValue, tableId){
   thead.innerHTML = "";
   tbody.innerHTML = "";
 
-  const url =
-    `${SCRIPT_URL}?tag=${encodeURIComponent(tag)}&` +
-    `${encodeURIComponent(keyName)}=${encodeURIComponent(keyValue)}`;
+  // ✅ KHÔNG CÓ KEY → LẤY HẾT
+  let url = `${SCRIPT_URL}?tag=${encodeURIComponent(tag)}`;
+
+  // ✅ CHỈ GẮN KEY KHI CÓ
+  if(keyValue){
+    url += `&${encodeURIComponent(keyName)}=${encodeURIComponent(keyValue)}`;
+  }
 
   fetch(url)
     .then(res => res.json())
     .then(list => {
-
       if(!Array.isArray(list) || list.length === 0){
         tbody.innerHTML =
-          `<tr>
-            <td colspan="100%" class="has-text-centered">
-              Không có dữ liệu
-            </td>
-          </tr>`;
+          `<tr><td colspan="100%" class="has-text-centered">
+            Không có dữ liệu
+          </td></tr>`;
         return;
       }
 
-      // ===== HEADER =====
-      const headers = Object.keys(list[0]);
-      thead.innerHTML =
-        "<tr>" +
-        headers.map(h => `<th>${h}</th>`).join("") +
-        "</tr>";
+const headers = Object.keys(list[0]);
 
-      // ===== BODY =====
-      list.forEach(row=>{
-        const tr = document.createElement("tr");
+// THÊM CỘT CHỌN
+thead.innerHTML =
+  "<tr><th>Chọn</th>" +
+  headers.map(h=>`<th>${h}</th>`).join("") +
+  "</tr>";
 
-        headers.forEach(h=>{
-          const td = document.createElement("td");
-          td.textContent = row[h] ?? "";
-          tr.appendChild(td);
-        });
+list.forEach(row=>{
+  const tr = document.createElement("tr");
 
-        tbody.appendChild(tr);
-      });
+  // === CỘT CHỌN ===
+  const tdSelect = document.createElement("td");
+  const btn = document.createElement("button");
+  btn.textContent = "Chọn";
+  btn.className = "button is-small is-link";
+
+  btn.onclick = () => {
+    if(tag === "xe") fillFormXe(row);
+    if(tag === "taixe") fillFormTaiXe(row);
+  };
+
+  tdSelect.appendChild(btn);
+  tr.appendChild(tdSelect);
+
+  // === CÁC CỘT DỮ LIỆU ===
+  headers.forEach(h=>{
+    const td = document.createElement("td");
+    td.textContent = row[h] ?? "";
+    tr.appendChild(td);
+  });
+
+  tbody.appendChild(tr);
+});
     })
-    .catch(err=>{
-      console.error("loadTableByKey error:", err);
+    .catch(()=>{
       tbody.innerHTML =
-        `<tr>
-          <td colspan="100%" class="has-text-centered has-text-danger">
-            Lỗi tải dữ liệu
-          </td>
-        </tr>`;
+        `<tr><td colspan="100%" class="has-text-danger">
+          Lỗi tải dữ liệu
+        </td></tr>`;
     });
 }
 
@@ -1913,7 +1934,7 @@ function handleLoaiHinh(select){
     if(moc) moc.value = "";
   }
 }
-const API_URL = "https://script.google.com/macros/s/AKfycbxDRgQq7W75fLqyCj_eC3wlsz34WDg938ZbC7axj6_HP08Tw4OTzUkYA4TpLTL3WfOE/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzkN9XCeS_n-yUjq1iHAyHqwNYuOrzcjlDBMYmazsXRWQHnvEOUQJqA9lDZHpVFsov_/exec";
 
 function autoFillTaiXe(mnv, targetInput){
   if(!mnv){
@@ -1933,6 +1954,23 @@ function autoFillTaiXe(mnv, targetInput){
     .catch(() => {
       targetInput.value = "";
     });
+}
+function fillFormXe(data){
+  Object.keys(data).forEach(k=>{
+    const el = document.querySelector(`[name="${k}"]`);
+    if(el) el.value = data[k];
+  });
+
+  // cuộn lên form
+  document.getElementById("form-xe")?.scrollIntoView({behavior:"smooth"});
+}
+function fillFormTaiXe(data){
+  Object.keys(data).forEach(k=>{
+    const el = document.querySelector(`[name="${k}"]`);
+    if(el) el.value = data[k];
+  });
+
+  document.getElementById("form-taixe")?.scrollIntoView({behavior:"smooth"});
 }
 
 </script>
