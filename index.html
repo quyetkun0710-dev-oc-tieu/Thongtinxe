@@ -566,7 +566,8 @@ body { background:#f4f6f8 }
 <div class="columns is-mobile">
   <div class="column is-6-mobile">
     <label class="label">MNV</label>
-    <input class="input" name="mnv">
+    <input class="input" name="mnv"
+     onblur="autoFillTaiXe(this.value, this.form.tai_xe)">
   </div>
   <div class="column is-6-mobile">
     <label class="label">Tài xế</label>
@@ -1107,7 +1108,8 @@ body { background:#f4f6f8 }
 
   <div class="column is-12-mobile is-4-tablet">
     <label class="label">Mã NV</label>
-    <input class="input" name="ma_nv">
+    <input class="input" name="ma_nv"
+      onblur="autoFillTaiXe(this.value, this.form.ho_ten)">
   </div>
 
   <div class="column is-12-mobile is-4-tablet">
@@ -1910,6 +1912,27 @@ function handleLoaiHinh(select){
     const moc = box.querySelector('[name="moc_bao_duong"]');
     if(moc) moc.value = "";
   }
+}
+const API_URL = "https://script.google.com/macros/s/AKfycbxDRgQq7W75fLqyCj_eC3wlsz34WDg938ZbC7axj6_HP08Tw4OTzUkYA4TpLTL3WfOE/exec";
+
+function autoFillTaiXe(mnv, targetInput){
+  if(!mnv){
+    targetInput.value = "";
+    return;
+  }
+
+  fetch(`${SCRIPT_URL}?tag=taixe&ma_nv=${encodeURIComponent(mnv)}`)
+    .then(res => res.json())
+    .then(list => {
+      if(Array.isArray(list) && list.length > 0){
+        targetInput.value = list[0].ho_ten || "";
+      }else{
+        targetInput.value = "";
+      }
+    })
+    .catch(() => {
+      targetInput.value = "";
+    });
 }
 
 </script>
