@@ -90,6 +90,11 @@ body { background:#f4f6f8 }
     -webkit-overflow-scrolling: touch;
   }
 }
+    /* 🔒 KHÓA FIELD KHI AUTO-SET */
+    .is-locked{
+      pointer-events: none;
+      background: #f5f5f5;
+    }
 </style>
 </head>
 
@@ -756,11 +761,13 @@ body { background:#f4f6f8 }
   <div class="column is-6-mobile is-4-tablet">
     <label class="label">Loại hình</label>
     <div class="select is-fullwidth">
-      <select name="loai_hinh" onchange="toggleLoaiHinh(this.value)">
-        <option value=""></option>
-        <option>Bảo dưỡng</option>
-        <option>Sửa chữa</option>
-      </select>
+<select name="loai_hinh" id="loai_hinh"
+        onchange="handleLoaiHinh(this)" required>
+  <option value=""></option>
+  <option value="Bảo dưỡng">Bảo dưỡng</option>
+  <option value="Sửa chữa">Sửa chữa</option>
+</select>
+
     </div>
   </div>
 
@@ -812,11 +819,11 @@ body { background:#f4f6f8 }
   <div class="column is-12-mobile is-6-tablet">
     <label class="label">Loại đơn vị</label>
     <div class="select is-fullwidth">
-      <select name="loai_don_vi" onchange="handleLoaiDonVi(this.value)">
-        <option value=""></option>
-        <option>Gara hợp đồng</option>
-        <option>Gara ngoài</option>
-      </select>
+<select name="loai_don_vi" onchange="handleLoaiDonVi(this)">
+  <option value=""></option>
+  <option>Gara hợp đồng</option>
+  <option>Gara ngoài</option>
+</select>
     </div>
   </div>
 
@@ -848,22 +855,23 @@ body { background:#f4f6f8 }
   <div class="column is-12-mobile is-6-tablet">
     <label class="label">Loại thanh toán</label>
     <div class="select is-fullwidth">
-      <select name="loai_thanh_toan">
-        <option value=""></option>
-        <option>Công nợ</option>
-        <option>Thanh toán ngay</option>
-      </select>
+<select name="loai_thanh_toan">
+  <option value=""></option>
+  <option>Công nợ</option>
+  <option>Tiền mặt</option>
+  <option>Chuyển khoản</option>
+</select>
     </div>
   </div>
 
   <div class="column is-12-mobile is-6-tablet">
     <label class="label">Hoá đơn</label>
     <div class="select is-fullwidth">
-      <select name="hoa_don">
-        <option value=""></option>
-        <option>Có</option>
-        <option>Không</option>
-      </select>
+<select name="hoa_don">
+  <option value=""></option>
+  <option>Có</option>
+  <option>Không</option>
+</select>
     </div>
   </div>
 
@@ -1280,20 +1288,25 @@ function submitForm(tag, form){
   const fd = new FormData(form);
   fd.append("tag", tag);
 
-  fetch(SCRIPT_URL, {
-    method: "POST",
-    body: fd
+  console.group("SUBMIT:", tag);
+  for(const [k,v] of fd.entries()){
+    console.log(k, "=", v);
+  }
+  console.groupEnd();
+
+  fetch(SCRIPT_URL,{
+    method:"POST",
+    body:fd
   })
   .then(res => res.text())
   .then(txt => {
     console.log("SERVER:", txt);
     let r;
     try { r = JSON.parse(txt); } catch { r = {}; }
-
-    if(r.status === "success"){
-      alert("✅ Lưu thành công");
-      form.reset();
-    }else{
+if(r.status === "success"){
+  alert("✅ Lưu thành công");
+  setTimeout(()=>form.reset(), 300);
+}else{
       alert("❌ Lỗi lưu dữ liệu");
     }
   })
@@ -1342,9 +1355,10 @@ function fillForm(formId, data){
       el.value = data[k];
     }
   });
-updateRemainFields();
+if(formId === "xeForm"){
+  updateRemainFields();
 }
-
+}
 /* ================= AUTO BIND SUBMIT ================= */
 document.getElementById("xeForm")?.addEventListener("submit",e=>{
   e.preventDefault(); submitForm("xe", e.target);
@@ -1894,19 +1908,42 @@ function toggleLoaiHinh(value){
     moc.value = "";
   }
 }
-function handleLoaiDonVi(value){
-  const loaiTT = document.querySelector('[name="loai_thanh_toan"]');
-  const hoaDon = document.querySelector('[name="hoa_don"]');
+function handleLoaiDonVi(select){
+  if(!select) return;
 
-  if(value === "Gara hợp đồng"){
-    loaiTT.value = "Công nợ";
+  const form = select.closest("form");
+  if(!form) return;
+
+  const loaiThanhToan = form.querySelector('[name="loai_thanh_toan"]');
+  const hoaDon        = form.querySelector('[name="hoa_don"]');
+
+  if(!loaiThanhToan || !hoaDon) return;
+
+  if(select.value === "Gara hợp đồng"){
+    // Gán giá trị
+    loaiThanhToan.value = "Công nợ";
     hoaDon.value = "Có";
 
-    loaiTT.disabled = true;
-    hoaDon.disabled = true;
-  } else {
-    loaiTT.disabled = false;
-    hoaDon.disabled = false;
+    // Khoá chỉnh sửa nhưng VẪN SUBMIT
+    loaiThanhToan.classList.add("is-locked");
+    hoaDon.classList.add("is-locked");
+
+  }else{
+    // Gara ngoài → cho chọn
+    loaiThanhToan.classList.remove("is-locked");
+    hoaDon.classList.remove("is-locked");
+  }
+}
+function handleLoaiHinh(select){
+  const box = document.getElementById("mocBaoDuongBox");
+  if(!box) return;
+
+  if(select.value === "Bảo dưỡng"){
+    box.classList.remove("hidden");
+  }else{
+    box.classList.add("hidden");
+    const moc = box.querySelector('[name="moc_bao_duong"]');
+    if(moc) moc.value = "";
   }
 }
 
