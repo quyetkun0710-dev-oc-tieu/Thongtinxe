@@ -515,13 +515,49 @@ body { background:#f4f6f8 }
 
 <!-- 6. HỒ SƠ -->
 <h3 class="subtitle">6️⃣ Hồ sơ</h3>
-<div class="columns is-mobile is-multiline">
-  <div class="column is-6-mobile"><label><input type="checkbox" name="hs_cccd"> CCCD</label></div>
-  <div class="column is-6-mobile"><label><input type="checkbox" name="hs_gplx"> GPLX</label></div>
-  <div class="column is-6-mobile"><label><input type="checkbox" name="hs_suc_khoe"> Giấy khám sức khoẻ</label></div>
-  <div class="column is-6-mobile"><label><input type="checkbox" name="hs_so_yeu"> Sơ yếu lý lịch</label></div>
-  <div class="column is-6-mobile"><label><input type="checkbox" name="hs_cu_tru"> Xác nhận cư trú</label></div>
-  <div class="column is-6-mobile"><label><input type="checkbox" name="hs_dan_su"> Xác nhận dân sự</label></div>
+
+<div class="columns is-mobile is-multiline" id="hs-taixe">
+
+  <div class="column is-6-mobile">
+    <label>
+      <input type="checkbox" name="hs_cccd" value="Có"> CCCD
+    </label>
+  </div>
+
+  <div class="column is-6-mobile">
+    <label>
+      <input type="checkbox" name="hs_gplx" value="Có"> GPLX
+    </label>
+  </div>
+
+  <div class="column is-6-mobile">
+    <label>
+      <input type="checkbox" name="hs_suc_khoe" value="Có">
+      Giấy khám sức khoẻ
+    </label>
+  </div>
+
+  <div class="column is-6-mobile">
+    <label>
+      <input type="checkbox" name="hs_so_yeu" value="Có">
+      Sơ yếu lý lịch
+    </label>
+  </div>
+
+  <div class="column is-6-mobile">
+    <label>
+      <input type="checkbox" name="hs_cu_tru" value="Có">
+      Xác nhận cư trú
+    </label>
+  </div>
+
+  <div class="column is-6-mobile">
+    <label>
+      <input type="checkbox" name="hs_dan_su" value="Có">
+      Xác nhận dân sự
+    </label>
+  </div>
+
 </div>
 
 <button class="button is-primary is-fullwidth mt-4" type="submit">
@@ -1206,7 +1242,7 @@ body { background:#f4f6f8 }
 
 <script>
 /* ================= CONFIG ================= */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyjFTcOSBDXc06l0E3JC-krmZRg5mRNyH6DyQ3NnDJH_rKfZTtpBNUWofuCb5zdjuyY/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzx2SIx65Z2zzJcmKy4Mg_spn57WjxFgoVvGlRFa2nBt1xoQ9PuN76PR87ZQOD-pKzw/exec";
 const ALL_TAGS = [
   "home",
 
@@ -1966,7 +2002,38 @@ function handleLoaiHinh(select){
     if(moc) moc.value = "";
   }
 }
-const API_URL = "https://script.google.com/macros/s/AKfycbyjFTcOSBDXc06l0E3JC-krmZRg5mRNyH6DyQ3NnDJH_rKfZTtpBNUWofuCb5zdjuyY/exec";
+const CHECKBOX_FIELDS_TAIXE = [
+  "hs_cccd",
+  "hs_gplx",
+  "hs_suc_khoe",
+  "hs_so_yeu",
+  "hs_cu_tru",
+  "hs_dan_su"
+];
+
+function submitTaiXe(){
+  const form = document.getElementById("form-taixe");
+  const fd = new FormData(form);
+
+  CHECKBOX_FIELDS_TAIXE.forEach(name=>{
+    if(fd.has(name)){
+      fd.set(name, "Có");     // checkbox được tích
+    }else{
+      fd.append(name, "Không"); // checkbox không tích
+    }
+  });
+
+  fetch(SCRIPT_URL,{
+    method:"POST",
+    body:fd
+  })
+  .then(r=>r.json())
+  .then(res=>{
+    alert(res.status==="success" ? "Đã lưu" : res.message);
+  });
+}
+
+const API_URL = "https://script.google.com/macros/s/AKfycbzoH3ZTYzzDzJEh0nejPQle2NuooPuv-rRaRUaBv99_w0JqiTanwNgY40ZYTmh-ElLV/exechttps://script.google.com/macros/s/AKfycbzx2SIx65Z2zzJcmKy4Mg_spn57WjxFgoVvGlRFa2nBt1xoQ9PuN76PR87ZQOD-pKzw/exec";
 
 function autoFillTaiXe(mnv, targetInput){
   if(!mnv){
