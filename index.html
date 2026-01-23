@@ -1206,7 +1206,7 @@ body { background:#f4f6f8 }
 
 <script>
 /* ================= CONFIG ================= */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxwTFQuyf9Tq-_tHCOF_wvJd7say1iGEfubX51SO7VEG4DrbX374AyJwBJ2JjgJf4V1/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwXfZByOJhBEVE4zKOy_ndoOXkoO3L4iETg82nSb55zMaafG117WTkf0K0Fmu2i3eQK/exec";
 const ALL_TAGS = [
   "home",
 
@@ -1513,6 +1513,27 @@ function calcRemainDays(dateStr){
   );
 
   return diff >= 0 ? diff : 0;
+}
+function calc(input, limitDays, targetField){
+  if(!input || !input.value) return;
+
+  const form = input.form;
+  if(!form || !form[targetField]) return;
+
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  const target = new Date(input.value);
+  if(isNaN(target.getTime())) return;
+  target.setHours(0,0,0,0);
+
+  let diff = Math.ceil(
+    (target - today) / (1000 * 60 * 60 * 24)
+  );
+
+  if(diff < 0) diff = 0;
+
+  form[targetField].value = diff;
 }
 
 /* ===== UPDATE CÁC FIELD CÒN LẠI ===== */
@@ -1940,7 +1961,7 @@ function handleLoaiHinh(select){
     if(moc) moc.value = "";
   }
 }
-const API_URL = "https://script.google.com/macros/s/AKfycbxwTFQuyf9Tq-_tHCOF_wvJd7say1iGEfubX51SO7VEG4DrbX374AyJwBJ2JjgJf4V1/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwXfZByOJhBEVE4zKOy_ndoOXkoO3L4iETg82nSb55zMaafG117WTkf0K0Fmu2i3eQK/exec";
 
 function autoFillTaiXe(mnv, targetInput){
   if(!mnv){
@@ -1982,5 +2003,3 @@ function fillFormTaiXe(data){
 </script>
 </body>
 </html>
-
-
