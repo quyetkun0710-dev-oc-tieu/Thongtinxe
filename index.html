@@ -396,10 +396,16 @@ body { background:#f4f6f8 }
     <input class="input" name="nam_sinh" placeholder="Năm sinh">
   </div>
 
-  <div class="column is-6-mobile is-4-tablet">
-    <label class="label">Giới tính</label>
-    <input class="input" name="gioi_tinh" placeholder="Giới tính">
+<div class="column is-6-mobile is-4-tablet">
+  <label class="label">Giới tính</label>
+  <div class="select is-fullwidth">
+    <select name="gioi_tinh">
+      <option value="">-- Chọn --</option>
+      <option value="Nam">Nam</option>
+      <option value="Nữ">Nữ</option>
+    </select>
   </div>
+</div>
   <div class="column is-6-mobile is-4-tablet">
     <label class="label">Số CCCD/Hộ chiếu</label>
     <input class="input" name="cccd" placeholder="CCCD / Hộ chiếu">
@@ -1976,5 +1982,4 @@ function fillFormTaiXe(data){
 </script>
 </body>
 </html>
-
 
