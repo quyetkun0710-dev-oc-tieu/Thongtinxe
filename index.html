@@ -99,6 +99,23 @@ body { background:#f4f6f8 }
 .fuel-hidden {
   display: none;
 }
+#name-suggest {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #ccc;
+  z-index: 999;
+  display: none;
+}
+
+.suggest-item {
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.suggest-item:hover {
+  background: #f0f0f0;
+}
+
 </style>
 </head>
 
@@ -1154,10 +1171,11 @@ body { background:#f4f6f8 }
       onblur="autoFillTaiXe(this.value, this.form.ho_ten)">
   </div>
 
-  <div class="column is-12-mobile is-4-tablet">
-    <label class="label">Họ tên</label>
-    <input class="input" name="ho_ten">
-  </div>
+<div class="column is-12-mobile is-4-tablet" style="position:relative">
+  <label class="label">Họ tên</label>
+  <input class="input" name="ho_ten" oninput="suggestHoTen(this)">
+  <div id="name-suggest"></div>
+</div>
 
   <div class="column is-12-mobile is-4-tablet">
     <label class="label">Ngày đánh giá</label>
@@ -1242,7 +1260,7 @@ body { background:#f4f6f8 }
 
 <script>
 /* ================= CONFIG ================= */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzx2SIx65Z2zzJcmKy4Mg_spn57WjxFgoVvGlRFa2nBt1xoQ9PuN76PR87ZQOD-pKzw/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw43r0SdZ8TuJ5oqVRHA3mTDbUNZeCFXNj4Fizc3uLOVAOanSsYmgh5ZvEF7KzcLmb_/exec";
 const ALL_TAGS = [
   "home",
 
@@ -2033,7 +2051,7 @@ function submitTaiXe(){
   });
 }
 
-const API_URL = "https://script.google.com/macros/s/AKfycbzoH3ZTYzzDzJEh0nejPQle2NuooPuv-rRaRUaBv99_w0JqiTanwNgY40ZYTmh-ElLV/exechttps://script.google.com/macros/s/AKfycbzx2SIx65Z2zzJcmKy4Mg_spn57WjxFgoVvGlRFa2nBt1xoQ9PuN76PR87ZQOD-pKzw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbw43r0SdZ8TuJ5oqVRHA3mTDbUNZeCFXNj4Fizc3uLOVAOanSsYmgh5ZvEF7KzcLmb_/exec";
 
 function autoFillTaiXe(mnv, targetInput){
   if(!mnv){
@@ -2070,6 +2088,82 @@ function fillFormTaiXe(data){
   });
 
   document.getElementById("form-taixe")?.scrollIntoView({behavior:"smooth"});
+}
+async function handleHoTenInput(value) {
+  if (!value) return;
+
+  const res = await fetch(`${API_URL}?action=searchByName&name=${encodeURIComponent(value)}`);
+  const data = await res.json();
+
+  if (data.length === 1) {
+    fillForm(data[0]);
+    hideNameList();
+  }
+
+  if (data.length > 1) {
+    renderNameList(data);
+  }
+}
+
+function renderNameList(list) {
+  const box = document.getElementById('name-suggest');
+  box.innerHTML = '';
+  box.style.display = 'block';
+
+  list.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'suggest-item';
+    div.innerText = `${item.hoTen} – ${item.maNV}`;
+    div.onclick = () => {
+      fillForm(item);
+      hideNameList();
+    };
+    box.appendChild(div);
+  });
+}
+
+function hideNameList() {
+  document.getElementById('name-suggest').style.display = 'none';
+}
+
+function fillForm(data) {
+  document.getElementById('maNV').value = data.maNV;
+  // các field khác giữ nguyên theo form hiện có
+}
+function suggestHoTen(input){
+  const keyword = input.value.trim();
+  const box = document.getElementById("name-suggest");
+
+  if(keyword.length < 2){
+    box.style.display = "none";
+    box.innerHTML = "";
+    return;
+  }
+
+  fetch(`${SCRIPT_URL}?ho_ten=${encodeURIComponent(keyword)}`)
+    .then(r => r.json())
+    .then(list => {
+      if(!Array.isArray(list) || list.length === 0){
+        box.style.display = "none";
+        return;
+      }
+
+      box.innerHTML = "";
+      list.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "suggest-item";
+        div.textContent = `${item.ho_ten} – ${item.ma_nv}`;
+        div.onclick = () => {
+          const form = document.getElementById("danhgiaForm");
+          form.ho_ten.value = item.ho_ten;
+          form.ma_nv.value  = item.ma_nv;
+          box.style.display = "none";
+        };
+        box.appendChild(div);
+      });
+
+      box.style.display = "block";
+    });
 }
 
 </script>
