@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
@@ -101,10 +101,37 @@ display: none;
 </style>
 </head>
 <body>
+    <!-- ================= LOGIN ================= -->
+<div id="login" class="form-box">
+  <div class="box">
+    <h2 class="title is-4 has-text-centered">🔐 ĐĂNG NHẬP HỆ THỐNG</h2>
+
+    <div class="field">
+      <label class="label">Tài khoản</label>
+      <input class="input" id="login_user" placeholder="Nhập tài khoản">
+    </div>
+
+    <div class="field">
+      <label class="label">Mật khẩu</label>
+      <input
+        class="input"
+        id="login_pass"
+        type="password"
+        placeholder="Nhập mật khẩu"
+      >
+    </div>
+
+    <button class="button is-primary is-fullwidth" onclick="doLogin()">
+      🔓 Đăng nhập
+    </button>
+  </div>
+</div>
+<!-- ================= END LOGIN ================= -->
+
 <section class="section">
 <div class="container">
  <!-- ================= HOME ================= -->
-<div id="home">
+<div id="home" class="hidden">
 <div class="home-header">
 <div class="header-inner header-center">
 <img
@@ -118,42 +145,42 @@ src="https://drive.google.com/thumbnail?id=1nmtk4Y6oiqEXXebMOmZy6QNpkqPf75qe&sz=
 </div>
 <div class="columns is-multiline">
 <div class="column is-3">
-<div class="card card-hover" onclick="openTag('xe')">
+<div class="card card-hover" data-tag="xe" onclick="openTag('xe')">
 <div class="card-content has-text-centered">
 <p class="title is-5">🚚 Thông tin xe</p>
  </div>
  </div>
 </div>
 <div class="column is-3">
- <div class="card card-hover" onclick="openTag('taixe')">
+ <div class="card card-hover" data-tag="taixe" onclick="openTag('taixe')">
 <div class="card-content has-text-centered">
  <p class="title is-5">👨‍✈️ Tài xế</p>
 </div>
 </div>
  </div>
 <div class="column is-3">
-<div class="card card-hover" onclick="openTag('nhatky')">
+<div class="card card-hover" data-tag="nhatky" onclick="openTag('nhatky')">
 <div class="card-content has-text-centered">
 <p class="title is-5">📒 Nhật ký vận hành</p>
  </div>
 </div>
 </div>
  <div class="column is-3">
-<div class="card card-hover" onclick="openTag('baoduong')">
+<div class="card card-hover" data-tag="baoduong" onclick="openTag('baoduong')">
  <div class="card-content has-text-centered">
  <p class="title is-5">🛠️ Bảo dưỡng</p>
  </div>
  </div>
  </div>
 <div class="column is-3">
-<div class="card card-hover" onclick="openTag('fuel')">
+<div class="card card-hover" data-tag="fuel" onclick="openTag('fuel')">
  <div class="card-content has-text-centered">
  <p class="title is-5">⛽ Nhiên liệu</p>
 </div>
  </div>
  </div>
 <div class="column is-3">
-<div class="card card-hover" onclick="openTag('danhgia')">
+<div class="card card-hover" data-tag="danhgia" onclick="openTag('danhgia')">
 <div class="card-content has-text-centered">
 <p class="title is-5">📊 Đánh giá nhân sự</p>
  </div>
@@ -1348,20 +1375,92 @@ const ALL_TAGS = [
 "danhgia",
 "danhgia_table"
 ];
-/* ================= UI NAV ================= */
-function openTag(id) {
-// Ẩn tất cả
-ALL_TAGS.forEach(t => {
-const el = document.getElementById(t);
-if (el) el.classList.add("hidden");
+/* ================= LOGIN ================= */
+const LOGIN_API = "https://script.google.com/macros/s/AKfycbw3MTRDfoEpxL8JJQxgmYYO6YKRIUZLnuHzt5ff5lCWQYhHwRYTAvlcRndXBU5ydgj1Zg/exec";
+async function doLogin() {
+  const u = document.getElementById("login_user").value.trim();
+  const p = document.getElementById("login_pass").value.trim();
+
+  const res = await fetch(LOGIN_API, {
+    method: "POST",
+    body: JSON.stringify({ user: u, pass: p })
+  });
+
+  const data = await res.json();
+
+  if (!data.ok) {
+    alert("❌ Sai tài khoản hoặc mật khẩu");
+    return;
+  }
+USER_ROLE = data.role === "driver" ? "taixe" : data.role;
+
+sessionStorage.setItem("logged", "1");
+sessionStorage.setItem("role", USER_ROLE);
+
+document.getElementById("login").classList.add("hidden");
+document.getElementById("home").classList.remove("hidden");
+}
+function hideAllTags() {
+  document.querySelectorAll(
+    ".tag-nhatky, .tag-baoduong, .tag-nhienlieu, .tag-danhgia"
+  ).forEach(el => el.classList.add("hidden"));
+}
+
+function showTags(list) {
+  list.forEach(cls => {
+    document.querySelectorAll(cls)
+      .forEach(el => el.classList.remove("hidden"));
+  });
+}
+window.addEventListener("load", () => {
+  const logged = sessionStorage.getItem("logged");
+  const role = sessionStorage.getItem("role");
+
+  if (logged === "1" && role) {
+    USER_ROLE = role;
+    document.getElementById("login")?.classList.add("hidden");
+    document.getElementById("home")?.classList.remove("hidden");
+  } else {
+    document.getElementById("login")?.classList.remove("hidden");
+  }
 });
-// Hiện đúng TAG
-const target = document.getElementById(id);
-if (target) {
-target.classList.remove("hidden");
+
+/* ================= UI NAV ================= */
+let USER_ROLE = null; // manager | admin | taixe
+
+const ROLE_PERMISSION = {
+  manager: ["xe", "taixe", "nhatky", "baoduong", "fuel", "danhgia"],
+  admin: ["nhatky", "baoduong", "fuel", "danhgia"],
+  taixe: ["nhatky", "baoduong", "fuel"]
+};
+function openTag(tagId) {
+  if (!USER_ROLE) {
+    alert("Chưa đăng nhập");
+    return;
+  }
+
+  const allowTags = ROLE_PERMISSION[USER_ROLE] || [];
+
+  if (!allowTags.includes(tagId)) {
+    alert("Bạn không có quyền truy cập chức năng này");
+    return;
+  }
+
+  // Ẩn home
+  document.getElementById("home").classList.add("hidden");
+
+  // Ẩn toàn bộ TAG
+  document.querySelectorAll(".form-box").forEach(el => {
+    el.classList.add("hidden");
+  });
+
+  // Hiện TAG được phép
+  const target = document.getElementById(tagId);
+  if (target) {
+    target.classList.remove("hidden");
+  }
 }
-window.scrollTo({ top: 0 });
-}
+
 function backHome() {
 ALL_TAGS.forEach(t => {
 const el = document.getElementById(t);
@@ -2030,7 +2129,30 @@ document
 .getElementById("form-taixe")
 ?.scrollIntoView({ behavior: "smooth" });
 }
+function applyRolePermission(role) {
+  USER_ROLE = role;
+
+  const allowTags = ROLE_PERMISSION[role] || [];
+
+  /* 1. Ẩn toàn bộ TAG form */
+  document.querySelectorAll(".form-box").forEach(el => {
+    el.classList.add("hidden");
+  });
+
+  /* 2. Hiện HOME */
+  document.getElementById("home").classList.remove("hidden");
+
+  /* 3. Xử lý card HOME */
+  document.querySelectorAll("#home .card").forEach(card => {
+    const tag = card.dataset.tag;
+    if (allowTags.includes(tag)) {
+      card.style.display = "block";
+    } else {
+      card.style.display = "none";
+    }
+  });
+}
+
 </script>
 </body>
 </html>
-
