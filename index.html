@@ -1399,6 +1399,7 @@ sessionStorage.setItem("role", USER_ROLE);
 
 document.getElementById("login").classList.add("hidden");
 document.getElementById("home").classList.remove("hidden");
+applyHomeCardByRole();
 }
 function hideAllTags() {
   document.querySelectorAll(
@@ -1433,6 +1434,24 @@ const ROLE_PERMISSION = {
   admin: ["nhatky", "baoduong", "fuel", "danhgia"],
   taixe: ["nhatky", "baoduong", "fuel"]
 };
+/* ================= HIDE HOME CARD BY ROLE ================= */
+
+function applyHomeCardByRole() {
+  if (!USER_ROLE) return;
+
+  const allowTags = ROLE_PERMISSION[USER_ROLE] || [];
+
+  document.querySelectorAll("#home [data-tag]").forEach(card => {
+    const tag = card.dataset.tag;
+
+    if (!allowTags.includes(tag)) {
+      card.style.display = "none";
+    } else {
+      card.style.display = "";
+    }
+  });
+}
+
 function openTag(tagId) {
   if (!USER_ROLE) {
     alert("Chưa đăng nhập");
