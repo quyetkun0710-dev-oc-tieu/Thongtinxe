@@ -1196,6 +1196,8 @@ name="gio_thuc_hien"
 class="input"
 type="number"
 name="so_lit"
+step="0.001"
+inputmode="decimal"
 oninput="calcFuelMoney()"
 >
 </div>
@@ -1394,7 +1396,7 @@ id="danhgiaResultTable"
 <script>
 /* ================= CONFIG ================= */
 const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbwG70Qulg3Wm9v8JNBuK2PEuWwPjPqRiB1dDIiEq0pNZegIB9kbgF95e08EZwceeTRJ/exec";
+"https://script.google.com/macros/s/AKfycbytmytPowKp58TET6maz9SeeGhlY8clf_9jF2Pla9UsQL4-szcGnVoiAkojqilWkLba/exec";
 const ALL_TAGS = [
 "home",
 "xe",
@@ -2141,7 +2143,7 @@ alert(res.status === "success" ? "Đã lưu" : res.message);
 });
 }
 const API_URL =
-"https://script.google.com/macros/s/AKfycbwG70Qulg3Wm9v8JNBuK2PEuWwPjPqRiB1dDIiEq0pNZegIB9kbgF95e08EZwceeTRJ/exec";
+"https://script.google.com/macros/s/AKfycbytmytPowKp58TET6maz9SeeGhlY8clf_9jF2Pla9UsQL4-szcGnVoiAkojqilWkLba/exec";
 function autoFillTaiXe(mnv, targetInput) {
 if (!mnv) {
 targetInput.value = "";
@@ -2226,4 +2228,3 @@ function doLogout() {
 </script>
 </body>
 </html>
-
