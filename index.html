@@ -10,6 +10,11 @@
   <style>
     body {
       background: #f4f6f8;
+      min-height: 100vh;
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
     }
 
     .hidden {
@@ -25,9 +30,67 @@
       transform: scale(1.03);
     }
 
+    .form-box,
+    .box,
+    .card {
+      /* Loại bỏ background container lớn */
+      background: transparent !important;
+      box-shadow: none !important;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    /* Thêm nền cho input để dễ nhìn */
+    .input,
+    .textarea,
+    .select select {
+      background: rgba(255, 255, 255, 0.9) !important;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      font-weight: 500;
+    }
+
+    /* Chữ có viền bóng để nổi trên nền ảnh */
+    .label,
+    .title,
+    .subtitle,
+    .checkbox,
+    .radio {
+      color: #fff !important;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Bảng giữ nguyên nền trắng để dễ đọc */
+    .table-container {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Card home vẫn cần chút nền để bấm được */
+    #home .card {
+      background: rgba(255, 255, 255, 0.85) !important;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+      transition: transform 0.2s;
+    }
+
+    #home .card:hover {
+      background: rgba(255, 255, 255, 0.95) !important;
+      transform: scale(1.05);
+    }
+
+    /* Chữ trong card home màu đen cho dễ đọc */
+    #home .card .title {
+      color: #333 !important;
+      text-shadow: none !important;
+    }
+
     .form-box {
       max-width: 1100px;
       margin: auto;
+      padding: 20px;
     }
 
     /* ===== HEADER TRANG ĐẦU (HOME ONLY) ===== */
@@ -40,7 +103,9 @@
       display: flex;
       align-items: center;
       gap: 20px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+      background: linear-gradient(135deg, rgba(252, 24, 24, 0.95), rgba(182, 60, 60, 0.95));
+      backdrop-filter: blur(4px);
     }
 
     .home-header .logo {
@@ -1172,7 +1237,7 @@
   <script>
     /* ================= CONFIG ================= */
     const SCRIPT_URL =
-      "https://script.google.com/macros/s/AKfycbxF28gmgYDUSHnk8SDqUqHcnfNvnP7LZN0k2ib9BaWl2C4_cZijkx7rDWOLuVGv_cAA/exec";
+      "https://script.google.com/macros/s/AKfycbzbtEpCG0ZujJxlwbCGXKNMWHX8sucM2gj2SYCvIxsdJFVUjmzxXhBpx5SXVfogmgK3/exec";
     const ALL_TAGS = [
       "home",
       "xe",
@@ -1232,10 +1297,50 @@
         USER_ROLE = role;
         document.getElementById("login")?.classList.add("hidden");
         document.getElementById("home")?.classList.remove("hidden");
+        applyBackground("home"); // Mặc định home
       } else {
         document.getElementById("login")?.classList.remove("hidden");
+        applyBackground("login"); // Mặc định login
       }
+
+      // Tải ảnh nền
+      fetchBackgrounds();
     });
+
+    /* ================= BACKGROUNDS ================= */
+    let BG_CONFIG = {};
+
+    function fetchBackgrounds() {
+      fetch(`${SCRIPT_URL}?action=get_backgrounds`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === "success") {
+            BG_CONFIG = data.data;
+            // Apply ngay nếu đang ở home/login
+            const currentTag = document.getElementById("home").classList.contains("hidden")
+              ? (document.getElementById("login").classList.contains("hidden") ? "other" : "login")
+              : "home";
+            if (currentTag !== "other") applyBackground(currentTag);
+          }
+        })
+        .catch(err => console.error("Lỗi tải background:", err));
+    }
+
+    function applyBackground(tag) {
+      // Ưu tiên ảnh từ Sheet
+      const url = BG_CONFIG[tag] || BG_CONFIG["default"];
+
+      if (url) {
+        document.body.style.backgroundImage = `url('${url}')`;
+        document.body.style.backgroundSize = "cover";
+        document.body.style.backgroundPosition = "center";
+        document.body.style.backgroundAttachment = "fixed";
+      } else {
+        // Fallback nếu không có ảnh
+        document.body.style.background = "#f4f6f8";
+        document.body.style.backgroundImage = "";
+      }
+    }
 
     /* ================= UI NAV ================= */
     let USER_ROLE = null; // manager | admin | taixe
@@ -1288,6 +1393,7 @@
       const target = document.getElementById(tagId);
       if (target) {
         target.classList.remove("hidden");
+        applyBackground(tagId); // Đổi background theo tag
       }
     }
 
@@ -1297,13 +1403,21 @@
         if (el) el.classList.add("hidden");
       });
       document.getElementById("home")?.classList.remove("hidden");
+      applyBackground("home"); // Đổi background về home
       window.scrollTo({ top: 0 });
     }
-    function backToNhatKy() {
+
+    // Generic function to go back to a specific form/tag
+    function backToForm(tagId) {
       ALL_TAGS.forEach(t => {
         document.getElementById(t)?.classList.add("hidden");
       });
-      document.getElementById("nhatky")?.classList.remove("hidden");
+      document.getElementById(tagId)?.classList.remove("hidden");
+      applyBackground(tagId); // Apply background for the specific tag
+      window.scrollTo({ top: 0 });
+    }
+
+    function backToNhatKy() {
       window.scrollTo({ top: 0 });
     }
     function backToBaoDuong() {
@@ -1927,7 +2041,7 @@ Lỗi tải dữ liệu
         });
     }
     const API_URL =
-      "https://script.google.com/macros/s/AKfycbxF28gmgYDUSHnk8SDqUqHcnfNvnP7LZN0k2ib9BaWl2C4_cZijkx7rDWOLuVGv_cAA/exec";
+      "https://script.google.com/macros/s/AKfycbzbtEpCG0ZujJxlwbCGXKNMWHX8sucM2gj2SYCvIxsdJFVUjmzxXhBpx5SXVfogmgK3/exec";
     function autoFillTaiXe(mnv, targetInput) {
       if (!mnv) {
         targetInput.value = "";
