@@ -492,7 +492,7 @@
           </h3>
           <div class="columns is-mobile">
             <div class="column is-8-mobile is-4-tablet">
-              <label class="label">Biển số xe (KEY)</label>
+              <label class="label">Biển số xe</label>
               <input class="input" id="search_bien_so_xe" placeholder="VD: 51C-12345">
             </div>
             <div class="column is-4-mobile is-2-tablet">
@@ -697,7 +697,7 @@
             </div>
             <div class="column is-6-mobile is-4-tablet">
               <label class="label">Năm sinh</label>
-              <input class="input" type="number" name="nam_sinh" placeholder="Năm sinh">
+              <input class="input" type="date" name="nam_sinh">
             </div>
             <div class="column is-6-mobile is-4-tablet">
               <label class="label">Giới tính</label>
@@ -809,35 +809,35 @@
           <h3 class="subtitle">6️⃣ Hồ sơ</h3>
           <div class="columns is-mobile is-multiline" id="hs-taixe">
             <div class="column is-6-mobile">
-              <label>
+              <label class="checkbox">
                 <input type="checkbox" name="hs_cccd" value="Có"> CCCD
               </label>
             </div>
             <div class="column is-6-mobile">
-              <label>
+              <label class="checkbox">
                 <input type="checkbox" name="hs_gplx" value="Có"> GPLX
               </label>
             </div>
             <div class="column is-6-mobile">
-              <label>
+              <label class="checkbox">
                 <input type="checkbox" name="hs_suc_khoe" value="Có">
                 Giấy khám sức khoẻ
               </label>
             </div>
             <div class="column is-6-mobile">
-              <label>
+              <label class="checkbox">
                 <input type="checkbox" name="hs_so_yeu" value="Có">
                 Sơ yếu lý lịch
               </label>
             </div>
             <div class="column is-6-mobile">
-              <label>
+              <label class="checkbox">
                 <input type="checkbox" name="hs_cu_tru" value="Có">
                 Xác nhận cư trú
               </label>
             </div>
             <div class="column is-6-mobile">
-              <label>
+              <label class="checkbox">
                 <input type="checkbox" name="hs_dan_su" value="Có">
                 Xác nhận dân sự
               </label>
@@ -1423,7 +1423,7 @@
   <script>
     /* ================= CONFIG ================= */
     const SCRIPT_URL =
-      "https://script.google.com/macros/s/AKfycbzbtEpCG0ZujJxlwbCGXKNMWHX8sucM2gj2SYCvIxsdJFVUjmzxXhBpx5SXVfogmgK3/exec";
+      "https://script.google.com/macros/s/AKfycbyL3A3yxdnRcYvEcI7Awqz2Mf9dMfW8J5p7BFyD_6igzFs1IUiw0V5Tb4_7l9lcuASX/exec";
     const ALL_TAGS = [
       "home",
       "xe",
@@ -1983,8 +1983,8 @@ Không có dữ liệu
             btn.textContent = "Chọn";
             btn.className = "button is-small is-link";
             btn.onclick = () => {
-              if (tag === "xe") fillForm("xeForm", row);
-              if (tag === "taixe") fillForm("taixeForm", row);
+              if (tag === "xe") fillFormXe(row);
+              if (tag === "taixe") fillFormTaiXe(row);
             };
             tdSelect.appendChild(btn);
             tr.appendChild(tdSelect);
@@ -2233,7 +2233,7 @@ Lỗi tải dữ liệu
         });
     }
     const API_URL =
-      "https://script.google.com/macros/s/AKfycbzbtEpCG0ZujJxlwbCGXKNMWHX8sucM2gj2SYCvIxsdJFVUjmzxXhBpx5SXVfogmgK3/exec";
+      "https://script.google.com/macros/s/AKfycbyL3A3yxdnRcYvEcI7Awqz2Mf9dMfW8J5p7BFyD_6igzFs1IUiw0V5Tb4_7l9lcuASX/exec";
     function autoFillTaiXe(mnv, targetInput) {
       if (!mnv) {
         targetInput.value = "";
@@ -2255,23 +2255,64 @@ Lỗi tải dữ liệu
         });
     }
     function fillFormXe(data) {
+      const form = document.getElementById("xeForm");
+      if (!form) return;
       Object.keys(data).forEach(k => {
-        const el = document.querySelector(`[name="${k}"]`);
-        if (el) el.value = data[k];
+        const val = data[k];
+        // Xử lý riêng cho Radio buttons
+        const radioList = form.querySelectorAll(`input[name="${k}"][type="radio"]`);
+        if (radioList.length > 0) {
+          radioList.forEach(r => {
+            if (r.value === val) r.checked = true;
+          });
+          return; // Done radio
+        }
+
+        // Các input khác
+        const el = form.querySelector(`[name="${k}"]`);
+        if (el) el.value = val;
       });
       // cuộn lên form
-      document
-        .getElementById("form-xe")
-        ?.scrollIntoView({ behavior: "smooth" });
+      form.scrollIntoView({ behavior: "smooth" });
     }
     function fillFormTaiXe(data) {
+      const form = document.getElementById("taixeForm");
+      if (!form) return;
+
       Object.keys(data).forEach(k => {
-        const el = document.querySelector(`[name="${k}"]`);
-        if (el) el.value = data[k];
+        // Tìm input bên trong form-taixe để tránh nhầm lẫn
+        const el = form.querySelector(`[name="${k}"]`);
+        if (el) {
+          if (el.type === "checkbox") {
+            // Checkbox: "Có" hoặc "true" hoặc "x"
+            const val = String(data[k]).trim().toLowerCase();
+            el.checked = (val === "có" || val === "co" || val === "x" || val === "true");
+          } else if (el.type === "date") {
+            // Date: nếu dữ liệu là DD/MM/YYYY hoặc chuỗi ngày khác, cần chuyển về YYYY-MM-DD
+            const raw = data[k];
+            if (raw) {
+              // Thử tạo Date object
+              const d = new Date(raw);
+              if (!isNaN(d.getTime())) {
+                // Format YYYY-MM-DD
+                el.value = d.toISOString().split('T')[0];
+              } else {
+                // Fallback nếu date string lạ (ví dụ DD/MM/YYYY)
+                // Tùy format thực tế, ở đây giữ nguyên hoặc xử lý thêm nếu cần
+                // Ví dụ sheet gửi về "20/10/1990" -> manual parse
+                const parts = String(raw).split('/');
+                if (parts.length === 3) {
+                  // Giả sử DD/MM/YYYY -> YYYY-MM-DD
+                  el.value = `${parts[2]}-${parts[1]}-${parts[0]}`;
+                }
+              }
+            }
+          } else {
+            el.value = data[k];
+          }
+        }
       });
-      document
-        .getElementById("form-taixe")
-        ?.scrollIntoView({ behavior: "smooth" });
+      form.scrollIntoView({ behavior: "smooth" });
     }
     function applyRolePermission(role) {
       USER_ROLE = role;
