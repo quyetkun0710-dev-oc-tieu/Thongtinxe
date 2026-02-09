@@ -1995,413 +1995,452 @@ Không có dữ liệu
               tr.appendChild(td);
             });
             tbody.appendChild(tr);
-
-            // renderZoomControls(tableId); // Xóa cũ
-            enablePinchZoom(tableId);       // Thêm mới
-            showToggleBtn(true);
-          })
-            .catch(() => {
-              tbody.innerHTML = `
+          });
+          showToggleBtn(true);
+          enablePinchZoom(tableId);
+        })
+        .catch(() => {
+          tbody.innerHTML = `
 <tr>
 <td colspan="100%" class="has-text-danger">
 Lỗi tải dữ liệu
 </td>
 </tr>
 `;
-            });
-        }
+        });
+    }
     /* ================= DATE UTIL ================= */
     function calcRemainDays(dateStr) {
-            if (!dateStr) return "";
-            const d = new Date(dateStr);
-            if (isNaN(d)) return "";
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            d.setHours(0, 0, 0, 0);
-            return Math.round((d - today) / 86400000);
-          }
+      if (!dateStr) return "";
+      const d = new Date(dateStr);
+      if (isNaN(d)) return "";
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      d.setHours(0, 0, 0, 0);
+      return Math.round((d - today) / 86400000);
+    }
     function calc(el, soNgay, targetField) {
-            const f = el.closest("form");
-            if (!f) return;
-            if (!el.value) {
-              if (f.elements[targetField]) f.elements[targetField].value = "";
-              return;
-            }
-            const ngayHetHan = new Date(el.value);
-            ngayHetHan.setDate(ngayHetHan.getDate() + soNgay);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            ngayHetHan.setHours(0, 0, 0, 0);
-            const conLai = Math.round((ngayHetHan - today) / 86400000);
-            if (f.elements[targetField]) {
-              f.elements[targetField].value = conLai;
-            }
-          }
+      const f = el.closest("form");
+      if (!f) return;
+      if (!el.value) {
+        if (f.elements[targetField]) f.elements[targetField].value = "";
+        return;
+      }
+      const ngayHetHan = new Date(el.value);
+      ngayHetHan.setDate(ngayHetHan.getDate() + soNgay);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      ngayHetHan.setHours(0, 0, 0, 0);
+      const conLai = Math.round((ngayHetHan - today) / 86400000);
+      if (f.elements[targetField]) {
+        f.elements[targetField].value = conLai;
+      }
+    }
     /* ================= BẢO DƯỠNG ================= */
     function calcBaoDuongKM() {
-            const f = document.getElementById("baoduongForm");
-            if (!f) return;
-            const kmTruoc = Number(f.km_truoc.value || 0);
-            const kmSau = Number(f.km_sau.value || 0);
-            f.km_chenh_lech.value =
-              kmSau >= kmTruoc ? kmSau - kmTruoc : "";
-          }
+      const f = document.getElementById("baoduongForm");
+      if (!f) return;
+      const kmTruoc = Number(f.km_truoc.value || 0);
+      const kmSau = Number(f.km_sau.value || 0);
+      f.km_chenh_lech.value =
+        kmSau >= kmTruoc ? kmSau - kmTruoc : "";
+    }
     function calcBaoDuongNgay() {
-            const f = document.getElementById("baoduongForm");
-            if (!f) return;
-            if (!f.ngay_bat_dau.value || !f.ngay_ket_thuc.value) {
-              f.tong_ngay.value = "";
-              return;
-            }
-            const start = new Date(f.ngay_bat_dau.value);
-            const end = new Date(f.ngay_ket_thuc.value);
-            const diff = Math.round((end - start) / 86400000) + 1;
-            f.tong_ngay.value = diff > 0 ? diff : "";
-          }
+      const f = document.getElementById("baoduongForm");
+      if (!f) return;
+      if (!f.ngay_bat_dau.value || !f.ngay_ket_thuc.value) {
+        f.tong_ngay.value = "";
+        return;
+      }
+      const start = new Date(f.ngay_bat_dau.value);
+      const end = new Date(f.ngay_ket_thuc.value);
+      const diff = Math.round((end - start) / 86400000) + 1;
+      f.tong_ngay.value = diff > 0 ? diff : "";
+    }
     /* ================= HOÁ ĐƠN ================= */
     function toggleFuelHoaDon() {
-            const f = document.getElementById("fuelForm");
-            const hoaDon = document.getElementById("fuel_hoa_don");
-            if (f.don_vi.value === "Cây dầu hợp đồng") {
-              hoaDon.value = "Có";
-              hoaDon.classList.add("is-locked");
-            } else {
-              hoaDon.disabled = false;
-            }
-          }
+      const f = document.getElementById("fuelForm");
+      const hoaDon = document.getElementById("fuel_hoa_don");
+      if (f.don_vi.value === "Cây dầu hợp đồng") {
+        hoaDon.value = "Có";
+        hoaDon.classList.add("is-locked");
+      } else {
+        hoaDon.disabled = false;
+      }
+    }
     /* ================= NHIÊN LIỆU ================= */
     function toNumber(v) {
-            if (!v) return 0;
-            return (
-              Number(
-                String(v)
-                  .replace(/\./g, "")
-                  .replace(/,/g, ".")
-              ) || 0
-            );
-          }
+      if (!v) return 0;
+      return (
+        Number(
+          String(v)
+            .replace(/\./g, "")
+            .replace(/,/g, ".")
+        ) || 0
+      );
+    }
     function calcFuelKM() {
-            const f = document.getElementById("fuelForm");
-            if (!f) return;
-            const kmTruoc = toNumber(f.km_truoc.value);
-            const kmSau = toNumber(f.km_sau.value);
-            f.km_chenh_lech.value =
-              kmSau >= kmTruoc && kmTruoc > 0 ? kmSau - kmTruoc : "";
-          }
+      const f = document.getElementById("fuelForm");
+      if (!f) return;
+      const kmTruoc = toNumber(f.km_truoc.value);
+      const kmSau = toNumber(f.km_sau.value);
+      f.km_chenh_lech.value =
+        kmSau >= kmTruoc && kmTruoc > 0 ? kmSau - kmTruoc : "";
+    }
     function calcFuelMoney() {
-            const f = document.getElementById("fuelForm");
-            const lit = parseFloat(f.so_lit.value) || 0;
-            const gia = parseFloat(f.don_gia.value) || 0;
-            f.thanh_tien.value = lit * gia;
-          }
+      const f = document.getElementById("fuelForm");
+      const lit = parseFloat(f.so_lit.value) || 0;
+      const gia = parseFloat(f.don_gia.value) || 0;
+      f.thanh_tien.value = lit * gia;
+    }
     /* ================= NHẬT KÝ ================= */
     function loadNhatKyTableByKey(tag, keyName, keyValue, tableId) {
-            const table = document.getElementById(tableId);
-            if (!table) return;
-            const thead = table.querySelector("thead");
-            const tbody = table.querySelector("tbody");
-            thead.innerHTML = "";
-            tbody.innerHTML = "";
-            const url =
-              `${SCRIPT_URL}?tag=${encodeURIComponent(tag)}` +
-              `&${encodeURIComponent(keyName)}=${encodeURIComponent(keyValue)}`;
-            fetch(url)
-              .then(res => res.json())
-              .then(rows => {
-                if (!rows || !rows.length) {
-                  alert("❌ Không có dữ liệu");
-                  return;
-                }
-                const headers = Object.keys(rows[0]);
-                thead.innerHTML =
-                  `<tr>${headers.map(h => `<th>${h}</th>`).join("")}</tr>`;
-                tbody.innerHTML =
-                  rows
-                    .map(r =>
-                      `<tr>${headers.map(h => `<td>${r[h] ?? ""}</td>`).join("")}</tr>`
-                    )
-                    .join("");
-                // renderZoomControls(tableId);
-                enablePinchZoom(tableId);
-                showToggleBtn(true);
-              })
-              .catch(err => {
-                console.error(err);
-                alert("❌ Lỗi tải dữ liệu nhật ký");
-              });
+      const table = document.getElementById(tableId);
+      if (!table) return;
+      const thead = table.querySelector("thead");
+      const tbody = table.querySelector("tbody");
+      thead.innerHTML = "";
+      tbody.innerHTML = "";
+      const url =
+        `${SCRIPT_URL}?tag=${encodeURIComponent(tag)}` +
+        `&${encodeURIComponent(keyName)}=${encodeURIComponent(keyValue)}`;
+      fetch(url)
+        .then(res => res.json())
+        .then(rows => {
+          if (!rows || !rows.length) {
+            alert("❌ Không có dữ liệu");
+            return;
           }
+          const headers = Object.keys(rows[0]);
+          thead.innerHTML =
+            `<tr>${headers.map(h => `<th>${h}</th>`).join("")}</tr>`;
+          tbody.innerHTML =
+            rows
+              .map(r =>
+                `<tr>${headers.map(h => `<td>${r[h] ?? ""}</td>`).join("")}</tr>`
+              )
+              .join("");
+          showToggleBtn(true);
+          enablePinchZoom(tableId);
+        })
+        .catch(err => {
+          console.error(err);
+          alert("❌ Lỗi tải dữ liệu nhật ký");
+        });
+    }
     /* ================= UI UTIL ================= */
     function scrollToTable(tableId) {
-            const el = document.getElementById(tableId);
-            if (!el) return;
-            el.scrollIntoView({
-              behavior: "smooth",
-              block: "start"
-            });
-          }
+      const el = document.getElementById(tableId);
+      if (!el) return;
+      el.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
     /* ================= AUTO FILL ================= */
     function toggleSuCo(value) {
-            const vanDe = document.querySelector('[name="van_de_phat_sinh"]');
-            const danhGia = document.querySelector('[name="tu_danh_gia"]');
-            const deXuat = document.querySelector('[name="de_xuat_pa"]');
-            if (value === "co") {
-              vanDe.required = true;
-              danhGia.required = true;
-              deXuat.required = true;
-              if (vanDe.value === "Hoạt động bình thường") {
-                vanDe.value = "";
-                danhGia.value = "";
-                deXuat.value = "";
-              }
-            } else {
-              vanDe.required = false;
-              danhGia.required = false;
-              deXuat.required = false;
-              vanDe.value = "Hoạt động bình thường";
-              danhGia.value = "Nhẹ";
-              deXuat.value = "Hoạt động bình thường";
-            }
-          }
+      const vanDe = document.querySelector('[name="van_de_phat_sinh"]');
+      const danhGia = document.querySelector('[name="tu_danh_gia"]');
+      const deXuat = document.querySelector('[name="de_xuat_pa"]');
+      if (value === "co") {
+        vanDe.required = true;
+        danhGia.required = true;
+        deXuat.required = true;
+        if (vanDe.value === "Hoạt động bình thường") {
+          vanDe.value = "";
+          danhGia.value = "";
+          deXuat.value = "";
+        }
+      } else {
+        vanDe.required = false;
+        danhGia.required = false;
+        deXuat.required = false;
+        vanDe.value = "Hoạt động bình thường";
+        danhGia.value = "Nhẹ";
+        deXuat.value = "Hoạt động bình thường";
+      }
+    }
     function toggleLoaiHinh(value) {
-            const moc = document.querySelector('[name="moc_bao_duong"]');
-            const box = document.getElementById("mocBaoDuongBox");
-            if (value === "Bảo dưỡng") {
-              box.style.display = "";
-              moc.required = true;
-            } else {
-              box.style.display = "none";
-              moc.required = false;
-              moc.value = "";
-            }
-          }
+      const moc = document.querySelector('[name="moc_bao_duong"]');
+      const box = document.getElementById("mocBaoDuongBox");
+      if (value === "Bảo dưỡng") {
+        box.style.display = "";
+        moc.required = true;
+      } else {
+        box.style.display = "none";
+        moc.required = false;
+        moc.value = "";
+      }
+    }
     function handleLoaiDonVi(select) {
-            if (!select) return;
-            const form = select.closest("form");
-            if (!form) return;
-            const loaiThanhToan = form.querySelector('[name="loai_thanh_toan"]');
-            const hoaDon = form.querySelector('[name="hoa_don"]');
-            if (!loaiThanhToan || !hoaDon) return;
-            if (select.value === "Gara hợp đồng") {
-              // Gán giá trị
-              loaiThanhToan.value = "Công nợ";
-              hoaDon.value = "Có";
-              // Khoá chỉnh sửa nhưng VẪN SUBMIT
-              loaiThanhToan.classList.add("is-locked");
-              hoaDon.classList.add("is-locked");
-            } else {
-              // Gara ngoài → cho chọn
-              loaiThanhToan.classList.remove("is-locked");
-              hoaDon.classList.remove("is-locked");
-            }
-          }
+      if (!select) return;
+      const form = select.closest("form");
+      if (!form) return;
+      const loaiThanhToan = form.querySelector('[name="loai_thanh_toan"]');
+      const hoaDon = form.querySelector('[name="hoa_don"]');
+      if (!loaiThanhToan || !hoaDon) return;
+      if (select.value === "Gara hợp đồng") {
+        // Gán giá trị
+        loaiThanhToan.value = "Công nợ";
+        hoaDon.value = "Có";
+        // Khoá chỉnh sửa nhưng VẪN SUBMIT
+        loaiThanhToan.classList.add("is-locked");
+        hoaDon.classList.add("is-locked");
+      } else {
+        // Gara ngoài → cho chọn
+        loaiThanhToan.classList.remove("is-locked");
+        hoaDon.classList.remove("is-locked");
+      }
+    }
     function handleLoaiHinh(select) {
-            const box = document.getElementById("mocBaoDuongBox");
-            if (!box) return;
-            if (select.value === "Bảo dưỡng") {
-              box.classList.remove("hidden");
-            } else {
-              box.classList.add("hidden");
-              const moc = box.querySelector('[name="moc_bao_duong"]');
-              if (moc) moc.value = "";
-            }
-          }
+      const box = document.getElementById("mocBaoDuongBox");
+      if (!box) return;
+      if (select.value === "Bảo dưỡng") {
+        box.classList.remove("hidden");
+      } else {
+        box.classList.add("hidden");
+        const moc = box.querySelector('[name="moc_bao_duong"]');
+        if (moc) moc.value = "";
+      }
+    }
     const CHECKBOX_FIELDS_TAIXE = [
-        "hs_cccd",
-        "hs_gplx",
-        "hs_suc_khoe",
-        "hs_so_yeu",
-        "hs_cu_tru",
-        "hs_dan_su"
-      ];
-      function submitTaiXe() {
-        const form = document.getElementById("form-taixe");
-        const fd = new FormData(form);
-        CHECKBOX_FIELDS_TAIXE.forEach(name => {
-          if (fd.has(name)) {
-            // checkbox được tích
-            fd.set(name, "Có");
-          } else {
-            // checkbox không tích
-            fd.append(name, "Không");
-          }
-        });
-        fetch(SCRIPT_URL, {
-          method: "POST",
-          body: fd
-        })
-          .then(r => r.json())
-          .then(res => {
-            alert(res.status === "success" ? "Đã lưu" : res.message);
-          });
-      }
-      const API_URL =
-        "https://script.google.com/macros/s/AKfycbzbtEpCG0ZujJxlwbCGXKNMWHX8sucM2gj2SYCvIxsdJFVUjmzxXhBpx5SXVfogmgK3/exec";
-      function autoFillTaiXe(mnv, targetInput) {
-        if (!mnv) {
-          targetInput.value = "";
-          return;
-        }
-        fetch(
-          `${SCRIPT_URL}?tag=taixe&ma_nv=${encodeURIComponent(mnv)}`
-        )
-          .then(res => res.json())
-          .then(list => {
-            if (Array.isArray(list) && list.length > 0) {
-              targetInput.value = list[0].ho_ten || "";
-            } else {
-              targetInput.value = "";
-            }
-          })
-          .catch(() => {
-            targetInput.value = "";
-          });
-      }
-      function fillFormXe(data) {
-        Object.keys(data).forEach(k => {
-          const el = document.querySelector(`[name="${k}"]`);
-          if (el) el.value = data[k];
-        });
-        // cuộn lên form
-        document
-          .getElementById("form-xe")
-          ?.scrollIntoView({ behavior: "smooth" });
-      }
-      function fillFormTaiXe(data) {
-        Object.keys(data).forEach(k => {
-          const el = document.querySelector(`[name="${k}"]`);
-          if (el) el.value = data[k];
-        });
-        document
-          .getElementById("form-taixe")
-          ?.scrollIntoView({ behavior: "smooth" });
-      }
-      function applyRolePermission(role) {
-        USER_ROLE = role;
-
-        const allowTags = ROLE_PERMISSION[role] || [];
-
-        /* 1. Ẩn toàn bộ TAG form */
-        document.querySelectorAll(".form-box").forEach(el => {
-          el.classList.add("hidden");
-        });
-
-        /* 2. Hiện HOME */
-        document.getElementById("home").classList.remove("hidden");
-
-        /* 3. Xử lý card HOME */
-        document.querySelectorAll("#home .card").forEach(card => {
-          const tag = card.dataset.tag;
-          if (allowTags.includes(tag)) {
-            card.style.display = "block";
-          } else {
-            card.style.display = "none";
-          }
-        });
-      }
-      /* ================= LOGOUT ================= */
-
-      function doLogout() {
-        // Xóa session
-        sessionStorage.clear();
-
-        // Reset role toàn cục
-        USER_ROLE = null;
-
-        // Ẩn toàn bộ form/tag
-        document.querySelectorAll(".form-box").forEach(el =>
-          el.classList.add("hidden")
-        );
-
-        // Ẩn home, hiện login
-        document.getElementById("home")?.classList.add("hidden");
-        document.getElementById("login")?.classList.remove("hidden");
-        showToggleBtn(false); // Ẩn nút khi logout
-      }
-
-      /* ================= ZOOM LOGIC ================= */
-      let CURRENT_ZOOM = 1;
-
-      function renderZoomControls(tableId) {
-        // Chỉ render trên mobile
-        if (window.innerWidth > 768) return;
-
-        const table = document.getElementById(tableId);
-        if (!table) return;
-
-        const container = table.parentElement;
-        // Xóa controls cũ nếu có
-        const old = container.querySelector('.zoom-controls');
-        if (old) old.remove();
-
-        const div = document.createElement('div');
-        div.className = 'zoom-controls';
-        div.innerHTML = `
-         <span style="margin-right:auto; font-size:12px; color:#666; display:flex; align-items:center;">🔍 Zoom bảng</span>
-         <button class="zoom-btn" onclick="setZoom(-0.1, '${tableId}')">➖</button>
-         <button class="zoom-btn" onclick="setZoom(0.1, '${tableId}')">➕</button>
-         <button class="zoom-btn" onclick="setZoom(0, '${tableId}')">Reset</button>
-       `;
-
-        container.insertBefore(div, table);
-      }
-
-      function setZoom(delta, tableId) {
-        const table = document.getElementById(tableId);
-        if (!table) return;
-
-        if (delta === 0) {
-          CURRENT_ZOOM = 1;
+      "hs_cccd",
+      "hs_gplx",
+      "hs_suc_khoe",
+      "hs_so_yeu",
+      "hs_cu_tru",
+      "hs_dan_su"
+    ];
+    function submitTaiXe() {
+      const form = document.getElementById("form-taixe");
+      const fd = new FormData(form);
+      CHECKBOX_FIELDS_TAIXE.forEach(name => {
+        if (fd.has(name)) {
+          // checkbox được tích
+          fd.set(name, "Có");
         } else {
-          CURRENT_ZOOM += delta;
+          // checkbox không tích
+          fd.append(name, "Không");
         }
-
-        // Giới hạn zoom
-        if (CURRENT_ZOOM < 0.5) CURRENT_ZOOM = 0.5;
-        if (CURRENT_ZOOM > 2.0) CURRENT_ZOOM = 2.0;
-
-        table.style.transform = `scale(${CURRENT_ZOOM})`;
-
-        // Cập nhật lại chiều rộng container để scroll được hết khi zoom to
-        // (Optional: tùy thuộc vào hành vi trình duyệt)
+      });
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        body: fd
+      })
+        .then(r => r.json())
+        .then(res => {
+          alert(res.status === "success" ? "Đã lưu" : res.message);
+        });
+    }
+    const API_URL =
+      "https://script.google.com/macros/s/AKfycbzbtEpCG0ZujJxlwbCGXKNMWHX8sucM2gj2SYCvIxsdJFVUjmzxXhBpx5SXVfogmgK3/exec";
+    function autoFillTaiXe(mnv, targetInput) {
+      if (!mnv) {
+        targetInput.value = "";
+        return;
       }
-
-      /* ================= TOGGLE TABLE LOGIC ================= */
-      function showToggleBtn(show) {
-        const btn = document.querySelector('.toggle-table-btn');
-        if (btn) {
-          btn.style.display = show ? 'flex' : 'none';
-          // Reset icon về mặc định "Hiện" nếu đang ẩn nút
-          if (!show) {
-            const icon = document.getElementById('toggleIcon');
-            if (icon) icon.textContent = "👁️";
-          }
-        }
-      }
-
-      function toggleCurrentTable() {
-        // 1. Tìm tag đang hiện (không có class hidden)
-        const visibleTag = Array.from(document.querySelectorAll('.form-box'))
-          .find(el => !el.classList.contains('hidden') && el.id !== 'login');
-
-        if (!visibleTag) return;
-
-        // 2. Tìm table container bên trong
-        const tableContainer = visibleTag.querySelector('.table-container');
-        const searchBox = visibleTag.querySelector('section.box'); // Thường table nằm trong box search
-
-        // Ưu tiên ẩn nguyên box search chứa table cho gọn, nếu không thì ẩn table container
-        const target = searchBox || tableContainer;
-
-        if (target) {
-          if (target.style.display === "none") {
-            target.style.display = "";
-            document.getElementById('toggleIcon').textContent = "👁️"; // Icon hiện
+      fetch(
+        `${SCRIPT_URL}?tag=taixe&ma_nv=${encodeURIComponent(mnv)}`
+      )
+        .then(res => res.json())
+        .then(list => {
+          if (Array.isArray(list) && list.length > 0) {
+            targetInput.value = list[0].ho_ten || "";
           } else {
-            target.style.display = "none";
-            document.getElementById('toggleIcon').textContent = "🙈"; // Icon ẩn
+            targetInput.value = "";
           }
+        })
+        .catch(() => {
+          targetInput.value = "";
+        });
+    }
+    function fillFormXe(data) {
+      Object.keys(data).forEach(k => {
+        const el = document.querySelector(`[name="${k}"]`);
+        if (el) el.value = data[k];
+      });
+      // cuộn lên form
+      document
+        .getElementById("form-xe")
+        ?.scrollIntoView({ behavior: "smooth" });
+    }
+    function fillFormTaiXe(data) {
+      Object.keys(data).forEach(k => {
+        const el = document.querySelector(`[name="${k}"]`);
+        if (el) el.value = data[k];
+      });
+      document
+        .getElementById("form-taixe")
+        ?.scrollIntoView({ behavior: "smooth" });
+    }
+    function applyRolePermission(role) {
+      USER_ROLE = role;
+
+      const allowTags = ROLE_PERMISSION[role] || [];
+
+      /* 1. Ẩn toàn bộ TAG form */
+      document.querySelectorAll(".form-box").forEach(el => {
+        el.classList.add("hidden");
+      });
+
+      /* 2. Hiện HOME */
+      document.getElementById("home").classList.remove("hidden");
+
+      /* 3. Xử lý card HOME */
+      document.querySelectorAll("#home .card").forEach(card => {
+        const tag = card.dataset.tag;
+        if (allowTags.includes(tag)) {
+          card.style.display = "block";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    }
+    /* ================= LOGOUT ================= */
+
+    function doLogout() {
+      // Xóa session
+      sessionStorage.clear();
+
+      // Reset role toàn cục
+      USER_ROLE = null;
+
+      // Ẩn toàn bộ form/tag
+      document.querySelectorAll(".form-box").forEach(el =>
+        el.classList.add("hidden")
+      );
+
+      // Ẩn home, hiện login
+      document.getElementById("home")?.classList.add("hidden");
+      document.getElementById("login")?.classList.remove("hidden");
+      showToggleBtn(false); // Ẩn nút khi logout
+    }
+
+    /* ================= PINCH ZOOM LOGIC ================= */
+    function enablePinchZoom(tableId) {
+      // Chỉ kích hoạt trên mobile/tablet
+      if (window.innerWidth > 1024) return;
+
+      const table = document.getElementById(tableId);
+      if (!table) return;
+
+      const container = table.parentElement;
+
+      let initialScale = 1;
+      let currentScale = 1;
+      let startDist = 0;
+
+      // Prevent default behavior to allow pinch
+      container.style.touchAction = 'none';
+
+      container.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 2) {
+          e.preventDefault();
+          startDist = getDistance(e.touches);
+          initialScale = currentScale;
+        }
+      }, { passive: false });
+
+      container.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 2) {
+          e.preventDefault();
+          const newDist = getDistance(e.touches);
+          const scaleFactor = newDist / startDist;
+
+          currentScale = initialScale * scaleFactor;
+
+          // Giới hạn zoom
+          if (currentScale < 0.5) currentScale = 0.5;
+          if (currentScale > 3.0) currentScale = 3.0;
+
+          table.style.transform = `scale(${currentScale})`;
+          table.style.transformOrigin = '0 0';
+        }
+      }, { passive: false });
+    }
+
+    function getDistance(touches) {
+      const dx = touches[0].pageX - touches[1].pageX;
+      const dy = touches[0].pageY - touches[1].pageY;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    /* ================= PINCH ZOOM LOGIC ================= */
+    function enablePinchZoom(tableId) {
+      // Chỉ kích hoạt trên mobile/tablet
+      if (window.innerWidth > 1024) return;
+      const table = document.getElementById(tableId);
+      if (!table) return;
+      const container = table.parentElement;
+      let initialScale = 1;
+      let currentScale = 1;
+      let startDist = 0;
+      // Prevent default behavior to allow pinch
+      container.style.touchAction = 'none';
+      container.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 2) {
+          e.preventDefault();
+          startDist = getDistance(e.touches);
+          initialScale = currentScale;
+        }
+      }, { passive: false });
+      container.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 2) {
+          e.preventDefault();
+          const newDist = getDistance(e.touches);
+          const scaleFactor = newDist / startDist;
+          currentScale = initialScale * scaleFactor;
+          // Giới hạn zoom
+          if (currentScale < 0.5) currentScale = 0.5;
+          if (currentScale > 3.0) currentScale = 3.0;
+          table.style.transform = `scale(${currentScale})`;
+          table.style.transformOrigin = '0 0';
+        }
+      }, { passive: false });
+    }
+    function getDistance(touches) {
+      const dx = touches[0].pageX - touches[1].pageX;
+      const dy = touches[0].pageY - touches[1].pageY;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    /* ================= TOGGLE TABLE LOGIC ================= */
+    function showToggleBtn(show) {
+      const btn = document.querySelector('.toggle-table-btn');
+      if (btn) {
+        btn.style.display = show ? 'flex' : 'none';
+        // Reset icon về mặc định "Hiện" nếu đang ẩn nút
+        if (!show) {
+          const icon = document.getElementById('toggleIcon');
+          if (icon) icon.textContent = "👁️";
         }
       }
+    }
+
+    function toggleCurrentTable() {
+      // 1. Tìm tag đang hiện (không có class hidden)
+      const visibleTag = Array.from(document.querySelectorAll('.form-box'))
+        .find(el => !el.classList.contains('hidden') && el.id !== 'login');
+
+      if (!visibleTag) return;
+
+      // 2. Tìm table container bên trong
+      const tableContainer = visibleTag.querySelector('.table-container');
+      const searchBox = visibleTag.querySelector('section.box'); // Thường table nằm trong box search
+
+      // Ưu tiên ẩn nguyên box search chứa table cho gọn, nếu không thì ẩn table container
+      const target = searchBox || tableContainer;
+
+      if (target) {
+        if (target.style.display === "none") {
+          target.style.display = "";
+          document.getElementById('toggleIcon').textContent = "👁️"; // Icon hiện
+        } else {
+          target.style.display = "none";
+          document.getElementById('toggleIcon').textContent = "🙈"; // Icon ẩn
+        }
+      }
+    }
   </script>
 
   <!-- Nút ẩn hiện bảng -->
