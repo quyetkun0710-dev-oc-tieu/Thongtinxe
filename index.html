@@ -1,4 +1,3 @@
-\
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -386,13 +385,42 @@
       color: #fff;
       border: none;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-      cursor: pointer;
-      font-size: 1.5rem;
-      display: none;
-      /* Mặc định ẩn, JS sẽ hiện khi có bảng */
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.2s;
+    }
+
+    /* ================= WARNING MODAL ================= */
+    .modal-card-title.has-text-danger {
+      color: #ff3860 !important;
+      font-weight: bold;
+      text-transform: uppercase;
+      text-shadow: none !important;
+    }
+
+    .warning-item {
+      border-left: 4px solid #ff3860;
+      background: #fff5f7;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+    }
+
+    .warning-item strong {
+      color: #363636;
+    }
+
+    /* ================= REPORT DASHBOARD ================= */
+    .report-card {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      height: 100%;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .report-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #00d1b2;
     }
 
     .toggle-table-btn:active {
@@ -521,6 +549,13 @@
             <div class="card card-hover" data-tag="danhgia" onclick="openTag('danhgia')">
               <div class="card-content has-text-centered">
                 <p class="title is-5">📊 Đánh giá nhân sự</p>
+              </div>
+            </div>
+          </div>
+          <div class="column is-3">
+            <div class="card card-hover" data-tag="baocao" onclick="openReport()">
+              <div class="card-content has-text-centered">
+                <p class="title is-5">📊 Báo cáo</p>
               </div>
             </div>
           </div>
@@ -1459,6 +1494,138 @@
           </button>
         </form>
       </div>
+      <!-- ================= 10. BÁO CÁO (MANAGER ONLY) ================= -->
+      <div id="baocao" class="hidden form-box">
+        <button class="button mb-4" onclick="backHome()">⬅ Quay lại</button>
+        <h2 class="title is-4">📊 BÁO CÁO TỔNG HỢP</h2>
+
+        <!-- DATE FILTER -->
+        <section class="box" style="background: rgba(255,255,255,0.9);">
+          <div class="columns is-mobile is-vcentered">
+            <div class="column is-4">
+              <div class="select is-fullwidth">
+                <select id="rpt_month">
+                  <option value="1">Tháng 1</option>
+                  <option value="2">Tháng 2</option>
+                  <option value="3">Tháng 3</option>
+                  <option value="4">Tháng 4</option>
+                  <option value="5">Tháng 5</option>
+                  <option value="6">Tháng 6</option>
+                  <option value="7">Tháng 7</option>
+                  <option value="8">Tháng 8</option>
+                  <option value="9">Tháng 9</option>
+                  <option value="10">Tháng 10</option>
+                  <option value="11">Tháng 11</option>
+                  <option value="12">Tháng 12</option>
+                </select>
+              </div>
+            </div>
+            <div class="column is-4">
+              <div class="select is-fullwidth">
+                <select id="rpt_year">
+                  <option value="2023">2023</option>
+                  <option value="2024">2024</option>
+                  <option value="2025">2025</option>
+                  <option value="2026">2026</option>
+                  <option value="2027">2027</option>
+                  <option value="2028">2028</option>
+                  <option value="2029">2029</option>
+                  <option value="2030">2030</option>
+                </select>
+              </div>
+            </div>
+            <div class="column is-4">
+              <button class="button is-primary is-fullwidth" onclick="loadReport()">
+                Xem
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- REPORT CARDS -->
+        <div class="columns is-multiline">
+          <!-- 1. VẬN HÀNH -->
+          <div class="column is-12">
+            <h3 class="subtitle has-text-white" style="text-shadow: 1px 1px 2px black;">🚚 VẬN HÀNH</h3>
+          </div>
+          <div class="column is-4">
+            <div class="report-card">
+              <p class="subtitle is-6">TỔNG KM</p>
+              <p class="report-number" id="rpt_op_km">0</p>
+            </div>
+          </div>
+          <div class="column is-4">
+            <div class="report-card">
+              <p class="subtitle is-6">SỐ CHUYẾN</p>
+              <p class="report-number" id="rpt_op_trips">0</p>
+            </div>
+          </div>
+          <div class="column is-4">
+            <div class="report-card">
+              <p class="subtitle is-6">GIỜ CHẠY</p>
+              <p class="report-number" id="rpt_op_hours">0</p>
+            </div>
+          </div>
+
+          <!-- 2. NHIÊN LIỆU -->
+          <div class="column is-12">
+            <h3 class="subtitle has-text-white" style="text-shadow: 1px 1px 2px black;">⛽ NHIÊN LIỆU</h3>
+          </div>
+          <div class="column is-6">
+            <div class="report-card">
+              <p class="subtitle is-6">TỔNG TIỀN</p>
+              <p class="report-number" id="rpt_fuel_cost">0 ₫</p>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="report-card">
+              <p class="subtitle is-6">SỐ LÍT TIÊU THỤ</p>
+              <p class="report-number" id="rpt_fuel_liters">0</p>
+            </div>
+          </div>
+
+          <!-- 3. BẢO DƯỠNG -->
+          <div class="column is-12">
+            <h3 class="subtitle has-text-white" style="text-shadow: 1px 1px 2px black;">🛠️ BẢO DƯỠNG</h3>
+          </div>
+          <div class="column is-6">
+            <div class="report-card">
+              <p class="subtitle is-6">TỔNG TIỀN</p>
+              <p class="report-number" id="rpt_maintain_cost" style="color: #ff3860">0 ₫</p>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="report-card">
+              <p class="subtitle is-6">SỐ LƯỢT</p>
+              <p class="report-number" id="rpt_maintain_count">0</p>
+            </div>
+          </div>
+
+          <!-- 4. VI PHẠM -->
+          <div class="column is-12">
+            <h3 class="subtitle has-text-white" style="text-shadow: 1px 1px 2px black;">⚠️ VI PHẠM</h3>
+          </div>
+          <div class="column is-12">
+            <div class="report-card">
+              <p class="subtitle is-6">TỔNG SỐ LỖI</p>
+              <p class="report-number has-text-danger" id="rpt_violation_count">0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= WARNING MODAL ================= -->
+      <div class="modal" id="warningModal">
+        <div class="modal-background" onclick="closeWarning()"></div>
+        <div class="modal-card">
+          <header class="modal-card-head has-background-danger-light">
+            <p class="modal-card-title has-text-danger">⚠️ CẢNH BÁO XE SẮP HẾT HẠN</p>
+            <button class="delete" aria-label="close" onclick="closeWarning()"></button>
+          </header>
+          <section class="modal-card-body" id="warningList">
+            <!-- List items -->
+        </div>
+      </div>
       <!-- ================= TAG: BẢNG KẾT QUẢ ĐÁNH GIÁ ================= -->
       <div id="danhgia_table" class="hidden form-box">
         <button class="button mb-4" onclick="backToDanhGia()">
@@ -1477,7 +1644,7 @@
   <script>
     /* ================= CONFIG ================= */
     const SCRIPT_URL =
-      "https://script.google.com/macros/s/AKfycbyL3A3yxdnRcYvEcI7Awqz2Mf9dMfW8J5p7BFyD_6igzFs1IUiw0V5Tb4_7l9lcuASX/exec";
+      "https://script.google.com/macros/s/AKfycbw7YkX9xPwE2QCCvPVyR1bRvf9Ksc8BHEiMnEdgoqM3UQ0yHM3lSjuOR9CoT3c1AXc5/exec";
     const ALL_TAGS = [
       "home",
       "xe",
@@ -1489,7 +1656,8 @@
       "fuel",
       "fuel_table",
       "danhgia",
-      "danhgia_table"
+      "danhgia_table",
+      "baocao"
     ];
     /* ================= LOGIN ================= */
     const LOGIN_API = "https://script.google.com/macros/s/AKfycbw3MTRDfoEpxL8JJQxgmYYO6YKRIUZLnuHzt5ff5lCWQYhHwRYTAvlcRndXBU5ydgj1Zg/exec";
@@ -1516,6 +1684,107 @@
       document.getElementById("login").classList.add("hidden");
       document.getElementById("home").classList.remove("hidden");
       applyHomeCardByRole();
+
+      // CHECK WARNINGS SAU KHI LOGIN
+      checkWarnings();
+    }
+
+    function checkWarnings() {
+      fetch(`${SCRIPT_URL}?action=get_warnings`)
+        .then(res => res.json())
+        .then(d => {
+          if (d.status === "success" && d.data.length > 0) {
+            const list = document.getElementById("warningList");
+            list.innerHTML = "";
+            d.data.forEach(w => {
+              const dayClass = w.con_lai < 0 ? "has-text-danger" : "has-text-warning-dark";
+              list.innerHTML += `
+                    <div class="warning-item">
+                       <strong>${w.bien_so_xe}</strong> - ${w.loai}<br>
+                       Hết hạn: ${w.ngay_he} <br>
+                       <span class="${dayClass}">Còn lại: ${w.con_lai} ngày</span>
+                    </div>
+                  `;
+            });
+            document.getElementById("warningModal").classList.add("is-active");
+          }
+        });
+    }
+    function closeWarning() {
+      document.getElementById("warningModal").classList.remove("is-active");
+    }
+
+    function openReport() {
+      ALL_TAGS.forEach(t => document.getElementById(t)?.classList.add("hidden"));
+      document.getElementById("baocao").classList.remove("hidden");
+      document.getElementById("home").classList.add("hidden");
+
+      // Set default Month/Year to Now
+      const d = new Date();
+      document.getElementById("rpt_month").value = d.getMonth() + 1;
+      document.getElementById("rpt_year").value = d.getFullYear();
+
+      // Load data
+      loadReport();
+    }
+
+    function loadReport() {
+      const m = document.getElementById("rpt_month").value;
+      const y = document.getElementById("rpt_year").value;
+      const btn = document.querySelector("#baocao .button.is-primary");
+
+      // Loading state
+      if (btn) {
+        btn.classList.add("is-loading");
+        btn.disabled = true;
+      }
+
+      fetch(`${SCRIPT_URL}?action=get_report&month=${m}&year=${y}`)
+        .then(res => res.json())
+        .then(d => {
+          if (d.status === "success") {
+            // Helper format number
+            const fmt = (n) => Number(n).toLocaleString("vi-VN");
+
+            // Helper format hours -> xx giờ yy phút
+            const fmtHours = (h) => {
+              const val = Number(h) || 0;
+              const hours = Math.floor(val);
+              const minutes = Math.round((val - hours) * 60);
+              if (hours === 0 && minutes === 0) return "0";
+              return `${hours} giờ ${minutes} phút`;
+            };
+
+            // FUEL
+            document.getElementById("rpt_fuel_cost").textContent = fmt(d.data.fuel_cost) + " ₫";
+            document.getElementById("rpt_fuel_liters").textContent = fmt(d.data.fuel_liters);
+
+            // MAINTAIN
+            document.getElementById("rpt_maintain_cost").textContent = fmt(d.data.maintain_cost) + " ₫";
+            document.getElementById("rpt_maintain_count").textContent = fmt(d.data.maintain_count);
+
+            // OPERATION
+            document.getElementById("rpt_op_km").textContent = fmt(d.data.op_km);
+            document.getElementById("rpt_op_trips").textContent = fmt(d.data.op_trips);
+            document.getElementById("rpt_op_hours").textContent = fmtHours(d.data.op_hours);
+
+            // VIOLATION
+            document.getElementById("rpt_violation_count").textContent = fmt(d.data.violation_count);
+          } else {
+            alert("Lỗi tải báo cáo: " + d.message);
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Lỗi kết nối khi tải báo cáo");
+        })
+        .finally(() => {
+          // Reset button
+          if (btn) {
+            btn.classList.remove("is-loading");
+            btn.disabled = false;
+          }
+        });
     }
     function hideAllTags() {
       document.querySelectorAll(
@@ -1586,7 +1855,7 @@
     let USER_ROLE = null; // manager | admin | taixe
 
     const ROLE_PERMISSION = {
-      manager: ["xe", "taixe", "nhatky", "baoduong", "fuel", "danhgia"],
+      manager: ["xe", "taixe", "nhatky", "baoduong", "fuel", "danhgia", "baocao"],
       admin: ["nhatky", "baoduong", "fuel", "danhgia"],
       taixe: ["nhatky", "baoduong", "fuel"]
     };
@@ -2287,7 +2556,7 @@ Lỗi tải dữ liệu
         });
     }
     const API_URL =
-      "https://script.google.com/macros/s/AKfycbyL3A3yxdnRcYvEcI7Awqz2Mf9dMfW8J5p7BFyD_6igzFs1IUiw0V5Tb4_7l9lcuASX/exec";
+      "https://script.google.com/macros/s/AKfycbw7YkX9xPwE2QCCvPVyR1bRvf9Ksc8BHEiMnEdgoqM3UQ0yHM3lSjuOR9CoT3c1AXc5/exec";
     function autoFillTaiXe(mnv, targetInput) {
       if (!mnv) {
         targetInput.value = "";
@@ -2411,54 +2680,6 @@ Lỗi tải dữ liệu
       showToggleBtn(false); // Ẩn nút khi logout
     }
 
-    /* ================= PINCH ZOOM LOGIC ================= */
-    function enablePinchZoom(tableId) {
-      // Chỉ kích hoạt trên mobile/tablet
-      if (window.innerWidth > 1024) return;
-
-      const table = document.getElementById(tableId);
-      if (!table) return;
-
-      const container = table.parentElement;
-
-      let initialScale = 1;
-      let currentScale = 1;
-      let startDist = 0;
-
-      // Prevent default behavior to allow pinch
-      container.style.touchAction = 'none';
-
-      container.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 2) {
-          e.preventDefault();
-          startDist = getDistance(e.touches);
-          initialScale = currentScale;
-        }
-      }, { passive: false });
-
-      container.addEventListener('touchmove', (e) => {
-        if (e.touches.length === 2) {
-          e.preventDefault();
-          const newDist = getDistance(e.touches);
-          const scaleFactor = newDist / startDist;
-
-          currentScale = initialScale * scaleFactor;
-
-          // Giới hạn zoom
-          if (currentScale < 0.5) currentScale = 0.5;
-          if (currentScale > 3.0) currentScale = 3.0;
-
-          table.style.transform = `scale(${currentScale})`;
-          table.style.transformOrigin = '0 0';
-        }
-      }, { passive: false });
-    }
-
-    function getDistance(touches) {
-      const dx = touches[0].pageX - touches[1].pageX;
-      const dy = touches[0].pageY - touches[1].pageY;
-      return Math.sqrt(dx * dx + dy * dy);
-    }
 
     /* ================= PINCH ZOOM LOGIC ================= */
     function enablePinchZoom(tableId) {
@@ -2539,8 +2760,8 @@ Lỗi tải dữ liệu
       const tableContainer = visibleTag.querySelector('.table-container');
       const searchBox = visibleTag.querySelector('section.box'); // Thường table nằm trong box search
 
-      // Ưu tiên ẩn nguyên box search chứa table cho gọn, nếu không thì ẩn table container
-      const target = searchBox || tableContainer;
+      // Ưu tiên ẩn bảng dữ liệu (table-container) để người dùng xem form nhập liệu
+      const target = tableContainer || searchBox;
 
       if (target) {
         if (target.style.display === "none") {
