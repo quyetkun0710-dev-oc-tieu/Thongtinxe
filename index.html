@@ -219,8 +219,49 @@
     }
 
     @media (max-width: 768px) {
+      .section {
+        padding: 10px 5px !important;
+        /* Sát lề hơn trên mobile */
+      }
+
+      .container.is-fluid {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+
+      .form-box {
+        padding: 10px 5px !important;
+        /* Giảm padding trong form */
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 0 !important;
+        /* Bỏ bo góc để liền mạch */
+        box-shadow: none !important;
+        /* Bỏ bóng cho nhẹ */
+      }
+
+      .columns {
+        margin-left: -5px !important;
+        margin-right: -5px !important;
+        margin-top: 0 !important;
+      }
+
+      .column {
+        padding: 5px !important;
+      }
+
       .table-container {
         -webkit-overflow-scrolling: touch;
+        box-shadow: none !important;
+        border-radius: 0;
+        padding: 0;
+      }
+
+      /* Input cao hơn tí cho dễ bấm */
+      .input,
+      .select select,
+      .button {
+        height: 2.8em;
       }
     }
 
@@ -334,7 +375,7 @@
   </div>
   <!-- ================= END LOGIN ================= -->
 
-  <section class="section" style="padding: 1.5rem 0.5rem;">
+  <section class="section">
     <div class="container is-fluid">
       <!-- ================= HOME ================= -->
       <div id="home" class="hidden">
