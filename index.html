@@ -47,26 +47,27 @@
 
     .form-box,
     .box,
-    .card {
-      background: rgba(255, 255, 255, 0.45) !important;
-      /* Tăng độ trong suốt */
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
-      border: 1px solid rgba(255, 255, 255, 0.3);
+    .card,
+    .login-box,
+    .report-card {
+      background: transparent !important;
+      box-shadow: none !important;
       border-radius: 12px;
       margin-bottom: 20px;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      border: none !important;
     }
 
-    /* Bảng giữ nguyên nền trắng mờ hơn */
+    /* Bảng giữ nguyên nền trắng mờ để dễ đọc */
     .table-container {
-      background: rgba(255, 255, 255, 0.6) !important;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.95);
       padding: 10px;
       border-radius: 8px;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
+
+    /* Duplicated table style removed */
 
     /* Chữ có viền bóng để nổi trên nền ảnh */
     .label,
@@ -78,18 +79,13 @@
       text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.5);
     }
 
-    /* Bảng giữ nguyên nền trắng để dễ đọc */
-    .table-container {
-      background: rgba(255, 255, 255, 0.95);
-      padding: 10px;
-      border-radius: 8px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
+    /* Duplicated table style removed */
 
     /* Card home vẫn cần chút nền để bấm được */
     #home .card {
       background: rgba(255, 255, 255, 0.85) !important;
       backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
       transition: transform 0.2s;
     }
@@ -336,12 +332,8 @@
       margin-bottom: 1.5rem;
     }
 
+    /* login-box unified with general glass style */
     .login-box {
-      background: rgba(255, 255, 255, 0.75) !important;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
       max-width: 400px;
       margin: 0 auto;
       padding: 3rem 2rem !important;
@@ -398,14 +390,11 @@
       color: #363636;
     }
 
-    /* ================= REPORT DASHBOARD ================= */
+    /* report-card unified with general glass style */
     .report-card {
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 12px;
       padding: 20px;
       text-align: center;
       height: 100%;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
 
     /* Highlight colors for reports */
@@ -481,8 +470,19 @@
       }
 
       body {
+        background-color: transparent !important;
+        /* HIỆN THỊ LỚP FIXED-BG PHÍA DƯỚI */
         background-image: none !important;
-        /* Dùng fixed-bg thay thế */
+      }
+
+      .section {
+        padding: 1rem 0.75rem !important;
+      }
+
+      .form-box {
+        max-width: 94% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
       }
     }
 
