@@ -443,6 +443,26 @@
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
 
+    /* Highlight colors for reports */
+    .highlight-success {
+      background-color: #ebfffc !important;
+      border-left: 4px solid #00d1b2;
+    }
+
+    .highlight-warning {
+      background-color: #fffbeb !important;
+      border-left: 4px solid #ffdd57;
+    }
+
+    .highlight-danger {
+      background-color: #feecf0 !important;
+      border-left: 4px solid #ff3860;
+    }
+
+    .has-text-weight-bold {
+      font-weight: 700 !important;
+    }
+
     .report-number {
       font-size: 2rem;
       font-weight: 800;
@@ -481,10 +501,80 @@
       height: 100px;
       width: 100%;
     }
+
+    /* Toast Notification */
+    #toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    .toast {
+      min-width: 280px;
+      margin-bottom: 15px;
+      padding: 16px 24px;
+      border-radius: 12px;
+      color: white;
+      font-weight: 600;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: slideIn 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+      pointer-events: auto;
+      border-left: 6px solid rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(8px);
+    }
+
+    .toast.is-success {
+      background-color: rgba(72, 199, 142, 0.95);
+    }
+
+    .toast.is-danger {
+      background-color: rgba(241, 70, 104, 0.95);
+    }
+
+    .toast.is-warning {
+      background-color: rgba(255, 224, 138, 0.95);
+      color: #946c00;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(120%);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+
+      to {
+        transform: translateX(120%);
+        opacity: 0;
+      }
+    }
+
+    .toast.fade-out {
+      animation: slideOut 0.4s ease forwards;
+    }
   </style>
 </head>
 
 <body>
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
 
   <!-- ================= LOGIN ================= -->
   <div id="login" class="form-box">
@@ -1609,14 +1699,31 @@
           </div>
           <div class="column is-6">
             <div class="report-card">
-              <p class="subtitle is-6">TỔNG TIỀN</p>
-              <p class="report-number" id="rpt_maintain_cost" style="color: #ff3860">0 ₫</p>
+              <p class="subtitle is-6">TỔNG CHI PHÍ BD</p>
+              <p class="report-number" id="rpt_bd_cost" style="color: #ff3860">0 ₫</p>
             </div>
           </div>
           <div class="column is-6">
             <div class="report-card">
-              <p class="subtitle is-6">SỐ LƯỢT</p>
-              <p class="report-number" id="rpt_maintain_count">0</p>
+              <p class="subtitle is-6">SỐ LƯỢT BD</p>
+              <p class="report-number" id="rpt_bd_count">0</p>
+            </div>
+          </div>
+
+          <!-- 3.1 SỬA CHỮA -->
+          <div class="column is-12">
+            <h3 class="subtitle has-text-white" style="text-shadow: 1px 1px 2px black;">🔧 SỬA CHỮA</h3>
+          </div>
+          <div class="column is-6">
+            <div class="report-card">
+              <p class="subtitle is-6">TỔNG CHI PHÍ SC</p>
+              <p class="report-number" id="rpt_sc_cost" style="color: #ff3860">0 ₫</p>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="report-card">
+              <p class="subtitle is-6">SỐ LƯỢT SC</p>
+              <p class="report-number" id="rpt_sc_count">0</p>
             </div>
           </div>
 
@@ -1644,10 +1751,10 @@
                 <th class="has-text-centered">KM</th>
                 <th class="has-text-centered">Giờ</th>
                 <th class="has-text-centered">Chuyến</th>
-                <th class="has-text-centered">Tiền Dầu</th>
-                <th class="has-text-centered">Lít Dầu</th>
-                <th class="has-text-centered">Tiền Bảo Dưỡng</th>
-                <th class="has-text-centered">Lượt BD</th>
+                <th class="has-text-centered">Chi phí nhiên liệu</th>
+                <th class="has-text-centered">Tổng nhiên liệu</th>
+                <th class="has-text-centered">Chi phí SCBD</th>
+                <th class="has-text-centered">Lượt BD-SC</th>
               </tr>
             </thead>
             <tbody id="rpt_vehicle_body"></tbody>
@@ -1702,9 +1809,35 @@
       <!-- ================= END TAG ĐÁNH GIÁ ================= -->
   </section>
   <script>
+    /* ================= SHOW ALERT (TOAST) ================= */
+    function showAlert(msg, type = 'is-success') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+
+      // Icon mapping
+      let icon = '✅';
+      if (type === 'is-danger') icon = '❌';
+      if (type === 'is-warning') icon = '⚠️';
+
+      toast.innerHTML = `
+        <span>${icon} ${msg}</span>
+      `;
+
+      container.appendChild(toast);
+
+      // Auto remove after 4s
+      setTimeout(() => {
+        toast.classList.add('fade-out');
+        setTimeout(() => toast.remove(), 400);
+      }, 4000);
+    }
+
     /* ================= CONFIG ================= */
     const SCRIPT_URL =
-      "https://script.google.com/macros/s/AKfycbwYRK4NIQm6wF5rf1R0UO-mzt15kjSsdTT11G3krU46JI5Gabn8VhNPQhgjk9C_Cv4G/exec";
+      "https://script.google.com/macros/s/AKfycbz4Ps8IXDEuc6N3pVWXXFJzUloatOTIsUb-MlscCDzMU4GPpgrhTDkxLdjlwdow408A/exec";
     const ALL_TAGS = [
       "home",
       "xe",
@@ -1733,7 +1866,7 @@
       const data = await res.json();
 
       if (!data.ok) {
-        alert("❌ Sai tài khoản hoặc mật khẩu");
+        showAlert("Sai tài khoản hoặc mật khẩu", "is-danger");
         return;
       }
       USER_ROLE = data.role === "driver" ? "taixe" : data.role;
@@ -1819,9 +1952,13 @@
             document.getElementById("rpt_fuel_cost").textContent = fmt(d.data.fuel_cost) + " ₫";
             document.getElementById("rpt_fuel_liters").textContent = fmt(d.data.fuel_liters);
 
-            // MAINTAIN
-            document.getElementById("rpt_maintain_cost").textContent = fmt(d.data.maintain_cost) + " ₫";
-            document.getElementById("rpt_maintain_count").textContent = fmt(d.data.maintain_count);
+            // MAINTAIN & REPAIR
+            if (document.getElementById("rpt_bd_cost")) {
+              document.getElementById("rpt_bd_cost").textContent = fmt(d.data.bd_cost) + " ₫";
+              document.getElementById("rpt_bd_count").textContent = fmt(d.data.bd_count);
+              document.getElementById("rpt_sc_cost").textContent = fmt(d.data.sc_cost) + " ₫";
+              document.getElementById("rpt_sc_count").textContent = fmt(d.data.sc_count);
+            }
 
             // OPERATION
             document.getElementById("rpt_op_km").textContent = fmt(d.data.op_km);
@@ -1834,43 +1971,61 @@
             // RENDER VEHICLES
             const vb = document.getElementById("rpt_vehicle_body");
             vb.innerHTML = "";
-            (d.data.vehicles || []).forEach(v => {
+
+            // Tìm TOP để highlight
+            const vehicles = d.data.vehicles || [];
+            const maxKM = Math.max(...vehicles.map(v => v.op_km), 0);
+            const maxFuel = Math.max(...vehicles.map(v => v.fuel_liters), 0);
+            const maxCost = Math.max(...vehicles.map(v => v.maintain_cost), 0);
+
+            vehicles.forEach(v => {
+              let rowClass = "";
+              // Logic Highlight Xe theo yêu cầu: KM nhiều nhất, Nhiên liệu nhiều nhất, Chi phí nhiều nhất
+              if (v.op_km === maxKM && maxKM > 0) rowClass = "highlight-success"; // Nhiều KM nhất
+              else if (v.fuel_liters === maxFuel && maxFuel > 0) rowClass = "highlight-warning"; // Tốn dầu nhất
+              else if (v.maintain_cost === maxCost && maxCost > 0) rowClass = "highlight-danger"; // Tốn SCBD nhất
+
               vb.innerHTML += `
-                    <tr>
-                        <td class="has-text-weight-bold has-text-centered">${v.bsx}</td>
-                        <td class="has-text-right">${fmt(v.op_km)}</td>
-                        <td class="has-text-right">${fmtHours(v.op_hours)}</td>
-                        <td class="has-text-right">${fmt(v.op_trips)}</td>
-                        <td class="has-text-right has-text-success">${fmt(v.fuel_cost)}</td>
-                        <td class="has-text-right">${fmt(v.fuel_liters)}</td>
-                        <td class="has-text-right has-text-danger">${fmt(v.maintain_cost)}</td>
-                        <td class="has-text-right">${fmt(v.maintain_count)}</td>
-                    </tr>
-                `;
+                <tr class="${rowClass}">
+                    <td class="has-text-weight-bold has-text-centered">${v.bsx}</td>
+                    <td class="has-text-right">${fmt(v.op_km)}</td>
+                    <td class="has-text-right">${fmtHours(v.op_hours)}</td>
+                    <td class="has-text-right">${fmt(v.op_trips)}</td>
+                    <td class="has-text-right has-text-success">${fmt(v.fuel_cost)}</td>
+                    <td class="has-text-right">${fmt(v.fuel_liters)}</td>
+                    <td class="has-text-right has-text-danger">${fmt(v.maintain_cost)}</td>
+                    <td class="has-text-right">${fmt(v.maintain_count)}</td>
+                </tr>
+            `;
             });
 
             // RENDER DRIVERS
             const db = document.getElementById("rpt_driver_body");
             db.innerHTML = "";
             (d.data.drivers || []).forEach(dr => {
+              let rowClass = "";
+              // Logic Highlight Tài xế: từ 3 lần vi phạm trở lên
+              if (dr.violation_count >= 3) rowClass = "highlight-danger";
+              else if (dr.op_trips > 50) rowClass = "highlight-success";
+
               db.innerHTML += `
-                    <tr>
-                        <td class="has-text-weight-bold has-text-centered">${dr.mnv}</td>
-                        <td>${dr.name}</td>
-                        <td class="has-text-right">${fmt(dr.op_trips)}</td>
-                        <td class="has-text-right">${fmt(dr.op_km)}</td>
-                        <td class="has-text-right">${fmtHours(dr.op_hours)}</td>
-                        <td class="has-text-right has-text-danger">${fmt(dr.violation_count)}</td>
-                    </tr>
-                `;
+                <tr class="${rowClass}">
+                    <td class="has-text-weight-bold has-text-centered">${dr.mnv}</td>
+                    <td>${dr.name}</td>
+                    <td class="has-text-right">${fmt(dr.op_trips)}</td>
+                    <td class="has-text-right">${fmt(dr.op_km)}</td>
+                    <td class="has-text-right">${fmtHours(dr.op_hours)}</td>
+                    <td class="has-text-right has-text-danger">${fmt(dr.violation_count)}</td>
+                </tr>
+            `;
             });
           } else {
-            alert("Lỗi tải báo cáo: " + d.message);
+            showAlert("Lỗi tải báo cáo: " + d.message, "is-danger");
           }
         })
         .catch(err => {
           console.error(err);
-          alert("Lỗi kết nối khi tải báo cáo");
+          showAlert("Lỗi kết nối khi tải báo cáo", "is-danger");
         })
         .finally(() => {
           // Reset button
@@ -1880,6 +2035,8 @@
           }
         });
     }
+
+
     function hideAllTags() {
       document.querySelectorAll(
         ".tag-nhatky, .tag-baoduong, .tag-nhienlieu, .tag-danhgia"
@@ -1937,7 +2094,13 @@
         document.body.style.backgroundImage = `url('${url}')`;
         document.body.style.backgroundSize = "cover";
         document.body.style.backgroundPosition = "center";
-        document.body.style.backgroundAttachment = "fixed";
+
+        // Responsive Background: Fixed for Mobile/Tablet, Scroll for WebApp
+        if (window.matchMedia("(max-width: 1024px)").matches) {
+          document.body.style.backgroundAttachment = "fixed";
+        } else {
+          document.body.style.backgroundAttachment = "scroll";
+        }
       } else {
         // Fallback nếu không có ảnh
         document.body.style.background = "#f4f6f8";
@@ -1980,7 +2143,7 @@
       const allowTags = ROLE_PERMISSION[USER_ROLE] || [];
 
       if (!allowTags.includes(tagId)) {
-        alert("Bạn không có quyền truy cập chức năng này");
+        showAlert("Bạn không có quyền truy cập chức năng này", "is-warning");
         return;
       }
 
@@ -2071,21 +2234,21 @@
             r = {};
           }
           if (r.status === "success") {
-            alert("✅ Lưu thành công");
+            showAlert("Lưu thành công", "is-success");
             setTimeout(() => form.reset(), 300);
           } else {
-            alert("❌ Lỗi lưu dữ liệu");
+            showAlert("Lỗi lưu dữ liệu", "is-danger");
           }
         })
         .catch(err => {
           console.error(err);
-          alert("❌ Lỗi kết nối server");
+          showAlert("Lỗi kết nối server", "is-danger");
         });
     }
     /* ================= SEARCH ================= */
     function searchByKey(tag, keyName, keyValue, formId) {
       if (!keyValue) {
-        alert("⚠️ Thiếu dữ liệu tra cứu");
+        showAlert("Thiếu dữ liệu tra cứu", "is-warning");
         return;
       }
       const url =
@@ -2096,14 +2259,14 @@
         .then(res => res.json())
         .then(data => {
           if (!data || Object.keys(data).length === 0) {
-            alert("❌ Không tìm thấy dữ liệu");
+            showAlert("Không tìm thấy dữ liệu", "is-danger");
             return;
           }
           fillForm(formId, data);
         })
         .catch(err => {
           console.error(err);
-          alert("❌ Lỗi tra cứu");
+          showAlert("Lỗi tra cứu", "is-danger");
         });
     }
     /* ================= FORM UTIL ================= */
@@ -2175,7 +2338,7 @@
     function searchNhatKy() {
       const key =
         document.getElementById("search_nhatky_bien_so_xe").value;
-      if (!key) return alert("Thiếu biển số xe");
+      if (!key) return showAlert("Thiếu biển số xe", "is-warning");
       ALL_TAGS.forEach(t => {
         document.getElementById(t)?.classList.add("hidden");
       });
@@ -2193,7 +2356,7 @@
     function searchbaoduong() {
       const key =
         document.getElementById("search_baoduong_bien_so_xe").value;
-      if (!key) return alert("Thiếu biển số xe");
+      if (!key) return showAlert("Thiếu biển số xe", "is-warning");
       ALL_TAGS.forEach(t => {
         document.getElementById(t)?.classList.add("hidden");
       });
@@ -2211,7 +2374,7 @@
     function searchFuel() {
       const key =
         document.getElementById("search_fuel_bien_so_xe").value;
-      if (!key) return alert("Thiếu biển số xe");
+      if (!key) return showAlert("Thiếu biển số xe", "is-warning");
       ALL_TAGS.forEach(t => {
         document.getElementById(t)?.classList.add("hidden");
       });
@@ -2229,7 +2392,7 @@
     function searchDanhGia() {
       const key =
         document.getElementById("search_danhgia_ma_nv").value;
-      if (!key) return alert("Thiếu mã nhân viên");
+      if (!key) return showAlert("Thiếu mã nhân viên", "is-warning");
       ALL_TAGS.forEach(t => {
         document.getElementById(t)?.classList.add("hidden");
       });
@@ -2654,7 +2817,7 @@ Lỗi tải dữ liệu
         });
     }
     const API_URL =
-      "https://script.google.com/macros/s/AKfycbwYRK4NIQm6wF5rf1R0UO-mzt15kjSsdTT11G3krU46JI5Gabn8VhNPQhgjk9C_Cv4G/exec";
+      "https://script.google.com/macros/s/AKfycbz4Ps8IXDEuc6N3pVWXXFJzUloatOTIsUb-MlscCDzMU4GPpgrhTDkxLdjlwdow408A/exec";
     function autoFillTaiXe(mnv, targetInput) {
       if (!mnv) {
         targetInput.value = "";
