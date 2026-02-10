@@ -48,21 +48,23 @@
     .form-box,
     .box,
     .card {
-      /* Loại bỏ background container lớn */
-      background: transparent !important;
-      box-shadow: none !important;
+      background: rgba(255, 255, 255, 0.7) !important;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+      border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 12px;
       margin-bottom: 20px;
     }
 
-    /* Thêm nền cho input để dễ nhìn */
-    .input,
-    .textarea,
-    .select select {
-      background: rgba(255, 255, 255, 0.9) !important;
-      border: 1px solid #ccc;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      font-weight: 500;
+    /* Bảng giữ nguyên nền trắng mờ để dễ đọc */
+    .table-container {
+      background: rgba(255, 255, 255, 0.8) !important;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
 
     /* Chữ có viền bóng để nổi trên nền ảnh */
@@ -105,9 +107,21 @@
     .form-box {
       width: 100%;
       max-width: 1000px;
-      /* Giới hạn để không bị quá rộng trên PC */
       margin: auto;
       padding: 15px;
+    }
+
+    /* Tối ưu lề trên Mobile để hiện Background ở các cạnh */
+    @media (max-width: 1024px) {
+      .section {
+        padding: 1.5rem 1rem !important;
+        /* Tạo khoảng trống 2 bên */
+      }
+
+      .container.is-fluid {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+      }
     }
 
     /* ===== HEADER TRANG ĐẦU (HOME ONLY) ===== */
