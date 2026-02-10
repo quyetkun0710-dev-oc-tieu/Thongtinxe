@@ -30,57 +30,7 @@
     }
 
 
-    /* Keyframes cho hiệu ứng trượt ngang (Mobile/Portrait) */
-    @keyframes bgPanX {
-      0% {
-        background-position: 0% 50%;
-      }
-
-      50% {
-        background-position: 100% 50%;
-      }
-
-      100% {
-        background-position: 0% 50%;
-      }
-    }
-
-    /* Keyframes cho hiệu ứng trượt nhẹ (Desktop/Landscape) */
-    @keyframes bgBreath {
-      0% {
-        background-size: 110% 110%;
-        background-position: center;
-      }
-
-      50% {
-        background-size: 120% 120%;
-        background-position: center;
-      }
-
-      100% {
-        background-size: 110% 110%;
-        background-position: center;
-      }
-    }
-
-    /* === MOBILE / TABLET DỌC (PORTRAIT) === */
-    @media (orientation: portrait) {
-      body {
-        /* Zoom ảnh cao bằng màn hình, chiều ngang sẽ dư ra để trượt */
-        background-size: auto 100vh;
-        animation: bgPanX 40s ease-in-out infinite;
-      }
-    }
-
-    /* === PC / TABLET NGANG (LANDSCAPE) === */
-    @media (orientation: landscape) {
-      body {
-        /* Cover màn hình */
-        background-size: cover;
-        /* Hiệu ứng zoom nhẹ nhàng (breathing) */
-        animation: bgBreath 30s ease-in-out infinite;
-      }
-    }
+    /* === END LEGACY BACKGROUND ANIMATIONS === */
 
     .hidden {
       display: none;
@@ -2119,24 +2069,38 @@
       const fixedBg = document.getElementById("fixed-bg");
 
       if (url) {
+        // Cả Mobile và Desktop đều dùng cover và center
+        const commonStyle = {
+          backgroundImage: `url('${url}')`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat"
+        };
+
         if (window.matchMedia("(max-width: 1024px)").matches) {
-          // MOBILE: Dùng lớp nền cố định
+          // MOBILE: Luôn "Full ảnh" và Cố định (Fixed) dùng lớp nền riêng để mượt nhất
           if (fixedBg) {
-            fixedBg.style.backgroundImage = `url('${url}')`;
+            Object.assign(fixedBg.style, commonStyle);
+            fixedBg.style.display = "block";
           }
           document.body.style.backgroundImage = "none";
+          document.body.style.backgroundAttachment = "scroll"; // Reset body
         } else {
-          // DESKTOP: Dùng background body cuộn theo
-          document.body.style.backgroundImage = `url('${url}')`;
-          document.body.style.backgroundSize = "cover";
-          document.body.style.backgroundPosition = "center";
+          // DESKTOP: "Scroll" cuộn theo nội dung
+          Object.assign(document.body.style, commonStyle);
           document.body.style.backgroundAttachment = "scroll";
-          if (fixedBg) fixedBg.style.backgroundImage = "none";
+          if (fixedBg) {
+            fixedBg.style.display = "none";
+            fixedBg.style.backgroundImage = "none";
+          }
         }
       } else {
         document.body.style.background = "#f4f6f8";
         document.body.style.backgroundImage = "";
-        if (fixedBg) fixedBg.style.backgroundImage = "none";
+        if (fixedBg) {
+          fixedBg.style.display = "none";
+          fixedBg.style.backgroundImage = "none";
+        }
       }
     }
 
