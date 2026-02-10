@@ -496,6 +496,31 @@
       transform: scale(0.95);
     }
 
+    /* Fixed Background for Mobile */
+    #fixed-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      z-index: -1;
+      display: none;
+      /* Chỉ hiện trên mobile */
+    }
+
+    @media (max-width: 1024px) {
+      #fixed-bg {
+        display: block;
+      }
+
+      body {
+        background-image: none !important;
+        /* Dùng fixed-bg thay thế */
+      }
+    }
+
     /* Spacer để nội dung không bị nút che mất */
     .form-spacer {
       height: 100px;
@@ -572,6 +597,9 @@
 </head>
 
 <body>
+  <!-- Lớp nền cố định cho mobile -->
+  <div id="fixed-bg"></div>
+
   <!-- Toast Container -->
   <div id="toast-container"></div>
 
@@ -2087,26 +2115,38 @@
     }
 
     function applyBackground(tag) {
-      // Ưu tiên ảnh từ Sheet
       const url = BG_CONFIG[tag] || BG_CONFIG["default"];
+      const fixedBg = document.getElementById("fixed-bg");
 
       if (url) {
-        document.body.style.backgroundImage = `url('${url}')`;
-        document.body.style.backgroundSize = "cover";
-        document.body.style.backgroundPosition = "center";
-
-        // Responsive Background: Fixed for Mobile/Tablet, Scroll for WebApp
         if (window.matchMedia("(max-width: 1024px)").matches) {
-          document.body.style.backgroundAttachment = "fixed";
+          // MOBILE: Dùng lớp nền cố định
+          if (fixedBg) {
+            fixedBg.style.backgroundImage = `url('${url}')`;
+          }
+          document.body.style.backgroundImage = "none";
         } else {
+          // DESKTOP: Dùng background body cuộn theo
+          document.body.style.backgroundImage = `url('${url}')`;
+          document.body.style.backgroundSize = "cover";
+          document.body.style.backgroundPosition = "center";
           document.body.style.backgroundAttachment = "scroll";
+          if (fixedBg) fixedBg.style.backgroundImage = "none";
         }
       } else {
-        // Fallback nếu không có ảnh
         document.body.style.background = "#f4f6f8";
         document.body.style.backgroundImage = "";
+        if (fixedBg) fixedBg.style.backgroundImage = "none";
       }
     }
+
+    // Auto update background on rezize
+    window.addEventListener("resize", () => {
+      const currentTag = document.getElementById("home").classList.contains("hidden")
+        ? (document.getElementById("login").classList.contains("hidden") ? "other" : "login")
+        : "home";
+      if (currentTag !== "other") applyBackground(currentTag);
+    });
 
     /* ================= UI NAV ================= */
     let USER_ROLE = null; // manager | admin | taixe
