@@ -16,7 +16,19 @@
       background-attachment: fixed;
       background-position: center center;
       transition: background 0.5s ease;
+      overflow-x: hidden;
+      /* NGĂN TRÀN NGANG TOÀN TRANG */
     }
+
+    html {
+      overflow-x: hidden;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
 
     /* Keyframes cho hiệu ứng trượt ngang (Mobile/Portrait) */
     @keyframes bgPanX {
@@ -142,11 +154,10 @@
 
     .form-box {
       width: 100%;
-      max-width: 98%;
-      /* Mở rộng tối đa */
+      max-width: 1000px;
+      /* Giới hạn để không bị quá rộng trên PC */
       margin: auto;
-      padding: 10px;
-      /* Giảm padding để bảng sát lề hơn */
+      padding: 15px;
     }
 
     /* ===== HEADER TRANG ĐẦU (HOME ONLY) ===== */
@@ -228,16 +239,16 @@
 
     .table th,
     .table td {
-      white-space: normal !important;
-      /* Cho phép xuống dòng để tiết kiệm chiều ngang */
+      white-space: nowrap !important;
+      /* Không cho phép xuống dòng */
       vertical-align: middle;
       font-size: 12px;
       /* Chữ nhỏ hơn */
       padding: 4px 6px !important;
       /* Padding gọn hơn */
-      max-width: 150px;
-      /* Giới hạn chiều rộng cột để không bị quá bè */
-      word-wrap: break-word;
+      /* max-width: 150px; */
+      /* Bỏ giới hạn chiều rộng để text có thể dài ra */
+      /* word-wrap: break-word; */
     }
 
     .table th {
@@ -248,8 +259,7 @@
 
     @media (max-width: 768px) {
       .section {
-        padding: 10px 5px !important;
-        /* Sát lề hơn trên mobile */
+        padding: 10px 10px !important;
       }
 
       .container.is-fluid {
@@ -258,24 +268,20 @@
       }
 
       .form-box {
-        padding: 10px 5px !important;
-        /* Giảm padding trong form */
+        padding: 0 !important;
         width: 100% !important;
         max-width: 100% !important;
         border-radius: 0 !important;
-        /* Bỏ bo góc để liền mạch */
         box-shadow: none !important;
-        /* Bỏ bóng cho nhẹ */
       }
 
+      /* Tránh tràn màn hình do margin âm */
       .columns {
-        margin-left: -5px !important;
-        margin-right: -5px !important;
-        margin-top: 0 !important;
+        margin: 0 !important;
       }
 
       .column {
-        padding: 5px !important;
+        padding: 10px 0 !important;
       }
 
       .table-container {
@@ -283,13 +289,18 @@
         box-shadow: none !important;
         border-radius: 0;
         padding: 0;
+        margin: 0;
+        width: 100%;
+        overflow-x: auto;
       }
 
-      /* Input cao hơn tí cho dễ bấm */
+      /* Cải thiện hiển thị input trên mobile */
       .input,
       .select select,
       .button {
-        height: 2.8em;
+        height: 3em;
+        font-size: 16px;
+        /* Tránh tự động zoom trên iOS */
       }
     }
 
@@ -377,14 +388,29 @@
       bottom: 20px;
       right: 20px;
       z-index: 999;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
+      padding: 12px 24px;
+      border-radius: 50px;
       background: #00d1b2;
-      /* Bulma primary color (teal) */
       color: #fff;
       border: none;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      display: none;
+      /* Mặc định ẨN */
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+
+    .toggle-table-btn:hover {
+      background: #00c4a7;
+      transform: translateY(-2px);
+    }
+
+    .toggle-table-btn:active {
+      transform: scale(0.95);
     }
 
     /* ================= WARNING MODAL ================= */
@@ -423,14 +449,6 @@
       color: #00d1b2;
     }
 
-    .toggle-table-btn:active {
-      transform: scale(0.9);
-    }
-
-    .toggle-table-btn.hidden-btn {
-      display: none;
-    }
-
     /* ================= FLOATING SAVE BUTTON ================= */
     .floating-save-btn {
       position: fixed;
@@ -467,6 +485,7 @@
 </head>
 
 <body>
+
   <!-- ================= LOGIN ================= -->
   <div id="login" class="form-box">
     <div class="box login-box">
@@ -548,7 +567,7 @@
           <div class="column is-3">
             <div class="card card-hover" data-tag="danhgia" onclick="openTag('danhgia')">
               <div class="card-content has-text-centered">
-                <p class="title is-5">📊 Đánh giá nhân sự</p>
+                <p class="title is-5">📝 Đánh giá nhân sự</p>
               </div>
             </div>
           </div>
@@ -1612,6 +1631,47 @@
             </div>
           </div>
         </div>
+
+        <!-- CHI TIẾT XE -->
+        <hr class="has-background-grey-lighter" style="height: 1px; opacity: 0.2">
+        <h3 class="subtitle has-text-white mt-5" style="text-shadow: 1px 1px 2px black;">📋 CHI TIẾT XE</h3>
+        <div class="table-container"
+          style="max-height: 500px; overflow: auto; background: rgba(255,255,255,0.95); border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+          <table class="table is-bordered is-striped is-fullwidth is-hoverable">
+            <thead>
+              <tr class="has-background-primary-light">
+                <th class="has-text-centered">Biển số</th>
+                <th class="has-text-centered">KM</th>
+                <th class="has-text-centered">Giờ</th>
+                <th class="has-text-centered">Chuyến</th>
+                <th class="has-text-centered">Tiền Dầu</th>
+                <th class="has-text-centered">Lít Dầu</th>
+                <th class="has-text-centered">Tiền Bảo Dưỡng</th>
+                <th class="has-text-centered">Lượt BD</th>
+              </tr>
+            </thead>
+            <tbody id="rpt_vehicle_body"></tbody>
+          </table>
+        </div>
+
+        <!-- CHI TIẾT NHÂN VIÊN -->
+        <h3 class="subtitle has-text-white mt-5" style="text-shadow: 1px 1px 2px black;">👨‍✈️ CHI TIẾT NHÂN VIÊN</h3>
+        <div class="table-container"
+          style="max-height: 500px; overflow: auto; background: rgba(255,255,255,0.95); border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+          <table class="table is-bordered is-striped is-fullwidth is-hoverable">
+            <thead>
+              <tr class="has-background-info-light">
+                <th class="has-text-centered">Mã NV</th>
+                <th class="has-text-centered">Họ tên</th>
+                <th class="has-text-centered">Số chuyến</th>
+                <th class="has-text-centered">Tổng KM</th>
+                <th class="has-text-centered">Tổng Giờ</th>
+                <th class="has-text-centered">Số vi phạm</th>
+              </tr>
+            </thead>
+            <tbody id="rpt_driver_body"></tbody>
+          </table>
+        </div>
       </div>
 
       <!-- ================= WARNING MODAL ================= -->
@@ -1644,7 +1704,7 @@
   <script>
     /* ================= CONFIG ================= */
     const SCRIPT_URL =
-      "https://script.google.com/macros/s/AKfycbw7YkX9xPwE2QCCvPVyR1bRvf9Ksc8BHEiMnEdgoqM3UQ0yHM3lSjuOR9CoT3c1AXc5/exec";
+      "https://script.google.com/macros/s/AKfycbxWso4daBTD1Y4ySETPy9TMQThVtLOKrNj_2XL-9HX96aT3cvU7JYWbiG4leX0ZRk5W/exec";
     const ALL_TAGS = [
       "home",
       "xe",
@@ -1770,6 +1830,40 @@
 
             // VIOLATION
             document.getElementById("rpt_violation_count").textContent = fmt(d.data.violation_count);
+
+            // RENDER VEHICLES
+            const vb = document.getElementById("rpt_vehicle_body");
+            vb.innerHTML = "";
+            (d.data.vehicles || []).forEach(v => {
+              vb.innerHTML += `
+                    <tr>
+                        <td class="has-text-weight-bold has-text-centered">${v.bsx}</td>
+                        <td class="has-text-right">${fmt(v.op_km)}</td>
+                        <td class="has-text-right">${fmtHours(v.op_hours)}</td>
+                        <td class="has-text-right">${fmt(v.op_trips)}</td>
+                        <td class="has-text-right has-text-success">${fmt(v.fuel_cost)}</td>
+                        <td class="has-text-right">${fmt(v.fuel_liters)}</td>
+                        <td class="has-text-right has-text-danger">${fmt(v.maintain_cost)}</td>
+                        <td class="has-text-right">${fmt(v.maintain_count)}</td>
+                    </tr>
+                `;
+            });
+
+            // RENDER DRIVERS
+            const db = document.getElementById("rpt_driver_body");
+            db.innerHTML = "";
+            (d.data.drivers || []).forEach(dr => {
+              db.innerHTML += `
+                    <tr>
+                        <td class="has-text-weight-bold has-text-centered">${dr.mnv}</td>
+                        <td>${dr.name}</td>
+                        <td class="has-text-right">${fmt(dr.op_trips)}</td>
+                        <td class="has-text-right">${fmt(dr.op_km)}</td>
+                        <td class="has-text-right">${fmtHours(dr.op_hours)}</td>
+                        <td class="has-text-right has-text-danger">${fmt(dr.violation_count)}</td>
+                    </tr>
+                `;
+            });
           } else {
             alert("Lỗi tải báo cáo: " + d.message);
           }
@@ -2203,12 +2297,16 @@
       if (!f) return;
       // ===== TÍNH GIỜ =====
       if (f.gio_xuat.value && f.gio_ve.value) {
-        const x =
-          new Date("1970-01-01T" + f.gio_xuat.value);
-        const v =
-          new Date("1970-01-01T" + f.gio_ve.value);
-        const diff = (v - x) / 3600000;
-        f.tong_gio.value = diff > 0 ? diff.toFixed(2) : "";
+        const x = new Date("1970-01-01T" + f.gio_xuat.value);
+        const v = new Date("1970-01-01T" + f.gio_ve.value);
+        let diff = (v - x) / 3600000;
+
+        // Handle midnight crossing
+        if (diff < 0) {
+          diff += 24;
+        }
+
+        f.tong_gio.value = diff.toFixed(2);
       } else {
         f.tong_gio.value = "";
       }
@@ -2556,7 +2654,7 @@ Lỗi tải dữ liệu
         });
     }
     const API_URL =
-      "https://script.google.com/macros/s/AKfycbw7YkX9xPwE2QCCvPVyR1bRvf9Ksc8BHEiMnEdgoqM3UQ0yHM3lSjuOR9CoT3c1AXc5/exec";
+      "https://script.google.com/macros/s/AKfycbxWso4daBTD1Y4ySETPy9TMQThVtLOKrNj_2XL-9HX96aT3cvU7JYWbiG4leX0ZRk5W/exec";
     function autoFillTaiXe(mnv, targetInput) {
       if (!mnv) {
         targetInput.value = "";
