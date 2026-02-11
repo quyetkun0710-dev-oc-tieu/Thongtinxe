@@ -2121,6 +2121,71 @@ Hết hạn: ${w.ngay_he} <br>
       // Tải ảnh nền
       fetchBackgrounds();
     });
+    /* ================= SWIPE NAVIGATION ================= */
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const SWIPE_THRESHOLD = 80;
+
+    document.addEventListener("touchstart", (e) => {
+      // Bỏ qua nếu vuốt trong bảng hoặc ô nhập liệu
+      if (e.target.closest('.table-container') || e.target.closest('.input') || e.target.closest('.textarea') || e.target.closest('.select')) {
+        touchStartX = 0;
+        return;
+      }
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    document.addEventListener("touchend", (e) => {
+      if (touchStartX === 0) return;
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+      const deltaX = touchEndX - touchStartX;
+      if (Math.abs(deltaX) < SWIPE_THRESHOLD) return;
+
+      if (deltaX < 0) {
+        // Vuốt sang Trái -> NEXT
+        navigateSwipe("next");
+      } else {
+        // Vuốt sang Phải -> PREV
+        navigateSwipe("prev");
+      }
+    }
+
+    function navigateSwipe(dir) {
+      if (!USER_ROLE) return;
+      const allowTags = ROLE_PERMISSION[USER_ROLE] || [];
+      const navOrder = ["home", ...allowTags];
+
+      // Xác định tag hiện tại đang hiển thị
+      let currentTag = "home";
+      const visibleTag = Array.from(document.querySelectorAll('.form-box'))
+        .find(el => !el.classList.contains('hidden') && el.id !== 'login');
+
+      if (visibleTag) currentTag = visibleTag.id;
+      if (document.getElementById("home").classList.contains("hidden") === false) currentTag = "home";
+
+      const currentIndex = navOrder.indexOf(currentTag);
+      if (currentIndex === -1) return;
+
+      let nextIndex;
+      if (dir === "next") {
+        nextIndex = currentIndex + 1;
+      } else {
+        nextIndex = currentIndex - 1;
+      }
+
+      if (nextIndex >= 0 && nextIndex < navOrder.length) {
+        const nextTag = navOrder[nextIndex];
+        if (nextTag === "home") {
+          backHome();
+        } else {
+          openTag(nextTag);
+        }
+      }
+    }
     /* ================= BACKGROUNDS ================= */
     let BG_CONFIG = {};
     function fetchBackgrounds() {
