@@ -830,6 +830,12 @@
           <!-- ========= 6. TRẠNG THÁI ========= -->
           <h3 class="subtitle">6️⃣ Trạng thái</h3>
           <div class="columns is-mobile">
+            <!-- Hidden Fields for Warning Calculations -->
+            <input type="hidden" name="cb_dk">
+            <input type="hidden" name="cb_dkiem">
+            <input type="hidden" name="cb_ph">
+            <input type="hidden" name="cb_bh">
+
             <div class="column is-6-mobile">
               <label class="label">Tình trạng hoạt động</label>
               <label class="radio">
@@ -1855,7 +1861,7 @@
 
     /* ================= CONFIG ================= */
     const SCRIPT_URL =
-      "https://script.google.com/macros/s/AKfycbz4Ps8IXDEuc6N3pVWXXFJzUloatOTIsUb-MlscCDzMU4GPpgrhTDkxLdjlwdow408A/exec";
+      "https://script.google.com/macros/s/AKfycbx-hx4YdQehCK2LX_O6Sg9nU_usogNTt4q8pa_u1A6mA-O318NjXSmT75HioKIrLNZM/exec";
     const ALL_TAGS = [
       "home",
       "xe",
@@ -2463,36 +2469,33 @@
       );
       return diff >= 0 ? diff : 0;
     }
-    function calc(input, limitDays, targetField) {
+    function calc(input, ignoredLimit, targetField) {
       if (!input || !input.value) return;
       const form = input.form;
-      if (!form || !form[targetField]) return;
+      if (!form || !form.elements[targetField]) return;
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const target = new Date(input.value);
       if (isNaN(target.getTime())) return;
       target.setHours(0, 0, 0, 0);
-      let diff = Math.ceil(
-        (target - today) / (1000 * 60 * 60 * 24)
-      );
-      if (diff < 0) diff = 0;
-      form[targetField].value = diff;
+      const diff = Math.round((target - today) / (1000 * 60 * 60 * 24));
+      form.elements[targetField].value = diff;
     }
     /* ===== UPDATE CÁC FIELD CÒN LẠI ===== */
     function updateRemainFields() {
       const f = document.getElementById("xeForm");
       if (!f) return;
+      if (f.ngay_dang_ky.value) {
+        f.cb_dk.value = calcRemainDays(f.ngay_dang_ky.value);
+      }
       if (f.ngay_dang_kiem.value) {
-        f.cb_dkiem.value =
-          calcRemainDays(f.ngay_dang_kiem.value);
+        f.cb_dkiem.value = calcRemainDays(f.ngay_dang_kiem.value);
       }
       if (f.ngay_phu_hieu.value) {
-        f.cb_ph.value =
-          calcRemainDays(f.ngay_phu_hieu.value);
+        f.cb_ph.value = calcRemainDays(f.ngay_phu_hieu.value);
       }
       if (f.ngay_bao_hiem.value) {
-        f.cb_bh.value =
-          calcRemainDays(f.ngay_bao_hiem.value);
+        f.cb_bh.value = calcRemainDays(f.ngay_bao_hiem.value);
       }
     }
     window.addEventListener("load", () => {
@@ -2647,22 +2650,19 @@ Lỗi tải dữ liệu
       d.setHours(0, 0, 0, 0);
       return Math.round((d - today) / 86400000);
     }
-    function calc(el, soNgay, targetField) {
+    function calc(el, ignoredLimit, targetField) {
       const f = el.closest("form");
-      if (!f) return;
+      if (!f || !f.elements[targetField]) return;
       if (!el.value) {
-        if (f.elements[targetField]) f.elements[targetField].value = "";
+        f.elements[targetField].value = "";
         return;
       }
       const ngayHetHan = new Date(el.value);
-      ngayHetHan.setDate(ngayHetHan.getDate() + soNgay);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       ngayHetHan.setHours(0, 0, 0, 0);
       const conLai = Math.round((ngayHetHan - today) / 86400000);
-      if (f.elements[targetField]) {
-        f.elements[targetField].value = conLai;
-      }
+      f.elements[targetField].value = conLai;
     }
     /* ================= BẢO DƯỠNG ================= */
     function calcBaoDuongKM() {
@@ -2861,7 +2861,7 @@ Lỗi tải dữ liệu
         });
     }
     const API_URL =
-      "https://script.google.com/macros/s/AKfycbz4Ps8IXDEuc6N3pVWXXFJzUloatOTIsUb-MlscCDzMU4GPpgrhTDkxLdjlwdow408A/exec";
+      "https://script.google.com/macros/s/AKfycbx-hx4YdQehCK2LX_O6Sg9nU_usogNTt4q8pa_u1A6mA-O318NjXSmT75HioKIrLNZM/exec";
     function autoFillTaiXe(mnv, targetInput) {
       if (!mnv) {
         targetInput.value = "";
