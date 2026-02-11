@@ -212,13 +212,59 @@
 
     @media (max-width: 1024px) {
       .section {
-        padding: 1.5rem 1rem !important;
-        /* Tạo khoảng trống 2 bên */
+        padding: 1rem 0.5rem !important;
       }
 
       .container.is-fluid {
-        padding-left: 0.5rem !important;
-        padding-right: 0.5rem !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+
+      .form-box {
+        padding: 10px 5px !important;
+      }
+
+      .box {
+        padding: 1rem !important;
+        margin-bottom: 1.5rem !important;
+      }
+
+      /* Tăng khoảng cách giữa các hàng trong form trên mobile */
+      .columns.is-mobile.is-multiline {
+        margin: 0 !important;
+        gap: 15px 0;
+      }
+
+      .column {
+        padding: 0 0.5rem !important;
+      }
+
+      /* Ép Textarea và các trường quan trọng thành 100% chiều ngang */
+      .column.is-12-mobile-custom,
+      .textarea-container,
+      .column:has(textarea) {
+        width: 100% !important;
+        flex: none !important;
+      }
+
+      .input,
+      .select select,
+      .button {
+        height: 44px !important;
+        /* Touch-friendly size */
+      }
+
+      .label {
+        font-size: 0.9rem !important;
+        margin-bottom: 0.4rem !important;
+      }
+
+      .subtitle {
+        font-size: 1.1rem !important;
+        margin-top: 1.5rem !important;
+        margin-bottom: 1rem !important;
+        border-left: 4px solid #00ffcc;
+        padding-left: 10px;
       }
     }
 
