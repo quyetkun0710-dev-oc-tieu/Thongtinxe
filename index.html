@@ -86,25 +86,62 @@
       text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.5);
     }
 
-    /* Duplicated table style removed */
-    /* Card home vẫn cần chút nền để bấm được */
-    #home .card {
-      background: rgba(255, 255, 255, 0.85) !important;
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
-      transition: transform 0.2s;
+    /* ================= APP LAUNCHER STYLE (HOME) ================= */
+    #home .app-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 20px;
+      padding: 20px 10px;
+      width: 100%;
     }
 
-    #home .card:hover {
-      background: rgba(255, 255, 255, 0.95) !important;
-      transform: scale(1.05);
+    .app-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 24px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 1/1;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
     }
 
-    /* Chữ trong card home màu đen cho dễ đọc */
-    #home .card .title {
-      color: #333 !important;
-      text-shadow: none !important;
+    .app-card:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .app-card:active {
+      transform: scale(0.95);
+    }
+
+    .app-icon {
+      font-size: 3.5rem;
+      margin-bottom: 12px;
+      filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+      transition: transform 0.3s ease;
+    }
+
+    .app-card:hover .app-icon {
+      transform: scale(1.1);
+    }
+
+    .app-name {
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      line-height: 1.2;
     }
 
     .form-box {
@@ -620,59 +657,47 @@
             <p></p>
           </div>
         </div>
-        <div class="columns is-multiline">
-          <div class="column is-3">
-            <div class="card card-hover" data-tag="xe" onclick="openTag('xe')">
-              <div class="card-content has-text-centered">
-                <p class="title is-5">🚚 Thông tin xe</p>
-              </div>
-            </div>
+        <div class="app-grid">
+          <div class="app-card" data-tag="xe" onclick="openTag('xe')">
+            <div class="app-icon">🚚</div>
+            <div class="app-name">Thông tin xe</div>
           </div>
-          <div class="column is-3">
-            <div class="card card-hover" data-tag="taixe" onclick="openTag('taixe')">
-              <div class="card-content has-text-centered">
-                <p class="title is-5">👨‍✈️ Tài xế</p>
-              </div>
-            </div>
+
+          <div class="app-card" data-tag="taixe" onclick="openTag('taixe')">
+            <div class="app-icon">👨‍✈️</div>
+            <div class="app-name">Tài xế</div>
           </div>
-          <div class="column is-3">
-            <div class="card card-hover" data-tag="nhatky" onclick="openTag('nhatky')">
-              <div class="card-content has-text-centered">
-                <p class="title is-5">📒 Nhật ký vận hành</p>
-              </div>
-            </div>
+
+          <div class="app-card" data-tag="nhatky" onclick="openTag('nhatky')">
+            <div class="app-icon">📒</div>
+            <div class="app-name">Nhật ký</div>
           </div>
-          <div class="column is-3">
-            <div class="card card-hover" data-tag="baoduong" onclick="openTag('baoduong')">
-              <div class="card-content has-text-centered">
-                <p class="title is-5">🛠️ Bảo dưỡng</p>
-              </div>
-            </div>
+
+          <div class="app-card" data-tag="baoduong" onclick="openTag('baoduong')">
+            <div class="app-icon">🛠️</div>
+            <div class="app-name">Bảo dưỡng</div>
           </div>
-          <div class="column is-3">
-            <div class="card card-hover" data-tag="fuel" onclick="openTag('fuel')">
-              <div class="card-content has-text-centered">
-                <p class="title is-5">⛽ Nhiên liệu</p>
-              </div>
-            </div>
+
+          <div class="app-card" data-tag="fuel" onclick="openTag('fuel')">
+            <div class="app-icon">⛽</div>
+            <div class="app-name">Nhiên liệu</div>
           </div>
-          <div class="column is-3">
-            <div class="card card-hover" data-tag="danhgia" onclick="openTag('danhgia')">
-              <div class="card-content has-text-centered">
-                <p class="title is-5">📝 Đánh giá nhân sự</p>
-              </div>
-            </div>
+
+          <div class="app-card" data-tag="danhgia" onclick="openTag('danhgia')">
+            <div class="app-icon">📝</div>
+            <div class="app-name">Đánh giá</div>
           </div>
-          <div class="column is-3">
-            <div class="card card-hover" data-tag="baocao" onclick="openReport()">
-              <div class="card-content has-text-centered">
-                <p class="title is-5">📊 Báo cáo</p>
-              </div>
-            </div>
+
+          <div class="app-card" data-tag="baocao" onclick="openReport()">
+            <div class="app-icon">📊</div>
+            <div class="app-name">Báo cáo</div>
           </div>
-          <!-- Logout -->
-          <div class="logout-wrap">
-            <button class="logout-btn" onclick="doLogout()">⎋ Logout</button>
+
+          <!-- Logout Button as an App or separate? Let's make it distinct slightly but in grid -->
+          <div class="app-card" style="background: rgba(255, 77, 79, 0.2); border-color: rgba(255, 77, 79, 0.3);"
+            onclick="doLogout()">
+            <div class="app-icon">⎋</div>
+            <div class="app-name">Đăng xuất</div>
           </div>
         </div>
       </div>
