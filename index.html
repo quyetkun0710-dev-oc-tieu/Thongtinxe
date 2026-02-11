@@ -50,13 +50,13 @@
     .card,
     .login-box,
     .report-card {
-      background: rgba(255, 255, 255, 0.15) !important;
-      backdrop-filter: blur(10px) !important;
-      -webkit-backdrop-filter: blur(10px) !important;
-      border: 1px solid rgba(255, 255, 255, 0.2) !important;
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+      background: rgba(255, 255, 255, 0.1) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
       border-radius: 12px;
       margin-bottom: 20px;
+      backdrop-filter: blur(5px) !important;
+      -webkit-backdrop-filter: blur(5px) !important;
     }
 
     /* Bảng giữ nguyên nền trắng mờ để dễ đọc */
@@ -255,39 +255,14 @@
         overflow-x: auto;
       }
 
-      /* Cải thiện hiển thị input trên mobile và desktop */
+      /* Cải thiện hiển thị input trên mobile */
       .input,
       .select select,
-      .textarea {
-        background-color: rgba(255, 255, 255, 0.9) !important;
-        border: 1px solid #ccc !important;
-        color: #333 !important;
+      .button {
         height: 3em;
         font-size: 16px;
+        /* Tránh tự động zoom trên iOS */
       }
-
-      .input::placeholder {
-        color: #777 !important;
-      }
-    }
-
-    /* Style chung cho input để nổi bật hơn */
-    .input,
-    .select select,
-    .textarea {
-      background-color: rgba(255, 255, 255, 0.85) !important;
-      border: 1px solid rgba(255, 255, 255, 0.3) !important;
-      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1) !important;
-      color: #000 !important;
-      font-weight: 500;
-    }
-
-    .input:focus,
-    .select select:focus,
-    .textarea:focus {
-      background-color: #fff !important;
-      border-color: #00d1b2 !important;
-      box-shadow: 0 0 0 0.125em rgba(0, 209, 178, 0.25) !important;
     }
 
     /* 🔒 KHÓA FIELD KHI AUTO-SET */
@@ -1640,8 +1615,7 @@
         <h2 class="title is-4">📊 BÁO CÁO TỔNG HỢP</h2>
 
         <!-- DATE FILTER -->
-        <section class="box"
-          style="background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3);">
+        <section class="box">
           <div class="columns is-mobile is-vcentered">
             <div class="column is-4">
               <div class="select is-fullwidth">
