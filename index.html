@@ -1911,7 +1911,7 @@
       }, 4000);
     }
     /* ================= CONFIG ================= */
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-hx4YdQehCK2LX_O6Sg9nU_usogNTt4q8pa_u1A6mA-O318NjXSmT75HioKIrLNZM/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwf0P90us8Q17gl3rPwRfhuyUHOgsNWNjOUJmT9vL-PjntOsYP_BU1hxZpG9HQ7ppA/exec";
 
     let USER_ROLE = null; // manager | admin | taixe
     const ROLE_PERMISSION = {
@@ -1991,13 +1991,36 @@ Hết hạn: ${w.ngay_he} <br>
       document.getElementById("rpt_year").value = d.getFullYear();
       // Load data
       loadReport();
+      startReportAutoRefresh();
     }
-    function loadReport() {
+
+    let reportTimer = null;
+    function startReportAutoRefresh() {
+      stopReportAutoRefresh();
+      reportTimer = setInterval(() => {
+        // Chỉ refresh nếu đang ở trang báo cáo
+        if (!document.getElementById("baocao").classList.contains("hidden")) {
+          loadReport(true); // true để không hiện loading icon gây nháy mắt
+        } else {
+          stopReportAutoRefresh();
+        }
+      }, 15000);
+    }
+
+    function stopReportAutoRefresh() {
+      if (reportTimer) {
+        clearInterval(reportTimer);
+        reportTimer = null;
+      }
+    }
+
+    function loadReport(isAuto = false) {
       const m = document.getElementById("rpt_month").value;
       const y = document.getElementById("rpt_year").value;
       const btn = document.querySelector("#baocao .button.is-primary");
-      // Loading state
-      if (btn) {
+
+      // Loading state - Chỉ hiện nếu không phải auto refresh
+      if (btn && !isAuto) {
         btn.classList.add("is-loading");
         btn.disabled = true;
       }
@@ -2279,10 +2302,12 @@ Hết hạn: ${w.ngay_he} <br>
       if (target) {
         target.classList.remove("hidden");
         applyBackground(tagId); // Đổi background theo tag
+        if (tagId !== "baocao") stopReportAutoRefresh(); // Dừng refresh if rời báo cáo
       }
       showToggleBtn(false); // Reset nút khi chuyển tag
     }
     function backHome() {
+      stopReportAutoRefresh(); // Dừng refresh
       showToggleBtn(false); // Ẩn nút khi về home
       ALL_TAGS.forEach(t => {
         const el = document.getElementById(t);
@@ -2923,7 +2948,7 @@ Lỗi tải dữ liệu
         });
     }
     const API_URL =
-      "https://script.google.com/macros/s/AKfycbx-hx4YdQehCK2LX_O6Sg9nU_usogNTt4q8pa_u1A6mA-O318NjXSmT75HioKIrLNZM/exec";
+      "https://script.google.com/macros/s/AKfycbwf0P90us8Q17gl3rPwRfhuyUHOgsNWNjOUJmT9vL-PjntOsYP_BU1hxZpG9HQ7ppA/exec";
     function autoFillTaiXe(mnv, targetInput) {
       if (!mnv) {
         targetInput.value = "";
