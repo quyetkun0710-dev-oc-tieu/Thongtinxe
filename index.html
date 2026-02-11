@@ -2109,27 +2109,25 @@
       const fixedBg = document.getElementById("fixed-bg");
 
       if (url) {
-        // Cả Mobile và Desktop đều dùng center top
+        // Cả Mobile và Desktop đều dùng cover và center
         const commonStyle = {
           backgroundImage: `url('${url}')`,
-          backgroundPosition: "center top",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
           backgroundRepeat: "no-repeat"
         };
 
         if (window.matchMedia("(max-width: 1024px)").matches) {
-          // MOBILE: Luôn "Full ảnh gốc" (contain) và Cố định (Fixed)
+          // MOBILE: Luôn "Full ảnh" và Cố định (Fixed) dùng lớp nền riêng để mượt nhất
           if (fixedBg) {
             Object.assign(fixedBg.style, commonStyle);
-            fixedBg.style.backgroundSize = "contain";
-            fixedBg.style.backgroundColor = "#000";
             fixedBg.style.display = "block";
           }
           document.body.style.backgroundImage = "none";
-          document.body.style.backgroundAttachment = "scroll";
+          document.body.style.backgroundAttachment = "scroll"; // Reset body
         } else {
-          // DESKTOP: "Scroll" cuộn theo nội dung, dùng cover để phủ kín
+          // DESKTOP: "Scroll" cuộn theo nội dung
           Object.assign(document.body.style, commonStyle);
-          document.body.style.backgroundSize = "cover";
           document.body.style.backgroundAttachment = "scroll";
           if (fixedBg) {
             fixedBg.style.display = "none";
