@@ -57,14 +57,29 @@
       border: none !important;
     }
 
-    /* Hiệu ứng kính mờ CHỈ dành cho Tab Báo cáo */
-    #baocao .box,
-    #baocao .report-card {
-      background: rgba(255, 255, 255, 0.2) !important;
+    /* Hiệu ứng kính mờ CHỈ dành cho Tab Báo cáo - Chỉ áp dụng cho lớp bọc ngoài */
+    #baocao .box {
+      background: rgba(255, 255, 255, 0.15) !important;
       backdrop-filter: blur(15px) !important;
       -webkit-backdrop-filter: blur(15px) !important;
-      border: 1px solid rgba(255, 255, 255, 0.3) !important;
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4) !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+      padding: 1rem !important;
+      /* Compact padding */
+    }
+
+    /* Các thẻ con bên trong box không dùng hiệu ứng kính để tránh đè lớp */
+    #baocao .report-card {
+      background: rgba(255, 255, 255, 0.1) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      padding: 10px !important;
+      /* Compact padding */
+    }
+
+    .h-100 {
+      height: 100% !important;
     }
 
     /* Bảng giữ nguyên nền trắng mờ để dễ đọc */
@@ -571,7 +586,7 @@
     }
 
     .report-number {
-      font-size: 2.2rem;
+      font-size: 1.6rem;
       font-weight: 900;
       color: #00ffcc;
       /* Sáng hơn màu 00d1b2 cũ */
@@ -603,6 +618,35 @@
 
     .floating-save-btn:active {
       transform: scale(0.95);
+    }
+
+    /* ================= FLOATING BACK BUTTON ================= */
+    .floating-back-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1000;
+      padding: 8px 18px;
+      border-radius: 50px;
+      background: rgba(0, 0, 0, 0.6) !important;
+      color: #fff !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    .floating-back-btn:hover {
+      background: rgba(0, 0, 0, 0.8) !important;
+      transform: translateX(-5px);
+      border-color: #00ffcc !important;
     }
 
     /* Fixed Background for Mobile */
@@ -724,6 +768,8 @@
       border-radius: 8px;
       overflow-x: auto;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      position: relative;
+      /* Thêm để hỗ trợ sticky con */
     }
 
     .fuel-grid-table {
@@ -783,14 +829,23 @@
       position: sticky;
       left: 0;
       width: max-content;
-      z-index: 5;
-      padding: 5px 12px;
-      margin-bottom: 8px !important;
-      background: rgba(255, 255, 255, 0.9);
+      z-index: 10;
+      padding: 8px 15px;
+      margin-bottom: 10px !important;
+      background: #f0faff;
+      /* Màu nền nhẹ để nổi bật */
       backdrop-filter: blur(4px);
       border-radius: 6px;
-      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-      border-left: 4px solid #00d1b2;
+      box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
+      border-left: 5px solid #00d1b2;
+      font-weight: 800 !important;
+      color: #008080 !important;
+    }
+
+    .fuel-vehicle-wrapper {
+      width: fit-content;
+      min-width: 100%;
+      margin-bottom: 40px;
     }
   </style>
 </head>
@@ -884,7 +939,7 @@
       </div>
       <!-- ================= START TAG: THÔNG TIN XE ================= -->
       <div id="xe" class="hidden form-box">
-        <button class="button mb-4" onclick="backHome()">⬅ Quay lại</button>
+        <button class="floating-back-btn" type="button" onclick="backHome()">⬅ Quay lại</button>
         <h2 class="title is-4 has-text-weight-bold">🚚 THÔNG TIN XE </h2>
         <!-- ========= TRA CỨU ========= -->
         <section class="box">
@@ -1067,7 +1122,7 @@
       <!-- ================= END TAG: THÔNG TIN XE ================= -->
       <!-- ================= START TAG: THÔNG TIN TÀI XẾ ================= -->
       <div id="taixe" class="hidden form-box">
-        <button class="button mb-4" onclick="backHome()">⬅ Quay lại</button>
+        <button class="floating-back-btn" type="button" onclick="backHome()">⬅ Quay lại</button>
         <h2 class="title is-4">👨‍✈️ THÔNG TIN TÀI XẾ</h2>
         <!-- ===== TRA CỨU ===== -->
         <section class="box">
@@ -1259,7 +1314,7 @@
       <!-- ================= END TAG: THÔNG TIN TÀI XẾ ================= -->
       <!-- ================= TAG: NHẬT KÝ VẬN HÀNH ================= -->
       <div id="nhatky" class="hidden form-box">
-        <button class="button mb-4" type="button" onclick="backHome()">⬅ Quay lại</button>
+        <button class="floating-back-btn" type="button" onclick="backHome()">⬅ Quay lại</button>
         <h2 class="title is-4">📒 NHẬT KÝ VẬN HÀNH</h2>
         <!-- ===== TRA CỨU ===== -->
         <section class="box">
@@ -1417,7 +1472,7 @@
       </div>
       <!-- ================= TAG: BẢNG KẾT QUẢ NHẬT KÝ ================= -->
       <div id="nhatky_table" class="hidden form-box">
-        <button class="button mb-4" type="button" onclick="backToNhatKy()">
+        <button class="floating-back-btn" type="button" onclick="backToNhatKy()">
           ⬅ Quay lại Nhật ký
         </button>
         <h2 class="title is-4">📋 KẾT QUẢ NHẬT KÝ VẬN HÀNH</h2>
@@ -1432,7 +1487,7 @@
       <!-- ================= END TAG NHẬT KÝ ================= -->
       <!-- ================= TAG: BẢO DƯỠNG ================= -->
       <div id="baoduong" class="hidden form-box">
-        <button class="button mb-4" type="button" onclick="backHome()">
+        <button class="floating-back-btn" type="button" onclick="backHome()">
           ⬅ Quay lại
         </button>
         <h2 class="title is-4">🛠️ BẢO DƯỠNG – SỬA CHỮA</h2>
@@ -1582,7 +1637,7 @@
       </div>
       <!-- ================= TAG: BẢNG KẾT QUẢ BẢO DƯỠNG ================= -->
       <div id="baoduong_table" class="hidden form-box">
-        <button class="button mb-4" type="button" onclick="backToBaoDuong()">
+        <button class="floating-back-btn" type="button" onclick="backToBaoDuong()">
           ⬅ Quay lại Bảo dưỡng
         </button>
         <h2 class="title is-4">📋 KẾT QUẢ BẢO DƯỠNG</h2>
@@ -1596,7 +1651,7 @@
       <!-- ================= END TAG: BẢO DƯỠNG ================= -->
       <!-- ================= TAG QUẢN LÝ NHIÊN LIỆU ================= -->
       <div id="fuel" class="hidden form-box">
-        <button class="button mb-4" onclick="backHome()">
+        <button class="floating-back-btn" type="button" onclick="backHome()">
           ⬅ Quay lại
         </button>
         <h2 class="title is-4">⛽ NHIÊN LIỆU</h2>
@@ -1717,7 +1772,7 @@
       </div>
       <!-- ================= TAG: BẢNG KẾT QUẢ NHIÊN LIỆU ================= -->
       <div id="fuel_table" class="hidden form-box">
-        <button class="button mb-4" onclick="backToFuel()">
+        <button class="floating-back-btn" onclick="backToFuel()">
           ⬅ Quay lại Nhiên liệu
         </button>
         <h2 class="title is-4">📋 KẾT QUẢ NHIÊN LIỆU</h2>
@@ -1731,7 +1786,7 @@
       <!-- ================= END TAG NHIÊN LIỆU ================= -->
       <!-- ================= TAG ĐÁNH GIÁ NHÂN SỰ ================= -->
       <div id="danhgia" class="hidden form-box">
-        <button class="button mb-4" onclick="backHome()">
+        <button class="floating-back-btn" type="button" onclick="backHome()">
           ⬅ Quay lại
         </button>
         <h2 class="title is-4">📝 ĐÁNH GIÁ NHÂN SỰ</h2>
@@ -1818,7 +1873,7 @@
       </div>
       <!-- ================= 10. BÁO CÁO (MANAGER ONLY) ================= -->
       <div id="baocao" class="hidden form-box">
-        <button class="button mb-4" onclick="backHome()">⬅ Quay lại</button>
+        <button class="floating-back-btn" type="button" onclick="backHome()">⬅ Quay lại</button>
         <h2 class="title is-4">📊 BÁO CÁO TỔNG HỢP</h2>
         <!-- DATE FILTER -->
         <section class="box">
@@ -1885,85 +1940,113 @@
           </div>
         </div>
         <!-- REPORT CARDS -->
-        <div class="columns is-multiline">
-          <!-- 1. VẬN HÀNH -->
+        <div class="columns is-multiline is-mobile">
+          <!-- PAIR 1: VẬN HÀNH & NHIÊN LIỆU -->
           <div class="column is-12">
-            <h3 class="subtitle has-text-white" style="text-shadow: 1px 1px 2px black;">🚚 VẬN HÀNH</h3>
-          </div>
-          <div class="column is-4">
-            <div class="report-card">
-              <p class="subtitle is-6">TỔNG KM</p>
-              <p class="report-number" id="rpt_op_km">0</p>
+            <div class="columns is-mobile is-multiline">
+              <!-- Cột Vận Hành -->
+              <div class="column is-6-tablet is-12-mobile">
+                <div class="box h-100">
+                  <h3 class="subtitle is-6 mb-3">🚚 VẬN HÀNH</h3>
+                  <div class="columns is-mobile is-multiline">
+                    <div class="column is-12">
+                      <div class="report-card">
+                        <p class="subtitle is-7">TỔNG KM</p>
+                        <p class="report-number" id="rpt_op_km">0</p>
+                      </div>
+                    </div>
+                    <div class="column is-6">
+                      <div class="report-card">
+                        <p class="subtitle is-7">SỐ CHUYẾN</p>
+                        <p class="report-number" id="rpt_op_trips">0</p>
+                      </div>
+                    </div>
+                    <div class="column is-6">
+                      <div class="report-card">
+                        <p class="subtitle is-7">GIỜ CHẠY</p>
+                        <p class="report-number" id="rpt_op_hours">0</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Cột Nhiên Liệu -->
+              <div class="column is-6-tablet is-12-mobile">
+                <div class="box h-100">
+                  <h3 class="subtitle is-6 mb-3">⛽ NHIÊN LIỆU</h3>
+                  <div class="columns is-mobile is-multiline">
+                    <div class="column is-12">
+                      <div class="report-card">
+                        <p class="subtitle is-7">TỔNG TIỀN</p>
+                        <p class="report-number" id="rpt_fuel_cost">0 ₫</p>
+                      </div>
+                    </div>
+                    <div class="column is-12">
+                      <div class="report-card">
+                        <p class="subtitle is-7">SỐ LÍT</p>
+                        <p class="report-number" id="rpt_fuel_liters">0</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="column is-4">
-            <div class="report-card">
-              <p class="subtitle is-6">SỐ CHUYẾN</p>
-              <p class="report-number" id="rpt_op_trips">0</p>
-            </div>
-          </div>
-          <div class="column is-4">
-            <div class="report-card">
-              <p class="subtitle is-6">GIỜ CHẠY</p>
-              <p class="report-number" id="rpt_op_hours">0</p>
-            </div>
-          </div>
-          <!-- 2. NHIÊN LIỆU -->
+
+          <!-- PAIR 2: BẢO DƯỠNG & SỬA CHỮA -->
           <div class="column is-12">
-            <h3 class="subtitle has-text-white" style="text-shadow: 1px 1px 2px black;">⛽ NHIÊN LIỆU</h3>
-          </div>
-          <div class="column is-6">
-            <div class="report-card">
-              <p class="subtitle is-6">TỔNG TIỀN</p>
-              <p class="report-number" id="rpt_fuel_cost">0 ₫</p>
+            <div class="columns is-mobile is-multiline">
+              <!-- Cột Bảo Dưỡng -->
+              <div class="column is-6-tablet is-12-mobile">
+                <div class="box h-100">
+                  <h3 class="subtitle is-6 mb-3">🛠️ BẢO DƯỠNG</h3>
+                  <div class="columns is-mobile">
+                    <div class="column is-7">
+                      <div class="report-card">
+                        <p class="subtitle is-7">CHI PHÍ</p>
+                        <p class="report-number" id="rpt_bd_cost" style="color: #ff3860">0 ₫</p>
+                      </div>
+                    </div>
+                    <div class="column is-5">
+                      <div class="report-card">
+                        <p class="subtitle is-7">LƯỢT</p>
+                        <p class="report-number" id="rpt_bd_count">0</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Cột Sửa Chữa -->
+              <div class="column is-6-tablet is-12-mobile">
+                <div class="box h-100">
+                  <h3 class="subtitle is-6 mb-3">🔧 SỬA CHỮA</h3>
+                  <div class="columns is-mobile">
+                    <div class="column is-7">
+                      <div class="report-card">
+                        <p class="subtitle is-7">CHI PHÍ</p>
+                        <p class="report-number" id="rpt_sc_cost" style="color: #ff3860">0 ₫</p>
+                      </div>
+                    </div>
+                    <div class="column is-5">
+                      <div class="report-card">
+                        <p class="subtitle is-7">LƯỢT</p>
+                        <p class="report-number" id="rpt_sc_count">0</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="column is-6">
-            <div class="report-card">
-              <p class="subtitle is-6">SỐ LÍT TIÊU THỤ</p>
-              <p class="report-number" id="rpt_fuel_liters">0</p>
-            </div>
-          </div>
-          <!-- 3. BẢO DƯỠNG -->
-          <div class="column is-12">
-            <h3 class="subtitle has-text-white" style="text-shadow: 1px 1px 2px black;">🛠️ BẢO DƯỠNG</h3>
-          </div>
-          <div class="column is-6">
-            <div class="report-card">
-              <p class="subtitle is-6">TỔNG CHI PHÍ BD</p>
-              <p class="report-number" id="rpt_bd_cost" style="color: #ff3860">0 ₫</p>
-            </div>
-          </div>
-          <div class="column is-6">
-            <div class="report-card">
-              <p class="subtitle is-6">SỐ LƯỢT BD</p>
-              <p class="report-number" id="rpt_bd_count">0</p>
-            </div>
-          </div>
-          <!-- 3.1 SỬA CHỮA -->
-          <div class="column is-12">
-            <h3 class="subtitle has-text-white" style="text-shadow: 1px 1px 2px black;">🔧 SỬA CHỮA</h3>
-          </div>
-          <div class="column is-6">
-            <div class="report-card">
-              <p class="subtitle is-6">TỔNG CHI PHÍ SC</p>
-              <p class="report-number" id="rpt_sc_cost" style="color: #ff3860">0 ₫</p>
-            </div>
-          </div>
-          <div class="column is-6">
-            <div class="report-card">
-              <p class="subtitle is-6">SỐ LƯỢT SC</p>
-              <p class="report-number" id="rpt_sc_count">0</p>
-            </div>
-          </div>
+
           <!-- 4. VI PHẠM -->
           <div class="column is-12">
-            <h3 class="subtitle has-text-white" style="text-shadow: 1px 1px 2px black;">⚠️ VI PHẠM</h3>
-          </div>
-          <div class="column is-12">
-            <div class="report-card">
-              <p class="subtitle is-6">TỔNG SỐ LỖI</p>
-              <p class="report-number has-text-danger" id="rpt_violation_count">0</p>
+            <div class="box">
+              <h3 class="subtitle is-6 mb-3">⚠️ VI PHẠM</h3>
+              <div class="report-card" style="padding: 10px !important;">
+                <p class="subtitle is-7">TỔNG SỐ LỖI</p>
+                <p class="report-number has-text-danger" id="rpt_violation_count">0</p>
+              </div>
             </div>
           </div>
         </div>
@@ -2021,7 +2104,7 @@
       </div>
       <!-- ================= TAG: BẢNG KẾT QUẢ ĐÁNH GIÁ ================= -->
       <div id="danhgia_table" class="hidden form-box">
-        <button class="button mb-4" onclick="backToDanhGia()">
+        <button class="floating-back-btn" onclick="backToDanhGia()">
           ⬅ Quay lại Đánh giá
         </button>
         <h2 class="title is-4">📋 KẾT QUẢ ĐÁNH GIÁ</h2>
@@ -3248,7 +3331,8 @@ Lỗi tải dữ liệu
 
       bsxList.forEach(bsx => {
         const vehicleData = data[bsx];
-        html += `<div class="mb-5"><h4 class="title is-6 has-text-info fuel-grid-sticky-title">🚚 Xe: ${bsx}</h4>`;
+        html += `<div class="fuel-vehicle-wrapper">`;
+        html += `<h4 class="title is-6 fuel-grid-sticky-title">🚚 Xe: ${bsx}</h4>`;
         html += `<table class="fuel-grid-table">`;
 
         // Header: Ngày
