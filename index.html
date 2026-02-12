@@ -778,6 +778,20 @@
       font-weight: bold;
       background: #eee;
     }
+
+    .fuel-grid-sticky-title {
+      position: sticky;
+      left: 0;
+      width: max-content;
+      z-index: 5;
+      padding: 5px 12px;
+      margin-bottom: 8px !important;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(4px);
+      border-radius: 6px;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+      border-left: 4px solid #00d1b2;
+    }
   </style>
 </head>
 
@@ -2042,7 +2056,7 @@
       }, 4000);
     }
     /* ================= CONFIG ================= */
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxg4I_QB3Mtrs_0jc2ex1ZcgJHy1TEP2z4WPF0dQ8HYRB7t0iuFzaxWIU-U3LegHJox/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw6HOU4C8lTiswejDMRt4GmVOpPEp7x6ZmMgonPs8BVU8AvE0QdKxVtL-aruR-SN8Nu/exec";
 
     let USER_ROLE = null; // manager | admin | taixe
     const ROLE_PERMISSION = {
@@ -2275,71 +2289,6 @@ Hết hạn: ${w.ngay_he} <br>
       // Tải ảnh nền
       fetchBackgrounds();
     });
-    /* ================= SWIPE NAVIGATION ================= */
-    let touchStartX = 0;
-    let touchEndX = 0;
-    const SWIPE_THRESHOLD = 80;
-
-    document.addEventListener("touchstart", (e) => {
-      // Bỏ qua nếu vuốt trong bảng hoặc ô nhập liệu
-      if (e.target.closest('.table-container') || e.target.closest('.input') || e.target.closest('.textarea') || e.target.closest('.select')) {
-        touchStartX = 0;
-        return;
-      }
-      touchStartX = e.changedTouches[0].screenX;
-    }, { passive: true });
-
-    document.addEventListener("touchend", (e) => {
-      if (touchStartX === 0) return;
-      touchEndX = e.changedTouches[0].screenX;
-      handleSwipe();
-    }, { passive: true });
-
-    function handleSwipe() {
-      const deltaX = touchEndX - touchStartX;
-      if (Math.abs(deltaX) < SWIPE_THRESHOLD) return;
-
-      if (deltaX < 0) {
-        // Vuốt sang Trái -> NEXT
-        navigateSwipe("next");
-      } else {
-        // Vuốt sang Phải -> PREV
-        navigateSwipe("prev");
-      }
-    }
-
-    function navigateSwipe(dir) {
-      if (!USER_ROLE) return;
-      const allowTags = ROLE_PERMISSION[USER_ROLE] || [];
-      const navOrder = ["home", ...allowTags];
-
-      // Xác định tag hiện tại đang hiển thị
-      let currentTag = "home";
-      const visibleTag = Array.from(document.querySelectorAll('.form-box'))
-        .find(el => !el.classList.contains('hidden') && el.id !== 'login');
-
-      if (visibleTag) currentTag = visibleTag.id;
-      if (document.getElementById("home").classList.contains("hidden") === false) currentTag = "home";
-
-      const currentIndex = navOrder.indexOf(currentTag);
-      if (currentIndex === -1) return;
-
-      let nextIndex;
-      if (dir === "next") {
-        nextIndex = currentIndex + 1;
-      } else {
-        nextIndex = currentIndex - 1;
-      }
-
-      if (nextIndex >= 0 && nextIndex < navOrder.length) {
-        const nextTag = navOrder[nextIndex];
-        if (nextTag === "home") {
-          backHome();
-        } else {
-          openTag(nextTag);
-        }
-      }
-    }
     /* ================= BACKGROUNDS ================= */
     let BG_CONFIG = {};
     function fetchBackgrounds() {
@@ -3079,7 +3028,7 @@ Lỗi tải dữ liệu
         });
     }
     const API_URL =
-      "https://script.google.com/macros/s/AKfycbxg4I_QB3Mtrs_0jc2ex1ZcgJHy1TEP2z4WPF0dQ8HYRB7t0iuFzaxWIU-U3LegHJox/exec";
+      "https://script.google.com/macros/s/AKfycbw6HOU4C8lTiswejDMRt4GmVOpPEp7x6ZmMgonPs8BVU8AvE0QdKxVtL-aruR-SN8Nu/exec";
     function autoFillTaiXe(mnv, targetInput) {
       if (!mnv) {
         targetInput.value = "";
@@ -3268,10 +3217,6 @@ Lỗi tải dữ liệu
       const y = document.getElementById("rpt_year").value;
       let bsx = document.getElementById("rpt_fuel_bsx").value.trim().toUpperCase();
 
-      if (!bsx) {
-        bsx = document.querySelector("#rpt_vehicle_body tr td:first-child")?.textContent || "";
-      }
-
       showAlert(bsx ? `Đang tải bảng kê cho xe ${bsx}...` : "Đang tải bảng kê toàn bộ xe...", "is-info");
 
       try {
@@ -3279,7 +3224,7 @@ Lỗi tải dữ liệu
         const json = await res.json();
 
         if (json.status === "success") {
-          renderFuelLogGrid(json.data, m, y, bsx);
+          renderFuelLogGrid(json.data, m, y);
           document.getElementById('fuelLogGridWrapper').classList.remove('hidden');
           document.getElementById('fuelLogGridWrapper').scrollIntoView({ behavior: 'smooth' });
         } else {
@@ -3290,22 +3235,23 @@ Lỗi tải dữ liệu
       }
     }
 
-    function renderFuelLogGrid(data, month, year, bsxInput) {
+    function renderFuelLogGrid(data, month, year) {
       const container = document.getElementById("fuelGridContainer");
       const numDays = new Date(year, month, 0).getDate();
 
       let html = "";
       const bsxList = Object.keys(data);
       if (bsxList.length === 0) {
-        container.innerHTML = "<p class='has-text-centered has-text-grey'>Không có dữ liệu trong tháng này.</p>";
+        container.innerHTML = "<p class='has-text-centered has-text-grey'>Không có dữ liệu đổ nhiên liệu trong tháng này.</p>";
         return;
       }
 
       bsxList.forEach(bsx => {
         const vehicleData = data[bsx];
-        html += `<div class="mb-5"><h4 class="title is-6 has-text-info">🚚 Xe: ${bsx}</h4>`;
+        html += `<div class="mb-5"><h4 class="title is-6 has-text-info fuel-grid-sticky-title">🚚 Xe: ${bsx}</h4>`;
         html += `<table class="fuel-grid-table">`;
 
+        // Header: Ngày
         html += `<tr><th class="fuel-grid-label">Nội dung / Ngày</th>`;
         for (let i = 1; i <= numDays; i++) {
           html += `<th class="fuel-grid-header-day">${i}</th>`;
@@ -3325,11 +3271,12 @@ Lỗi tải dữ liệu
         html += renderDataRow("KM Đầu", "km_dau");
         html += renderDataRow("KM Cuối", "km_cuoi");
 
+        // KM Cả ngày
         html += `<tr class="fuel-grid-data-row total-row"><td class="fuel-grid-label">KM Cả ngày</td>`;
         for (let i = 1; i <= numDays; i++) {
           let delta = "-";
           if (vehicleData[i] && vehicleData[i].km_dau && vehicleData[i].km_cuoi) {
-            delta = vehicleData[i].km_cuoi - vehicleData[i].km_dau;
+            delta = Number(vehicleData[i].km_cuoi) - Number(vehicleData[i].km_dau);
           }
           html += `<td>${delta}</td>`;
         }
