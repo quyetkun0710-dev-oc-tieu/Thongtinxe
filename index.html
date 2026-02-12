@@ -715,6 +715,69 @@
     .toast.fade-out {
       animation: slideOut 0.4s ease forwards;
     }
+
+    /* ================= FUEL GRID REPORT STYLE ================= */
+    .fuel-grid-container {
+      margin-top: 20px;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .fuel-grid-table {
+      border-collapse: collapse;
+      font-size: 11px;
+      width: max-content;
+      min-width: 100%;
+    }
+
+    .fuel-grid-table th,
+    .fuel-grid-table td {
+      border: 1px solid #ddd;
+      padding: 4px;
+      text-align: center;
+      min-width: 40px;
+    }
+
+    .fuel-grid-table th {
+      background: #f5f5f5;
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+    }
+
+    .fuel-grid-header-day {
+      background-color: #fce4ec !important;
+    }
+
+    .fuel-grid-header-km {
+      background-color: #e8f5e9 !important;
+    }
+
+    .fuel-grid-header-fuel {
+      background-color: #fffde7 !important;
+    }
+
+    .fuel-grid-label {
+      text-align: left !important;
+      font-weight: bold;
+      background: #fafafa;
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      min-width: 150px;
+    }
+
+    .fuel-grid-data-row:hover {
+      background: #f0f0f0;
+    }
+
+    .total-row {
+      font-weight: bold;
+      background: #eee;
+    }
   </style>
 </head>
 
@@ -1784,7 +1847,29 @@
               </button>
             </div>
           </div>
+          <div class="columns is-mobile mt-2">
+            <div class="column is-12-mobile is-4-tablet">
+              <input class="input" id="rpt_fuel_bsx" placeholder="Nhập Biển số xe">
+            </div>
+            <div class="column is-12-mobile is-8-tablet">
+              <button class="button is-link is-fullwidth" onclick="openFuelLogGrid()">
+                ⛽ Xem Bảng kê Nhiên liệu (Bảng ngang)
+              </button>
+            </div>
+          </div>
         </section>
+        <!-- FUEL LOG GRID CONTAINER (Hidden by default) -->
+        <div id="fuelLogGridWrapper" class="hidden">
+          <div class="box" style="background: rgba(255,255,255,0.95) !important;">
+            <h3 class="subtitle has-text-centered has-text-dark">📋 BẢNG KÊ CHI TIẾT NHIÊN LIỆU THEO NGÀY</h3>
+            <div id="fuelGridContainer" class="fuel-grid-container">
+              <!-- Table will be injected here -->
+            </div>
+            <button class="button is-small is-danger is-pulled-right mt-2"
+              onclick="document.getElementById('fuelLogGridWrapper').classList.add('hidden')">Đóng bảng ngang</button>
+            <div class="is-clearfix"></div>
+          </div>
+        </div>
         <!-- REPORT CARDS -->
         <div class="columns is-multiline">
           <!-- 1. VẬN HÀNH -->
@@ -1957,7 +2042,7 @@
       }, 4000);
     }
     /* ================= CONFIG ================= */
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwf0P90us8Q17gl3rPwRfhuyUHOgsNWNjOUJmT9vL-PjntOsYP_BU1hxZpG9HQ7ppA/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxg4I_QB3Mtrs_0jc2ex1ZcgJHy1TEP2z4WPF0dQ8HYRB7t0iuFzaxWIU-U3LegHJox/exec";
 
     let USER_ROLE = null; // manager | admin | taixe
     const ROLE_PERMISSION = {
@@ -2994,7 +3079,7 @@ Lỗi tải dữ liệu
         });
     }
     const API_URL =
-      "https://script.google.com/macros/s/AKfycbwf0P90us8Q17gl3rPwRfhuyUHOgsNWNjOUJmT9vL-PjntOsYP_BU1hxZpG9HQ7ppA/exec";
+      "https://script.google.com/macros/s/AKfycbxg4I_QB3Mtrs_0jc2ex1ZcgJHy1TEP2z4WPF0dQ8HYRB7t0iuFzaxWIU-U3LegHJox/exec";
     function autoFillTaiXe(mnv, targetInput) {
       if (!mnv) {
         targetInput.value = "";
@@ -3176,6 +3261,114 @@ Lỗi tải dữ liệu
           document.getElementById('toggleIcon').textContent = "🙈"; // Icon ẩn
         }
       }
+    }
+    /* ================= FUEL LOG GRID LOGIC ================= */
+    async function openFuelLogGrid() {
+      const m = document.getElementById("rpt_month").value;
+      const y = document.getElementById("rpt_year").value;
+      let bsx = document.getElementById("rpt_fuel_bsx").value.trim().toUpperCase();
+
+      if (!bsx) {
+        bsx = document.querySelector("#rpt_vehicle_body tr td:first-child")?.textContent || "";
+      }
+
+      showAlert(bsx ? `Đang tải bảng kê cho xe ${bsx}...` : "Đang tải bảng kê toàn bộ xe...", "is-info");
+
+      try {
+        const res = await fetch(`${SCRIPT_URL}?action=get_log_grid&bien_so_xe=${encodeURIComponent(bsx)}&month=${m}&year=${y}`);
+        const json = await res.json();
+
+        if (json.status === "success") {
+          renderFuelLogGrid(json.data, m, y, bsx);
+          document.getElementById('fuelLogGridWrapper').classList.remove('hidden');
+          document.getElementById('fuelLogGridWrapper').scrollIntoView({ behavior: 'smooth' });
+        } else {
+          showAlert("Lỗi: " + json.message, "is-danger");
+        }
+      } catch (err) {
+        showAlert("Lỗi kết nối: " + err.message, "is-danger");
+      }
+    }
+
+    function renderFuelLogGrid(data, month, year, bsxInput) {
+      const container = document.getElementById("fuelGridContainer");
+      const numDays = new Date(year, month, 0).getDate();
+
+      let html = "";
+      const bsxList = Object.keys(data);
+      if (bsxList.length === 0) {
+        container.innerHTML = "<p class='has-text-centered has-text-grey'>Không có dữ liệu trong tháng này.</p>";
+        return;
+      }
+
+      bsxList.forEach(bsx => {
+        const vehicleData = data[bsx];
+        html += `<div class="mb-5"><h4 class="title is-6 has-text-info">🚚 Xe: ${bsx}</h4>`;
+        html += `<table class="fuel-grid-table">`;
+
+        html += `<tr><th class="fuel-grid-label">Nội dung / Ngày</th>`;
+        for (let i = 1; i <= numDays; i++) {
+          html += `<th class="fuel-grid-header-day">${i}</th>`;
+        }
+        html += `</tr>`;
+
+        const renderDataRow = (label, rowKey) => {
+          let row = `<tr class="fuel-grid-data-row"><td class="fuel-grid-label">${label}</td>`;
+          for (let i = 1; i <= numDays; i++) {
+            const val = vehicleData[i] ? vehicleData[i][rowKey] : "";
+            row += `<td>${val || "-"}</td>`;
+          }
+          row += `</tr>`;
+          return row;
+        };
+
+        html += renderDataRow("KM Đầu", "km_dau");
+        html += renderDataRow("KM Cuối", "km_cuoi");
+
+        html += `<tr class="fuel-grid-data-row total-row"><td class="fuel-grid-label">KM Cả ngày</td>`;
+        for (let i = 1; i <= numDays; i++) {
+          let delta = "-";
+          if (vehicleData[i] && vehicleData[i].km_dau && vehicleData[i].km_cuoi) {
+            delta = vehicleData[i].km_cuoi - vehicleData[i].km_dau;
+          }
+          html += `<td>${delta}</td>`;
+        }
+        html += `</tr>`;
+
+        html += `<tr class="fuel-grid-data-row"><td class="fuel-grid-label">Giờ đổ</td>`;
+        for (let i = 1; i <= numDays; i++) {
+          const fuels = vehicleData[i] ? vehicleData[i].fuels : [];
+          html += `<td>${fuels.map(f => f.gio).join("<br>") || "-"}</td>`;
+        }
+        html += `</tr>`;
+
+        html += `<tr class="fuel-grid-data-row"><td class="fuel-grid-label">Số lít</td>`;
+        for (let i = 1; i <= numDays; i++) {
+          const fuels = vehicleData[i] ? vehicleData[i].fuels : [];
+          const totalLit = fuels.reduce((acc, f) => acc + Number(f.lit || 0), 0);
+          html += `<td>${totalLit > 0 ? totalLit.toFixed(2) : "-"}</td>`;
+        }
+        html += `</tr>`;
+
+        html += `<tr class="fuel-grid-data-row"><td class="fuel-grid-label">Thành tiền</td>`;
+        for (let i = 1; i <= numDays; i++) {
+          const fuels = vehicleData[i] ? vehicleData[i].fuels : [];
+          const totalMoney = fuels.reduce((acc, f) => acc + Number(f.tong || 0), 0);
+          html += `<td>${totalMoney > 0 ? totalMoney.toLocaleString("vi-VN") : "-"}</td>`;
+        }
+        html += `</tr>`;
+
+        html += `<tr class="fuel-grid-data-row"><td class="fuel-grid-label">KM khi đổ</td>`;
+        for (let i = 1; i <= numDays; i++) {
+          const fuels = vehicleData[i] ? vehicleData[i].fuels : [];
+          html += `<td>${fuels.map(f => f.km_khi_do).join("<br>") || "-"}</td>`;
+        }
+        html += `</tr>`;
+
+        html += `</table></div>`;
+      });
+
+      container.innerHTML = html;
     }
   </script>
   <!-- Nút ẩn hiện bảng -->
