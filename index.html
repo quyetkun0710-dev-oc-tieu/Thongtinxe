@@ -2140,7 +2140,7 @@
       }, 4000);
     }
     /* ================= CONFIG ================= */
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwXUD5r157imv91Prpbg-m3JHDdoIrcIQsmCHtceeMANCx_8ONf7M5v-fCV-xL0_rVu/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxrv7dMw6VItsceI-ouhqE1ApL1qpLJWs1XUuB9rMHe_YYnb8SeOinBVf-AA1LeTd7E/exec";
 
     let USER_ROLE = null; // manager | admin | taixe
     const ROLE_PERMISSION = {
@@ -2246,14 +2246,15 @@ Hết hạn: ${w.ngay_he} <br>
     function loadReport(isAuto = false) {
       const m = document.getElementById("rpt_month").value;
       const y = document.getElementById("rpt_year").value;
-      const btn = document.querySelector("#baocao .button.is-primary");
+      const bsx = document.getElementById("rpt_fuel_bsx") ? document.getElementById("rpt_fuel_bsx").value.trim().toUpperCase() : "";
+      const btn = document.querySelector("#baocao .button is-primary");
 
       // Loading state - Chỉ hiện nếu không phải auto refresh
       if (btn && !isAuto) {
         btn.classList.add("is-loading");
         btn.disabled = true;
       }
-      fetch(`${SCRIPT_URL}?action=get_report&month=${m}&year=${y}`)
+      fetch(`${SCRIPT_URL}?action=get_report&month=${m}&year=${y}&bien_so_xe=${encodeURIComponent(bsx)}`)
         .then(res => res.json())
         .then(d => {
           if (d.status === "success") {
@@ -3112,7 +3113,7 @@ Lỗi tải dữ liệu
         });
     }
     const API_URL =
-      "https://script.google.com/macros/s/AKfycbwXUD5r157imv91Prpbg-m3JHDdoIrcIQsmCHtceeMANCx_8ONf7M5v-fCV-xL0_rVu/exec";
+      "https://script.google.com/macros/s/AKfycbxrv7dMw6VItsceI-ouhqE1ApL1qpLJWs1XUuB9rMHe_YYnb8SeOinBVf-AA1LeTd7E/exec";
     function autoFillTaiXe(mnv, targetInput) {
       if (!mnv) {
         targetInput.value = "";
