@@ -1445,14 +1445,15 @@
             <div class="columns">
               <div class="column is-4">
                 <label class="label">Đánh giá</label>
-                <div class="select is-fullwidth">
-                  <select name="tu_danh_gia">
+                <div class="select is-fullwidth" id="tu_danh_gia_select_box">
+                  <select name="tu_danh_gia" id="tu_danh_gia_select">
                     <option value=""></option>
                     <option>Nhẹ</option>
                     <option>Trung bình</option>
                     <option>Nặng</option>
                   </select>
                 </div>
+                <input class="input hidden" id="tu_danh_gia_input" value="Không" readonly>
               </div>
               <div class="column">
                 <label class="label">Đề xuất xử lý</label>
@@ -1565,10 +1566,17 @@
               <label class="label">Tổng ngày</label>
               <input class="input" name="tong_ngay" readonly>
             </div>
-            <!-- Đơn vị - Loại đơn vị -->
             <div class="column is-12-mobile is-6-tablet">
               <label class="label">Đơn vị</label>
-              <input class="input" name="don_vi">
+              <div class="select is-fullwidth">
+                <select name="don_vi" onchange="handleDonViChange(this)">
+                  <option value=""></option>
+                  <option>Isuzu Yên Mỹ</option>
+                  <option>Việt Trung Hàn</option>
+                  <option>Thaco Hưng Yên</option>
+                  <option>Gara ngoài</option>
+                </select>
+              </div>
             </div>
             <div class="column is-12-mobile is-6-tablet">
               <label class="label">Loại đơn vị</label>
@@ -1590,10 +1598,16 @@
               <label class="label">Phát sinh / Thay thế</label>
               <input class="input" name="phat_sinh">
             </div>
-            <!-- Kết quả -->
             <div class="column is-12">
               <label class="label">Kết quả</label>
-              <input class="input" name="ket_qua">
+              <div class="select is-fullwidth">
+                <select name="ket_qua">
+                  <option value=""></option>
+                  <option>Đã hoàn thành</option>
+                  <option>Đang thực hiện</option>
+                  <option>Chờ xử lý</option>
+                </select>
+              </div>
             </div>
           </div>
           <!-- ================= 3️⃣ THANH TOÁN ================= -->
@@ -2945,7 +2959,8 @@ Lỗi tải dữ liệu
         hoaDon.value = "Có";
         hoaDon.classList.add("is-locked");
       } else {
-        hoaDon.disabled = false;
+        // Xóa lock để người dùng có thể chọn lại
+        hoaDon.classList.remove("is-locked");
       }
     }
     /* ================= NHIÊN LIỆU ================= */
@@ -3020,25 +3035,69 @@ Lỗi tải dữ liệu
     /* ================= AUTO FILL ================= */
     function toggleSuCo(value) {
       const vanDe = document.querySelector('[name="van_de_phat_sinh"]');
-      const danhGia = document.querySelector('[name="tu_danh_gia"]');
       const deXuat = document.querySelector('[name="de_xuat_pa"]');
+      const selectBox = document.getElementById("tu_danh_gia_select_box");
+      const selectEl = document.getElementById("tu_danh_gia_select");
+      const inputEl = document.getElementById("tu_danh_gia_input");
+
       if (value === "co") {
         vanDe.required = true;
-        danhGia.required = true;
         deXuat.required = true;
+
+        // Hiện Select, gán name
+        if (selectBox) selectBox.classList.remove("hidden");
+        if (selectEl) {
+          selectEl.name = "tu_danh_gia";
+          selectEl.required = true;
+        }
+
+        // Ẩn Input, xóa name
+        if (inputEl) {
+          inputEl.classList.add("hidden");
+          inputEl.name = "";
+        }
+
         if (vanDe.value === "Hoạt động bình thường") {
           vanDe.value = "";
-          danhGia.value = "";
+          if (selectEl) selectEl.value = "";
           deXuat.value = "";
         }
       } else {
         vanDe.required = false;
-        danhGia.required = false;
         deXuat.required = false;
+
+        // Hiện Input, gán name
+        if (inputEl) {
+          inputEl.classList.remove("hidden");
+          inputEl.name = "tu_danh_gia";
+        }
+
+        // Ẩn Select, xóa name
+        if (selectBox) selectBox.classList.add("hidden");
+        if (selectEl) {
+          selectEl.name = "";
+          selectEl.required = false;
+        }
+
         vanDe.value = "Hoạt động bình thường";
-        danhGia.value = "Nhẹ";
         deXuat.value = "Hoạt động bình thường";
       }
+    }
+    function handleDonViChange(select) {
+      if (!select) return;
+      const form = select.closest("form");
+      if (!form) return;
+      const loaiDonVi = form.querySelector('[name="loai_don_vi"]');
+      if (!loaiDonVi) return;
+
+      if (select.value === "Gara ngoài") {
+        loaiDonVi.value = "Gara ngoài";
+      } else if (select.value !== "") {
+        loaiDonVi.value = "Gara hợp đồng";
+      }
+
+      // Kích hoạt logic hoá đơn/thanh toán dựa trên loại đơn vị vừa gán
+      handleLoaiDonVi(loaiDonVi);
     }
     function toggleLoaiHinh(value) {
       const moc = document.querySelector('[name="moc_bao_duong"]');
@@ -3067,7 +3126,9 @@ Lỗi tải dữ liệu
         loaiThanhToan.classList.add("is-locked");
         hoaDon.classList.add("is-locked");
       } else {
-        // Gara ngoài → cho chọn
+        // Gara ngoài → reset về trống và cho chọn
+        loaiThanhToan.value = "";
+        hoaDon.value = "";
         loaiThanhToan.classList.remove("is-locked");
         hoaDon.classList.remove("is-locked");
       }
