@@ -1917,12 +1917,13 @@
             </div>
           </div>
           <div class="columns is-mobile mt-2">
-            <div class="column is-12-mobile is-4-tablet">
-              <input class="input" id="rpt_fuel_bsx" placeholder="Nhập Biển số xe">
+            <div class="column is-5-mobile is-4-tablet">
+              <input class="input" id="rpt_fuel_bsx" placeholder="Biển số"
+                oninput="this.value = this.value.toUpperCase()">
             </div>
-            <div class="column is-12-mobile is-8-tablet">
-              <button class="button is-link is-fullwidth" onclick="openFuelLogGrid()">
-                ⛽ Xem Bảng kê Nhiên liệu (Bảng ngang)
+            <div class="column is-7-mobile is-8-tablet">
+              <button class="button is-info is-fullwidth" onclick="openFuelLogGrid()">
+                ⛽ Bảng kê Nhiên liệu
               </button>
             </div>
           </div>
