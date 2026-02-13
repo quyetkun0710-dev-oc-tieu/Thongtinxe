@@ -111,11 +111,11 @@
     }
 
     .app-card {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.1) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      border-radius: 24px !important;
       padding: 20px;
       text-align: center;
       cursor: pointer;
@@ -129,10 +129,10 @@
     }
 
     .app-card:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.2) !important;
       transform: translateY(-10px) scale(1.02);
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-      border-color: rgba(255, 255, 255, 0.4);
+      border-color: rgba(255, 255, 255, 0.4) !important;
     }
 
     .app-card:active {
@@ -922,6 +922,11 @@
           <div class="app-card" data-tag="danhgia" onclick="openTag('danhgia')">
             <div class="app-icon">📝</div>
             <div class="app-name">Đánh giá</div>
+          </div>
+
+          <div class="app-card" data-tag="kehoachbaoduong" onclick="openMaintenancePlan()">
+            <div class="app-icon">📅</div>
+            <div class="app-name">Kế hoạch bảo dưỡng</div>
           </div>
 
           <div class="app-card" data-tag="baocao" onclick="openReport()">
@@ -1797,6 +1802,48 @@
           </table>
         </div>
       </div>
+      <!-- ================= TAG: KẾ HOẠCH BẢO DƯỠNG ================= -->
+      <div id="kehoachbaoduong" class="hidden form-box">
+        <button class="floating-back-btn" type="button" onclick="backHome()">
+          ⬅ Quay lại
+        </button>
+        <h2 class="title is-4">📅 KẾ HOẠCH BẢO DƯỠNG ĐỊNH KỲ</h2>
+        <div class="table-container">
+          <table class="table is-bordered is-striped is-fullwidth" id="maintenancePlanTable" style="background: white;">
+            <thead>
+              <tr style="background: #2b2b2b; color: #fff;">
+                <th rowspan="3" style="vertical-align: middle;">STT</th>
+                <th rowspan="3" style="vertical-align: middle;">BKS</th>
+                <th rowspan="3" style="vertical-align: middle;">Loại xe</th>
+                <th rowspan="3" style="vertical-align: middle;">Trọng tải</th>
+                <th rowspan="3" style="vertical-align: middle;">KM TB ngày</th>
+                <th colspan="6" style="text-align: center; background: #ffff00; color: #000;">Kế hoạch bảo dưỡng</th>
+                <th rowspan="3" style="vertical-align: middle; background: #ffff00; color: #000;">Số KM thực tế còn lại
+                </th>
+                <th rowspan="3" style="vertical-align: middle; background: #ffff00; color: #000;">Số ngày còn lại để BD
+                </th>
+              </tr>
+              <tr style="background: #2b2b2b; color: #fff;">
+                <th colspan="2" style="text-align: center; background: #dcd0ff; color: #000;">Kỳ trước</th>
+                <th colspan="4" style="text-align: center; background: #ffff00; color: #000;">Kế hoạch kỳ này</th>
+              </tr>
+              <tr style="background: #2b2b2b; color: #fff;">
+                <th style="background: #dcd0ff; color: #000;">KM T.H</th>
+                <th style="background: #dcd0ff; color: #000;">Ngày T.H</th>
+                <th style="background: #ffff00; color: #000;">KM T.H</th>
+                <th style="background: #ffff00; color: #000;">Ngày T.H</th>
+                <th style="background: #ffff00; color: #000;">KM KH (Dự kiến)</th>
+                <th style="background: #ffff00; color: #000;">Ngày KH (Dự kiến)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="13" class="has-text-centered">Đang tải dữ liệu...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
       <!-- ================= END TAG NHIÊN LIỆU ================= -->
       <!-- ================= TAG ĐÁNH GIÁ NHÂN SỰ ================= -->
       <div id="danhgia" class="hidden form-box">
@@ -2154,13 +2201,13 @@
       }, 4000);
     }
     /* ================= CONFIG ================= */
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxrv7dMw6VItsceI-ouhqE1ApL1qpLJWs1XUuB9rMHe_YYnb8SeOinBVf-AA1LeTd7E/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzJlu0ORmNSBpSJWKQoCZJJidlUq7_THzIZXWVlQxd-tdR23OlReew0skM_CA5HhZc/exec";
 
     let USER_ROLE = null; // manager | admin | taixe
     const ROLE_PERMISSION = {
-      manager: ["xe", "taixe", "nhatky", "baoduong", "fuel", "danhgia", "baocao"],
-      admin: ["nhatky", "baoduong", "fuel", "danhgia"],
-      taixe: ["nhatky", "baoduong", "fuel"]
+      manager: ["xe", "taixe", "nhatky", "baoduong", "fuel", "danhgia", "baocao", "kehoachbaoduong"],
+      admin: ["nhatky", "baoduong", "fuel", "danhgia", "kehoachbaoduong"],
+      taixe: ["nhatky", "baoduong", "fuel", "kehoachbaoduong"]
     };
 
     const ALL_TAGS = [
@@ -2175,7 +2222,8 @@
       "fuel_table",
       "danhgia",
       "danhgia_table",
-      "baocao"
+      "baocao",
+      "kehoachbaoduong"
     ];
     /* ================= LOGIN ================= */
     const LOGIN_API = "https://script.google.com/macros/s/AKfycbw3MTRDfoEpxL8JJQxgmYYO6YKRIUZLnuHzt5ff5lCWQYhHwRYTAvlcRndXBU5ydgj1Zg/exec";
@@ -3023,6 +3071,80 @@ Lỗi tải dữ liệu
           alert("❌ Lỗi tải dữ liệu nhật ký");
         });
     }
+
+    function openMaintenancePlan() {
+      openTag("kehoachbaoduong");
+      const tbody = document.querySelector("#maintenancePlanTable tbody");
+      tbody.innerHTML = '<tr><td colspan="9" class="has-text-centered">Đang tải dữ liệu kế hoạch...</td></tr>';
+
+      fetch(`${SCRIPT_URL}?action=get_maintenance_plan`)
+        .then(res => res.json())
+        .then(res => {
+          if (res.status === "success") {
+            renderMaintenancePlan(res.data);
+          } else {
+            tbody.innerHTML = `<tr><td colspan="9" class="has-text-danger has-text-centered">Lỗi: ${res.message}</td></tr>`;
+          }
+        })
+        .catch(err => {
+          tbody.innerHTML = `<tr><td colspan="9" class="has-text-danger has-text-centered">Lỗi kết nối: ${err.message}</td></tr>`;
+        });
+    }
+
+    function renderMaintenancePlan(data) {
+      const tbody = document.querySelector("#maintenancePlanTable tbody");
+      if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="13" class="has-text-centered">Chưa có dữ liệu bảo dưỡng</td></tr>';
+        return;
+      }
+
+      const formatDateShort = (d) => {
+        if (!d || d === "" || d === "Invalid Date") return "";
+        const date = new Date(d);
+        if (isNaN(date)) return "";
+        return date.toLocaleDateString('vi-VN');
+      };
+
+      const fmtNumber = (n) => {
+        if (n === "" || n === null || n === undefined) return "";
+        return Number(n).toLocaleString("vi-VN");
+      };
+
+      tbody.innerHTML = data.map((item, index) => {
+        let kmClass = "";
+        if (item.km_remain < 0) kmClass = "has-text-danger has-text-weight-bold";
+        else if (item.km_remain < 1000) kmClass = "has-text-warning has-text-weight-bold";
+
+        let dayClass = "";
+        if (item.days_remain < 0) dayClass = "has-text-danger has-text-weight-bold";
+        else if (item.days_remain < 15) dayClass = "has-text-warning has-text-weight-bold";
+
+        return `
+          <tr style="background: white; color: black;">
+            <td class="has-text-centered">${index + 1}</td>
+            <td class="has-text-weight-bold">${item.bks}</td>
+            <td>${item.loai_xe || ""}</td>
+            <td>${item.trong_tai || ""}</td>
+            <td>${fmtNumber(item.avg_km_day)}</td>
+            
+            <!-- Kỳ trước -->
+            <td class="has-text-right" style="background: #f0f0ff;">${fmtNumber(item.km_L2)}</td>
+            <td class="has-text-centered" style="background: #f0f0ff;">${formatDateShort(item.ngay_L2)}</td>
+            
+            <!-- Kế hoạch kỳ này -->
+            <td class="has-text-right">${fmtNumber(item.km_L1)}</td>
+            <td class="has-text-centered">${formatDateShort(item.ngay_L1)}</td>
+            <td class="has-text-right has-text-weight-bold" style="color: #0000ff;">${fmtNumber(item.km_plan)}</td>
+            <td class="has-text-centered has-text-weight-bold" style="color: #0000ff;">${formatDateShort(item.ngay_plan)}</td>
+            
+            <!-- Cảnh báo -->
+            <td class="has-text-right ${kmClass}" style="background: #ffffcc;">${fmtNumber(item.km_remain)}</td>
+            <td class="has-text-centered ${dayClass}" style="background: #ffffcc;">${item.days_remain} ngày</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
     /* ================= UI UTIL ================= */
     function scrollToTable(tableId) {
       const el = document.getElementById(tableId);
@@ -3174,7 +3296,7 @@ Lỗi tải dữ liệu
         });
     }
     const API_URL =
-      "https://script.google.com/macros/s/AKfycbxrv7dMw6VItsceI-ouhqE1ApL1qpLJWs1XUuB9rMHe_YYnb8SeOinBVf-AA1LeTd7E/exec";
+      "https://script.google.com/macros/s/AKfycbzJlu0ORmNSBpSJWKQoCZJJidlUq7_THzIZXWVlQxd-tdR23OlReew0skM_CA5HhZc/exec";
     function autoFillTaiXe(mnv, targetInput) {
       if (!mnv) {
         targetInput.value = "";
