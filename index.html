@@ -323,6 +323,54 @@
       opacity: 0.9;
     }
 
+    /* ===== HOẠT ẢNH LOGO & CHỮ ===== */
+    @keyframes pulseLogo {
+      0% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.4));
+      }
+
+      50% {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8));
+      }
+
+      100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.4));
+      }
+    }
+
+    .home-header .header-inner img {
+      animation: pulseLogo 3s infinite ease-in-out;
+      border-radius: 12px;
+      transition: all 0.5s;
+    }
+
+    .home-header .header-inner img:hover {
+      transform: rotate(5deg) scale(1.1);
+    }
+
+    /* Hiệu ứng chữ chạy lần lượt */
+    .animated-title {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .letter {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(20px) rotateX(-90deg);
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .letter.show {
+      opacity: 1;
+      transform: translateY(0) rotateX(0);
+    }
+
     /* mobile */
     @media (max-width: 768px) {
       .home-header {
@@ -764,89 +812,147 @@
     /* ================= FUEL GRID REPORT STYLE ================= */
     .fuel-grid-container {
       margin-top: 20px;
-      background: white;
-      padding: 15px;
-      border-radius: 8px;
+      padding: 0;
       overflow-x: auto;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-      position: relative;
-      /* Thêm để hỗ trợ sticky con */
+      background: #fff;
     }
 
     .fuel-grid-table {
       border-collapse: collapse;
-      font-size: 11px;
+      font-size: 13px;
       width: max-content;
       min-width: 100%;
+      border: 1px solid #000;
     }
 
     .fuel-grid-table th,
     .fuel-grid-table td {
-      border: 1px solid #ddd;
-      padding: 4px;
+      border: 1px solid #000;
+      padding: 4px 6px;
       text-align: center;
-      min-width: 40px;
+      height: 25px;
+      white-space: nowrap;
+      /* Đảm bảo nội dung không bị ngắt dòng */
     }
 
-    .fuel-grid-table th {
-      background: #f5f5f5;
+    /* Header đỏ trắng */
+    .fuel-grid-table thead th {
+      background-color: #ff0000 !important;
+      color: #ffffff !important;
       font-weight: bold;
       position: sticky;
       top: 0;
+      z-index: 10;
+      padding: 8px 4px;
     }
 
-    .fuel-grid-header-day {
+    .fuel-grid-table thead th.day-col {
+      min-width: 30px;
+      /* Nhỏ hơn để tiết kiệm diện tích */
+    }
+
+    /* Cột Biển số, Loại xe, Nội dung - Sticky Left */
+    /* Loại bỏ min-width cố định, sử dụng width: 1% để co lại vừa khít nội dung */
+    .fuel-grid-table .sticky-col-1 {
+      position: sticky;
+      left: 0;
+      z-index: 5;
+      background: #fff;
+      width: 1%;
+    }
+
+    .fuel-grid-table .sticky-col-2 {
+      position: sticky;
+      left: 80px;
+      /* Ước lượng vị trí mới sau khi co lại */
+      z-index: 5;
+      background: #fff;
+      width: 1%;
+    }
+
+    .fuel-grid-table .sticky-col-3 {
+      position: sticky;
+      left: 170px;
+      /* Ước lượng vị trí mới */
+      z-index: 5;
+      background: #fff;
+      width: 1%;
+      text-align: left;
+    }
+
+    /* Fix z-index for top-left intersection */
+    .fuel-grid-table thead th.sticky-col-1 {
+      z-index: 15;
+      left: 0;
+    }
+
+    .fuel-grid-table thead th.sticky-col-2 {
+      z-index: 15;
+      left: 80px;
+    }
+
+    .fuel-grid-table thead th.sticky-col-3 {
+      z-index: 15;
+      left: 170px;
+    }
+
+    /* Màu sắc các ô */
+    .bg-red {
+      background: #ff0000 !important;
+      color: #fff !important;
+    }
+
+    .bg-green {
+      background: #2e7d32 !important;
+      color: #fff !important;
+    }
+
+    .bg-green-light {
+      background: #c8e6c9 !important;
+    }
+
+    .bg-pink {
+      background: #f8bbd0 !important;
+    }
+
+    .bg-blue-light {
+      background: #9fa8da !important;
+    }
+
+    .bg-cyan {
+      background: #b2ebf2 !important;
+    }
+
+    .bg-yellow {
+      background: #fff59d !important;
+    }
+
+    .bg-white-pure {
+      background: #ffffff !important;
+    }
+
+    .has-text-weight-bold {
+      font-weight: 700 !important;
+    }
+
+    .fuel-grid-table th {
+      background: #ff0000 !important;
+      color: #fff !important;
+      text-align: center !important;
+      vertical-align: middle !important;
+      padding: 4px !important;
+    }
+
+    .data-cell-km {
+      background-color: #c6efce !important;
+    }
+
+    .data-cell-trip {
       background-color: #fce4ec !important;
     }
 
-    .fuel-grid-header-km {
-      background-color: #e8f5e9 !important;
-    }
-
-    .fuel-grid-header-fuel {
-      background-color: #fffde7 !important;
-    }
-
-    .fuel-grid-label {
-      text-align: left !important;
-      font-weight: bold;
-      background: #fafafa;
-      position: sticky;
-      left: 0;
-      z-index: 2;
-      min-width: 150px;
-    }
-
-    .fuel-grid-data-row:hover {
-      background: #f0f0f0;
-    }
-
-    .total-row {
-      font-weight: bold;
-      background: #eee;
-    }
-
-    .fuel-grid-sticky-title {
-      position: sticky;
-      left: 0;
-      width: max-content;
-      z-index: 10;
-      padding: 8px 15px;
-      margin-bottom: 10px !important;
-      background: #f0faff;
-      /* Màu nền nhẹ để nổi bật */
-      backdrop-filter: blur(4px);
-      border-radius: 6px;
-      box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
-      border-left: 5px solid #00d1b2;
-      font-weight: 800 !important;
-      color: #008080 !important;
-    }
-
-    .fuel-vehicle-wrapper {
-      width: fit-content;
-      min-width: 100%;
-      margin-bottom: 40px;
+    .fuel-grid-table tr:hover td {
+      filter: brightness(0.95);
     }
   </style>
 </head>
@@ -1339,9 +1445,7 @@
               </button>
             </div>
           </div>
-          <h3 class="subtitle">
-            📋 Danh sách sẽ hiển thị sau khi bấm tra cứu
-          </h3>
+          <h3 class="subtitle">📋 Danh sách sẽ hiển thị sau khi bấm tra cứu</h3>
           <div class="table-container">
             <table class="table is-bordered is-striped is-fullwidth" id="nhatkyTable">
               <thead></thead>
@@ -2117,7 +2221,10 @@
                 <th class="has-text-centered">Chi phí nhiên liệu</th>
                 <th class="has-text-centered">Tổng nhiên liệu</th>
                 <th class="has-text-centered">Chi phí SCBD</th>
-                <th class="has-text-centered">Lượt BD-SC</th>
+                <th class="has-text-centered">Số lượt SCBD</th>
+                <th class="has-text-right is-manager-only">Đ.Mức Khoán</th>
+                <th class="has-text-right is-manager-only">Đ.Mức Thực tế</th>
+                <th class="has-text-right is-manager-only">Chênh lệch</th>
               </tr>
             </thead>
             <tbody id="rpt_vehicle_body"></tbody>
@@ -2145,53 +2252,77 @@
       <!-- ================= TAG: BẢNG KÊ NHIÊN LIỆU (STANDALONE TAB) ================= -->
       <div id="fuelgrid" class="hidden form-box">
         <button class="floating-back-btn" type="button" onclick="backHome()">⬅ Quay lại</button>
-        <h2 class="title is-4">📋 BẢNG KÊ CHI TIẾT NHIÊN LIỆU</h2>
-        <section class="box">
-          <div class="columns is-mobile is-vcentered">
-            <div class="column is-4">
-              <div class="select is-fullwidth">
-                <select id="grid_month">
-                  <option value="1">Tháng 1</option>
-                  <option value="2">Tháng 2</option>
-                  <option value="3">Tháng 3</option>
-                  <option value="4">Tháng 4</option>
-                  <option value="5">Tháng 5</option>
-                  <option value="6">Tháng 6</option>
-                  <option value="7">Tháng 7</option>
-                  <option value="8">Tháng 8</option>
-                  <option value="9">Tháng 9</option>
-                  <option value="10">Tháng 10</option>
-                  <option value="11">Tháng 11</option>
-                  <option value="12">Tháng 12</option>
-                </select>
+        <h2 class="title is-4">📋 QUẢN LÝ NHIÊN LIỆU & ĐỊNH MỨC</h2>
+
+        <!-- SUB-TABS DẠNG BUTTON -->
+        <div class="buttons has-addons is-centered mb-4">
+          <button id="subtab_fuel" class="button is-info is-selected" onclick="switchFuelSubTab('fuel')">🔍 Tra cứu Bảng
+            kê</button>
+          <button id="subtab_quota" class="button" onclick="switchFuelSubTab('quota')">📄 Xem Định mức</button>
+        </div>
+
+        <!-- VIEW 1: TRA CỨU BẢNG KÊ -->
+        <div id="view_fuel_main">
+          <section class="box">
+            <div class="columns is-mobile">
+              <div class="column is-4">
+                <div class="select is-fullwidth">
+                  <select id="grid_month">
+                    <option value="1">Tháng 1</option>
+                    <option value="2">Tháng 2</option>
+                    <option value="3">Tháng 3</option>
+                    <option value="4">Tháng 4</option>
+                    <option value="5">Tháng 5</option>
+                    <option value="6">Tháng 6</option>
+                    <option value="7">Tháng 7</option>
+                    <option value="8">Tháng 8</option>
+                    <option value="9">Tháng 9</option>
+                    <option value="10">Tháng 10</option>
+                    <option value="11">Tháng 11</option>
+                    <option value="12">Tháng 12</option>
+                  </select>
+                </div>
+              </div>
+              <div class="column is-4">
+                <div class="select is-fullwidth">
+                  <select id="grid_year">
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                    <option value="2027">2027</option>
+                  </select>
+                </div>
+              </div>
+              <div class="column is-4">
+                <input class="input" id="grid_bsx" placeholder="Biển số"
+                  oninput="this.value = this.value.toUpperCase()">
               </div>
             </div>
-            <div class="column is-4">
-              <div class="select is-fullwidth">
-                <select id="grid_year">
-                  <option value="2024">2024</option>
-                  <option value="2025">2025</option>
-                  <option value="2026">2026</option>
-                  <option value="2027">2027</option>
-                </select>
-              </div>
-            </div>
-            <div class="column is-4">
-              <input class="input" id="grid_bsx" placeholder="Biển số" oninput="this.value = this.value.toUpperCase()">
+            <button class="button is-info is-fullwidth mt-2" onclick="openFuelLogGrid()">
+              🔍 Tra cứu bảng kê
+            </button>
+          </section>
+
+          <!-- Container bảng với style đồng bộ -->
+          <div class="table-container" style="background: rgba(255,255,255,0.95) !important; border-radius: 12px;">
+            <div id="fuelGridContainer" class="fuel-grid-container">
+              <p class="has-text-centered has-text-dark py-5">Nhấn "Tra cứu" để hiển thị dữ liệu</p>
             </div>
           </div>
-          <button class="button is-info is-fullwidth mt-2" onclick="openFuelLogGrid()">
-            🔍 Tra cứu bảng kê
-          </button>
-        </section>
+        </div>
 
-        <!-- Container bảng với style đồng bộ -->
-        <div class="table-container" style="background: rgba(255,255,255,0.95) !important; border-radius: 12px;">
-          <div id="fuelGridContainer" class="fuel-grid-container">
-            <p class="has-text-centered has-text-dark py-5">Nhấn "Tra cứu" để hiển thị dữ liệu</p>
+        <!-- VIEW 2: ĐỊNH MỨC -->
+        <div id="view_fuel_quota" class="hidden">
+          <div class="box">
+            <div class="table-container" id="quotaContainer"
+              style="background: white; border-radius: 12px; min-height: 200px;">
+              <p class="has-text-centered p-5">Đang tải dữ liệu định mức...</p>
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- ================= TAG: ĐỊNH MỨC (REMOVED INDEPENDENT TAG) ================= -->
       <!-- ================= WARNING MODAL ================= -->
       <div class="modal" id="warningModal">
         <div class="modal-background" onclick="closeWarning()"></div>
@@ -2241,13 +2372,15 @@
       }, 4000);
     }
     /* ================= CONFIG ================= */
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbymikXD148uyiEtiQmcjvRcus3YSkcW1KDxfycKexGWHEm65hhzN68jUpm5Y8BkPZ3F/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzzQQcZQottfDFjDLTax3eufjPfDh7KNbEDvJY-x02zkCutaW4DyS1Ui5VLCvHv73dz/exec";
+    const ACCOUNT_SS_ID = "1i0CFkUWJoY18C-DKIlavRpbsYYVIM4fpKtIYGkdPZ-A";
 
     let USER_ROLE = null; // manager | admin | taixe
+    let USER_MNV = null;
     const ROLE_PERMISSION = {
       manager: ["xe", "taixe", "nhatky", "baoduong", "fuel", "danhgia", "baocao", "kehoachbaoduong", "fuelgrid"],
-      admin: ["nhatky", "baoduong", "fuel", "danhgia", "kehoachbaoduong", "fuelgrid"],
-      taixe: ["nhatky", "baoduong", "fuel", "kehoachbaoduong", "fuelgrid"]
+      admin: ["nhatky", "baoduong", "fuel", "danhgia", "kehoachbaoduong", "baocao", "fuelgrid"],
+      taixe: ["nhatky", "baoduong", "fuel", "kehoachbaoduong", "baocao", "fuelgrid"]
     };
 
     const ALL_TAGS = [
@@ -2281,12 +2414,16 @@
         return;
       }
       USER_ROLE = data.role === "driver" ? "taixe" : data.role;
+      USER_MNV = u.toUpperCase();
       sessionStorage.setItem("logged", "1");
       sessionStorage.setItem("role", USER_ROLE);
+      sessionStorage.setItem("mnv", USER_MNV);
       document.getElementById("login").classList.add("hidden");
       document.getElementById("home").classList.remove("hidden");
+      animateHeaderTitle();
       applyHomeCardByRole();
-      // CHECK WARNINGS SAU KHI LOGIN
+      applyBackground("home");
+      preLoadData();
       checkWarnings();
     }
     function checkWarnings() {
@@ -2332,6 +2469,91 @@ Hết hạn: ${w.ngay_he} <br>
       const d = new Date();
       document.getElementById("grid_month").value = d.getMonth() + 1;
       document.getElementById("grid_year").value = d.getFullYear();
+      switchFuelSubTab('fuel'); // Mặc định mở tab tra cứu
+    }
+
+    function switchFuelSubTab(type) {
+      const vFuel = document.getElementById("view_fuel_main");
+      const vQuota = document.getElementById("view_fuel_quota");
+      const bFuel = document.getElementById("subtab_fuel");
+      const bQuota = document.getElementById("subtab_quota");
+
+      if (type === 'fuel') {
+        vFuel.classList.remove("hidden");
+        vQuota.classList.add("hidden");
+        bFuel.classList.add("is-info", "is-selected");
+        bQuota.classList.remove("is-info", "is-selected");
+      } else {
+        vFuel.classList.add("hidden");
+        vQuota.classList.remove("hidden");
+        bFuel.classList.remove("is-info", "is-selected");
+        bQuota.classList.add("is-info", "is-selected");
+        loadQuotaData();
+      }
+    }
+
+    function loadQuotaData() {
+      const container = document.getElementById("quotaContainer");
+      // Nếu đã có bảng rồi thì không tải lại để mượt hơn
+      if (container.querySelector(".quota-table-main")) return;
+
+      container.innerHTML = `<div class="has-text-centered p-5"><button class="button is-loading is-white">Đang tải...</button></div>`;
+
+      fetch(`${SCRIPT_URL}?action=get_quota`)
+        .then(res => res.json())
+        .then(json => {
+          if (json.status === "success") {
+            renderQuotaTable(json.data);
+          } else {
+            container.innerHTML = `<div class="notification is-danger">Lỗi: ${json.message}</div>`;
+          }
+        })
+        .catch(err => {
+          container.innerHTML = `<div class="notification is-danger">Lỗi kết nối: ${err.message}</div>`;
+        });
+    }
+
+    function renderQuotaTable(data) {
+      const container = document.getElementById("quotaContainer");
+      if (!data || data.length === 0) {
+        container.innerHTML = `<div class="notification is-info">Không có dữ liệu định mức</div>`;
+        return;
+      }
+
+      // Tìm index của các cột cần highlight (Biển số, Loại xe)
+      const headers = data[0].map(h => String(h).trim().toLowerCase().normalize("NFC"));
+      const iBsx = headers.findIndex(h => h.includes("biển số") || h.includes("bks"));
+      const iLoai = headers.findIndex(h => h.includes("loại xe") || h.includes("xe"));
+
+      let html = `<table class="table is-bordered is-striped is-narrow is-fullwidth quota-table-main">`;
+      data.forEach((row, i) => {
+        html += `<tr>`;
+        row.forEach((cell, j) => {
+          if (i === 0) {
+            html += `<th class="bg-red has-text-centered has-text-white" style="position: sticky; top: 0; z-index: 10;">${cell}</th>`;
+          } else {
+            // Định dạng số nếu có thể
+            let displayValue = cell;
+            let align = "has-text-centered";
+
+            if (cell !== "" && !isNaN(cell) && typeof cell !== "boolean") {
+              displayValue = Number(cell).toLocaleString("en-US", { maximumFractionDigits: 2 });
+              align = "has-text-right";
+            }
+
+            // Highlight cột đặc biệt
+            let extraStyle = "";
+            if (j === iBsx || j === iLoai) {
+              extraStyle = 'background-color: #fffde7 !important; font-weight: bold;';
+            }
+
+            html += `<td class="${align}" style="${extraStyle}">${displayValue}</td>`;
+          }
+        });
+        html += `</tr>`;
+      });
+      html += `</table>`;
+      container.innerHTML = html;
     }
 
     let reportTimer = null;
@@ -2403,24 +2625,50 @@ Hết hạn: ${w.ngay_he} <br>
             const maxKM = Math.max(...vehicles.map(v => v.op_km), 0);
             const maxFuel = Math.max(...vehicles.map(v => v.fuel_liters), 0);
             const maxCost = Math.max(...vehicles.map(v => v.maintain_cost), 0);
+            const isMgr = (USER_ROLE === "manager" || USER_ROLE === "admin");
+
+            // Xử lý ẩn hiện Header cột Manager
+            document.querySelectorAll(".is-manager-only").forEach(el => {
+              el.style.display = isMgr ? "" : "none";
+            });
+
             vehicles.forEach(v => {
               let rowClass = "";
-              // Logic Highlight Xe theo yêu cầu: KM nhiều nhất, Nhiên liệu nhiều nhất, Chi phí nhiều nhất
-              if (v.op_km === maxKM && maxKM > 0) rowClass = "highlight-success"; // Nhiều KM nhất
-              else if (v.fuel_liters === maxFuel && maxFuel > 0) rowClass = "highlight-warning"; // Tốn dầu nhất
-              else if (v.maintain_cost === maxCost && maxCost > 0) rowClass = "highlight-danger"; // Tốn SCBD nhất
-              vb.innerHTML += `
- <tr class="${rowClass}">
-<td class="has-text-weight-bold has-text-centered">${v.bsx}</td>
-<td class="has-text-right">${fmt(v.op_km)}</td>
-<td class="has-text-right">${fmtHours(v.op_hours)}</td>
-<td class="has-text-right">${fmt(v.op_trips)}</td>
-<td class="has-text-right has-text-success">${fmt(v.fuel_cost)}</td>
-<td class="has-text-right">${fmt(v.fuel_liters)}</td>
-<td class="has-text-right has-text-danger">${fmt(v.maintain_cost)}</td>
-<td class="has-text-right">${fmt(v.maintain_count)}</td>
- </tr>
-`;
+              if (v.op_km === maxKM && maxKM > 0) rowClass = "highlight-success";
+              else if (v.fuel_liters === maxFuel && maxFuel > 0) rowClass = "highlight-warning";
+              else if (v.maintain_cost === maxCost && maxCost > 0) rowClass = "highlight-danger";
+
+              // Tính toán phần trăm chênh lệch
+              let varPct = "";
+              let varClass = "";
+              if (v.expected_liters > 0) {
+                const pct = (v.variance / v.expected_liters) * 100;
+                varPct = ` (${pct > 0 ? "+" : ""}${pct.toFixed(1)}%)`;
+                varClass = v.variance > 0 ? "has-text-danger has-text-weight-bold" : "has-text-success";
+              }
+
+              let rowHtml = `
+                <tr class="${rowClass}">
+                  <td class="has-text-weight-bold has-text-centered">${v.bsx}</td>
+                  <td class="has-text-right">${fmt(v.op_km)}</td>
+                  <td class="has-text-right">${fmtHours(v.op_hours)}</td>
+                  <td class="has-text-right">${fmt(v.op_trips)}</td>
+                  <td class="has-text-right has-text-success">${fmt(v.fuel_cost)}</td>
+                  <td class="has-text-right">${fmt(v.fuel_liters)}</td>
+                  <td class="has-text-right has-text-danger">${fmt(v.maintain_cost)}</td>
+                  <td class="has-text-right">${fmt(v.maintain_count)}</td>
+              `;
+
+              if (isMgr) {
+                rowHtml += `
+                  <td class="has-text-right">${v.quota_l100 ? v.quota_l100.toFixed(2) : "0"}</td>
+                  <td class="has-text-right">${fmt(v.expected_liters.toFixed(1))}</td>
+                  <td class="has-text-right ${varClass}">${fmt(v.variance.toFixed(1))}${varPct}</td>
+                `;
+              }
+
+              rowHtml += `</tr>`;
+              vb.innerHTML += rowHtml;
             });
             // RENDER DRIVERS
             const db = document.getElementById("rpt_driver_body");
@@ -2430,6 +2678,26 @@ Hết hạn: ${w.ngay_he} <br>
               // Logic Highlight Tài xế: từ 3 lần vi phạm trở lên
               if (dr.violation_count >= 3) rowClass = "highlight-danger";
               else if (dr.op_trips > 50) rowClass = "highlight-success";
+
+              // Phân quyền hiển thị toàn bộ dòng nhân viên
+              let canSeeViolation = false;
+              if (USER_ROLE === "manager") {
+                canSeeViolation = true;
+              } else if (USER_ROLE === "admin") {
+                // Admin xem chính mình hoặc xem Drivers. Không xem được Managers.
+                if (dr.mnv === USER_MNV || dr.role === "driver") {
+                  canSeeViolation = true;
+                }
+              } else if (USER_ROLE === "taixe") {
+                // Driver chỉ xem được Driver (bao gồm cả chính mình nếu là Driver)
+                if (dr.role === "driver") {
+                  canSeeViolation = true;
+                }
+              }
+
+              // Nếu không có quyền xem vi phạm -> Bỏ hiển thị toàn bộ nhân viên này trong bảng
+              if (!canSeeViolation) return;
+
               db.innerHTML += `
  <tr class="${rowClass}">
 <td class="has-text-weight-bold has-text-centered">${dr.mnv}</td>
@@ -2468,21 +2736,44 @@ Hết hạn: ${w.ngay_he} <br>
           .forEach(el => el.classList.remove("hidden"));
       });
     }
+    function preLoadData() {
+      if (!USER_ROLE) return;
+      const d = new Date();
+      const m = d.getMonth() + 1;
+      const y = d.getFullYear();
+
+      // Set default cho Báo cáo
+      if (document.getElementById("rpt_month")) document.getElementById("rpt_month").value = m;
+      if (document.getElementById("rpt_year")) document.getElementById("rpt_year").value = y;
+
+      // Set default cho Bảng kê
+      if (document.getElementById("grid_month")) document.getElementById("grid_month").value = m;
+      if (document.getElementById("grid_year")) document.getElementById("grid_year").value = y;
+
+      // Kích hoạt tải ngầm
+      loadReport(true);
+      loadQuotaData();
+    }
+
     window.addEventListener("load", () => {
       const logged = sessionStorage.getItem("logged");
       const role = sessionStorage.getItem("role");
+      const mnv = sessionStorage.getItem("mnv");
       if (logged === "1" && role) {
         USER_ROLE = role;
+        USER_MNV = mnv ? mnv.toUpperCase() : null;
         document.getElementById("login")?.classList.add("hidden");
         document.getElementById("home")?.classList.remove("hidden");
         applyHomeCardByRole();
         checkWarnings();
-        applyBackground("home"); // Mặc định home
+        applyBackground("home");
+
+        // TẢI DỮ LIỆU SẴN
+        preLoadData();
       } else {
         document.getElementById("login")?.classList.remove("hidden");
-        applyBackground("login"); // Mặc định login
+        applyBackground("login");
       }
-      // Tải ảnh nền
       fetchBackgrounds();
     });
     /* ================= BACKGROUNDS ================= */
@@ -2582,6 +2873,28 @@ Hết hạn: ${w.ngay_he} <br>
       }
       showToggleBtn(false); // Reset nút khi chuyển tag
     }
+    function animateHeaderTitle() {
+      const titleBox = document.querySelector('.home-header .title-box h1');
+      if (!titleBox || titleBox.dataset.animated === "true") return;
+
+      const text = titleBox.innerText;
+      titleBox.innerHTML = '';
+      titleBox.classList.add('animated-title');
+
+      [...text].forEach((char, i) => {
+        const span = document.createElement('span');
+        span.className = 'letter';
+        span.innerText = char === ' ' ? '\u00A0' : char; // Giữ khoảng cách
+        titleBox.appendChild(span);
+
+        setTimeout(() => {
+          span.classList.add('show');
+        }, i * 100); // Mỗi chữ trễ 100ms
+      });
+
+      titleBox.dataset.animated = "true";
+    }
+
     function backHome() {
       stopReportAutoRefresh(); // Dừng refresh
       showToggleBtn(false); // Ẩn nút khi về home
@@ -3154,10 +3467,12 @@ Lỗi tải dữ liệu
         return date.toLocaleDateString('vi-VN');
       };
 
-      const fmtNumber = (n) => {
-        if (n === "" || n === null || n === undefined) return "";
-        return Number(n).toLocaleString("vi-VN");
-      };
+      const fmt = (val) => {
+        if (val === null || val === undefined || val === "") return "";
+        const n = Number(val);
+        if (isNaN(n)) return val;
+        return n.toLocaleString("vi-VN");
+      }
 
       tbody.innerHTML = data.map((item, index) => {
         let kmClass = "";
@@ -3174,20 +3489,20 @@ Lỗi tải dữ liệu
             <td class="has-text-weight-bold">${item.bks}</td>
             <td>${item.loai_xe || ""}</td>
             <td>${item.trong_tai || ""}</td>
-            <td>${fmtNumber(item.avg_km_day)}</td>
+            <td>${fmt(item.avg_km_day)}</td>
             
             <!-- Kỳ trước -->
-            <td class="has-text-right" style="background: #f0f0ff;">${fmtNumber(item.km_L2)}</td>
+            <td class="has-text-right" style="background: #f0f0ff;">${fmt(item.km_L2)}</td>
             <td class="has-text-centered" style="background: #f0f0ff;">${formatDateShort(item.ngay_L2)}</td>
             
             <!-- Kế hoạch kỳ này -->
-            <td class="has-text-right">${fmtNumber(item.km_L1)}</td>
+            <td class="has-text-right">${fmt(item.km_L1)}</td>
             <td class="has-text-centered">${formatDateShort(item.ngay_L1)}</td>
-            <td class="has-text-right has-text-weight-bold" style="color: #0000ff;">${fmtNumber(item.km_plan)}</td>
+            <td class="has-text-right has-text-weight-bold" style="color: #0000ff;">${fmt(item.km_plan)}</td>
             <td class="has-text-centered has-text-weight-bold" style="color: #0000ff;">${formatDateShort(item.ngay_plan)}</td>
             
             <!-- Cảnh báo -->
-            <td class="has-text-right ${kmClass}" style="background: #ffffcc;">${fmtNumber(item.km_remain)}</td>
+            <td class="has-text-right ${kmClass}" style="background: #ffffcc;">${fmt(item.km_remain)}</td>
             <td class="has-text-centered ${dayClass}" style="background: #ffffcc;">${item.days_remain} ngày</td>
           </tr>
         `;
@@ -3345,7 +3660,7 @@ Lỗi tải dữ liệu
         });
     }
     const API_URL =
-      "https://script.google.com/macros/s/AKfycbymikXD148uyiEtiQmcjvRcus3YSkcW1KDxfycKexGWHEm65hhzN68jUpm5Y8BkPZ3F/exec";
+      "https://script.google.com/macros/s/AKfycbzzQQcZQottfDFjDLTax3eufjPfDh7KNbEDvJY-x02zkCutaW4DyS1Ui5VLCvHv73dz/exec";
     function autoFillTaiXe(mnv, targetInput) {
       if (!mnv) {
         targetInput.value = "";
@@ -3541,7 +3856,7 @@ Lỗi tải dữ liệu
         const json = await res.json();
 
         if (json.status === "success") {
-          renderFuelLogGrid(json.data, m, y);
+          renderFuelLogGrid(json, m, y);
         } else {
           showAlert("Lỗi: " + json.message, "is-danger");
         }
@@ -3550,88 +3865,155 @@ Lỗi tải dữ liệu
       }
     }
 
-    function renderFuelLogGrid(data, month, year) {
+    function renderFuelLogGrid(d, month, year) {
       const container = document.getElementById("fuelGridContainer");
-      const numDays = new Date(year, month, 0).getDate();
-
-      let html = "";
-      const bsxList = Object.keys(data);
-      if (bsxList.length === 0) {
-        container.innerHTML = "<p class='has-text-centered has-text-grey'>Không có dữ liệu đổ nhiên liệu trong tháng này.</p>";
+      if (!d || d.status !== 'success') {
+        container.innerHTML = `<div class="notification is-danger">Lỗi: ${d ? d.message : 'Không có dữ liệu'}</div>`;
         return;
       }
 
-      bsxList.forEach(bsx => {
-        const vehicleData = data[bsx];
-        html += `<div class="fuel-vehicle-wrapper">`;
-        html += `<h4 class="title is-6 fuel-grid-sticky-title">🚚 Xe: ${bsx}</h4>`;
-        html += `<table class="fuel-grid-table">`;
+      const gridData = d.data || {};
+      const columns = d.columns || [];
+      const xeInfo = d.xeInfo || {};
+      const bsxList = Object.keys(gridData);
 
-        // Header: Ngày
-        html += `<tr><th class="fuel-grid-label">Nội dung / Ngày</th>`;
-        for (let i = 1; i <= numDays; i++) {
-          html += `<th class="fuel-grid-header-day">${i}</th>`;
-        }
-        html += `</tr>`;
+      if (bsxList.length === 0) {
+        container.innerHTML = `<div class="notification is-info">Không có dữ liệu cho tháng này</div>`;
+        return;
+      }
 
-        const renderDataRow = (label, rowKey) => {
-          let row = `<tr class="fuel-grid-data-row"><td class="fuel-grid-label">${label}</td>`;
-          for (let i = 1; i <= numDays; i++) {
-            const val = vehicleData[i] ? vehicleData[i][rowKey] : "";
-            row += `<td>${val || "-"}</td>`;
-          }
-          row += `</tr>`;
-          return row;
-        };
+      // Helper function for formatting numbers: 1,234.56 (US format as requested by photo)
+      const fmt = (val, dec = 0) => {
+        if (val === null || val === undefined || isNaN(val) || val === "") return "";
+        return Number(val).toLocaleString("en-US", { minimumFractionDigits: dec, maximumFractionDigits: dec });
+      };
 
-        html += renderDataRow("KM Đầu", "km_dau");
-        html += renderDataRow("KM Cuối", "km_cuoi");
+      let html = `<table class="table is-bordered is-narrow fuel-grid-table" id="fuel_log_table">`;
 
-        // KM Cả ngày
-        html += `<tr class="fuel-grid-data-row total-row"><td class="fuel-grid-label">KM Cả ngày</td>`;
-        for (let i = 1; i <= numDays; i++) {
-          let delta = "-";
-          if (vehicleData[i] && vehicleData[i].km_dau && vehicleData[i].km_cuoi) {
-            delta = Number(vehicleData[i].km_cuoi) - Number(vehicleData[i].km_dau);
-          }
-          html += `<td>${delta}</td>`;
-        }
-        html += `</tr>`;
-
-        html += `<tr class="fuel-grid-data-row"><td class="fuel-grid-label">Giờ đổ</td>`;
-        for (let i = 1; i <= numDays; i++) {
-          const fuels = vehicleData[i] ? vehicleData[i].fuels : [];
-          html += `<td>${fuels.map(f => f.gio).join("<br>") || "-"}</td>`;
-        }
-        html += `</tr>`;
-
-        html += `<tr class="fuel-grid-data-row"><td class="fuel-grid-label">Số lít</td>`;
-        for (let i = 1; i <= numDays; i++) {
-          const fuels = vehicleData[i] ? vehicleData[i].fuels : [];
-          const totalLit = fuels.reduce((acc, f) => acc + Number(f.lit || 0), 0);
-          html += `<td>${totalLit > 0 ? totalLit.toFixed(2) : "-"}</td>`;
-        }
-        html += `</tr>`;
-
-        html += `<tr class="fuel-grid-data-row"><td class="fuel-grid-label">Thành tiền</td>`;
-        for (let i = 1; i <= numDays; i++) {
-          const fuels = vehicleData[i] ? vehicleData[i].fuels : [];
-          const totalMoney = fuels.reduce((acc, f) => acc + Number(f.tong || 0), 0);
-          html += `<td>${totalMoney > 0 ? totalMoney.toLocaleString("vi-VN") : "-"}</td>`;
-        }
-        html += `</tr>`;
-
-        html += `<tr class="fuel-grid-data-row"><td class="fuel-grid-label">KM khi đổ</td>`;
-        for (let i = 1; i <= numDays; i++) {
-          const fuels = vehicleData[i] ? vehicleData[i].fuels : [];
-          html += `<td>${fuels.map(f => f.km_khi_do).join("<br>") || "-"}</td>`;
-        }
-        html += `</tr>`;
-
-        html += `</table></div>`;
+      // THEAD (2 hàng)
+      html += `<thead>`;
+      html += `<tr>`;
+      html += `<th rowspan="2" class="sticky-col-1 bg-red">Biển số</th>`;
+      html += `<th rowspan="2" class="sticky-col-2 bg-red">Loại xe</th>`;
+      html += `<th rowspan="2" class="sticky-col-3 bg-red">Nội dung</th>`;
+      html += `<th colspan="${columns.length}" class="bg-red">THÁNG ${month}</th>`;
+      html += `<th rowspan="2" class="bg-red">Tổng KM<br>trong tháng</th>`;
+      html += `<th rowspan="2" class="bg-red">Tổng số Lít<br>trong tháng</th>`;
+      html += `<th rowspan="2" class="bg-red">số<br>L/100km</th>`;
+      html += `</tr>`;
+      html += `<tr>`;
+      columns.forEach(col => {
+        html += `<th class="bg-red has-text-centered">${col.label}</th>`;
       });
+      html += `</tr>`;
+      html += `</thead>`;
 
+      // TBODY
+      html += `<tbody>`;
+      bsxList.forEach(bsx => {
+        const vehicleData = gridData[bsx] || {};
+        const rows = [
+          { label: "KM đầu", key: "km_dau", class: "bg-green-light" },
+          { label: "KM cuối", key: "km_cuoi", class: "bg-green-light" },
+          { label: "KM cả ngày", key: "km_ca_ngay", class: "bg-pink" },
+          { label: "Giờ đổ xăng", key: "gio_do", class: "bg-blue-light" },
+          { label: "Số lít đổ (L)", key: "so_lit", class: "bg-blue-light" },
+          { label: "TỔNG", key: "tong_tien", class: "bg-yellow" },
+          { label: "KM khi đổ", key: "km_khi_do", class: "bg-cyan" },
+          { label: "Ghi Chú", key: "ghi_chu", class: "bg-white-pure" }
+        ];
+
+        // TÍNH TOÁN TỔNG KẾT CHO XE
+        let vTotalKm = 0;
+        let vTotalLit = 0;
+        let vTotalMoney = 0;
+
+        columns.forEach(col => {
+          const entries = vehicleData[col.day] || [];
+          const entry = entries[col.idx];
+          if (entry) {
+            if (entry.km_dau !== null && entry.km_cuoi !== null) {
+              vTotalKm += (entry.km_cuoi - entry.km_dau);
+            }
+            (entry.fuels || []).forEach(f => {
+              vTotalLit += (Number(f.lit) || 0);
+              vTotalMoney += (Number(f.tong) || 0);
+            });
+          }
+        });
+        const vLper100 = vTotalKm > 0 ? (vTotalLit / vTotalKm * 100) : 0;
+
+        rows.forEach((rowInfo, rIdx) => {
+          html += `<tr>`;
+          // 2 cột đầu STICKY gộp 8 hàng
+          if (rIdx === 0) {
+            html += `<td rowspan="8" class="sticky-col-1 has-text-weight-bold has-text-centered is-vcentered bg-yellow">${bsx}</td>`;
+            html += `<td rowspan="8" class="sticky-col-2 has-text-weight-bold has-text-centered is-vcentered bg-yellow">${xeInfo[bsx] || ""}</td>`;
+          }
+          // Cột Nội dung
+          html += `<td class="sticky-col-3 ${rowInfo.class} has-text-weight-bold has-text-centered">${rowInfo.label}</td>`;
+
+          // CONTENT CELLS (Dữ liệu từng ngày)
+          columns.forEach(col => {
+            const entries = vehicleData[col.day] || [];
+            const entry = entries[col.idx];
+            let cellVal = "";
+            let cellClass = rowInfo.class;
+
+            if (entry) {
+              if (rowInfo.key === "km_dau") cellVal = fmt(entry.km_dau);
+              else if (rowInfo.key === "km_cuoi") cellVal = fmt(entry.km_cuoi);
+              else if (rowInfo.key === "km_ca_ngay") {
+                if (entry.km_dau !== null && entry.km_cuoi !== null) cellVal = fmt(entry.km_cuoi - entry.km_dau);
+              }
+              else if (entry.fuels && entry.fuels.length > 0) {
+                // Phân bổ dữ liệu fuel vào đúng hàng
+                const f = entry.fuels[0]; // Lấy fuel đầu tiên của trip này
+                if (rowInfo.key === "gio_do") cellVal = f.gio || "";
+                else if (rowInfo.key === "so_lit") cellVal = fmt(f.lit, 2);
+                else if (rowInfo.key === "tong_tien") cellVal = fmt(f.tong);
+                else if (rowInfo.key === "km_khi_do") cellVal = fmt(f.km_khi_do);
+                else if (rowInfo.key === "ghi_chu") cellVal = f.ghi_chu || "";
+              }
+            }
+            html += `<td class="${cellClass} has-text-centered">${cellVal}</td>`;
+          });
+
+          // SUMMARY COLUMNS (Cấu trúc gộp ô chuẩn ảnh mẫu)
+          if (rIdx === 0) {
+            // Hàng 1-5: 3 cột Xanh gộp dọc
+            html += `<td rowspan="5" class="bg-green has-text-weight-bold has-text-centered is-vcentered">${fmt(vTotalKm)}</td>`;
+            html += `<td rowspan="5" class="bg-green has-text-weight-bold has-text-centered is-vcentered">${fmt(vTotalLit, 2)}</td>`;
+            html += `<td rowspan="5" class="bg-green has-text-weight-bold has-text-centered is-vcentered">${fmt(vLper100, 2)}</td>`;
+          } else if (rIdx === 5) {
+            // Hàng 6, 7 & 8: Gộp ô Tổng tiền (Vàng) xuyên suốt 3 hàng cuối của khối tổng kết
+            html += `<td rowspan="3" colspan="3" class="bg-yellow has-text-weight-bold has-text-centered is-vcentered">${fmt(vTotalMoney)}</td>`;
+          }
+
+          html += `</tr>`;
+        });
+      });
+      html += `</tbody></table>`;
       container.innerHTML = html;
+      applyAutoStickyOffsets(container.querySelector('table'));
+    }
+
+    function applyAutoStickyOffsets(table) {
+      if (!table) return;
+      const cols = ['.sticky-col-1', '.sticky-col-2', '.sticky-col-3'];
+      let currentLeft = 0;
+
+      cols.forEach((selector, index) => {
+        const cells = table.querySelectorAll(selector);
+        if (cells.length === 0) return;
+
+        cells.forEach(cell => {
+          cell.style.left = currentLeft + 'px';
+        });
+
+        // Lấy độ rộng thực tế của cột đầu tiên tìm thấy để tính offset cho cột tiếp theo
+        currentLeft += cells[0].offsetWidth;
+      });
     }
   </script>
   <!-- Nút ẩn hiện bảng -->
