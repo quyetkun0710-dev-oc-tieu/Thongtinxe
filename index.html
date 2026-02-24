@@ -998,13 +998,112 @@
     <div class="container is-fluid">
       <!-- ================= HOME ================= -->
       <div id="home" class="hidden">
-        <div class="home-header">
-          <div class="header-inner header-center">
-            <img src="https://drive.google.com/thumbnail?id=1bCo718U6WuH5apKx2mHjqR6PtlbYdA_f&sz=w1200">
+        <div class="home-header" style="justify-content: space-between; position: relative; z-index: 9999;">
+          <div style="display: flex; align-items: center;">
+            <div class="header-inner header-center">
+              <img src="https://drive.google.com/thumbnail?id=1bCo718U6WuH5apKx2mHjqR6PtlbYdA_f&sz=w1200">
+            </div>
+            <div class="title-box">
+              <h1>FLEET MANAGEMENT</h1> <br>
+              <h1>SYSTEM</h1>
+              <p></p>
+            </div>
           </div>
-          <div class="title-box">
-            <h1>FLEET MANAGEMENT SYSTEM</h1>
-            <p></p>
+
+          <!-- THÔNG TIN TÀI KHOẢN -->
+          <div style="position: relative; z-index: 9999;">
+            <div class="user-profile-widget" onclick="toggleUserProfileDropdown()"
+              style="cursor: pointer; display: flex; align-items: center; background: rgba(255,255,255,0.15); padding: 8px 15px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(5px); transition: all 0.3s ease;"
+              onmouseover="this.style.background='rgba(255,255,255,0.25)'"
+              onmouseout="this.style.background='rgba(255,255,255,0.15)'">
+              <div class="avatar"
+                style="font-size: 24px; margin-right: 10px; background: rgba(255,255,255,0.9); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                👨‍💼
+              </div>
+              <div>
+                <div id="header_user_name"
+                  style="color: white; font-weight: bold; font-size: 14px; text-transform: uppercase;">
+                  Đang tải...
+                </div>
+                <div id="header_user_role"
+                  style="color: #ffdd57; font-size: 12px; font-weight: 600; text-transform: capitalize;">
+                  Manager
+                </div>
+              </div>
+            </div>
+
+            <!-- DROPDOWN MENU -->
+            <div id="userProfileDropdown" class="hidden"
+              style="position: absolute; top: calc(100% + 15px); right: 0; min-width: 330px; width: max-content; background: #ffffff; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); z-index: 9999; overflow: hidden; border: 1px solid rgba(0,0,0,0.08); transition: opacity 0.2s ease, transform 0.2s ease; transform-origin: top right;">
+              <header
+                style="background: linear-gradient(135deg, #3273dc, #1e52a8); color: white; padding: 16px; font-weight: 600; text-align: center; font-size: 15px; letter-spacing: 0.5px; border-bottom: 3px solid #ffdd57;">
+                THÔNG TIN TÀI KHOẢN
+              </header>
+              <div id="userProfileContent" class="p-4" style="background: #fafafa;">
+                <table class="table is-fullwidth align-middle"
+                  style="font-size: 14px; margin-bottom: 0; background: transparent; border-collapse: separate; border-spacing: 0 4px;">
+                  <tbody>
+                    <tr style="background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.02); border-radius: 6px;">
+                      <td class="has-text-grey"
+                        style="width: 40%; border: none; padding: 12px 10px; font-weight: 500; border-top-left-radius: 6px; border-bottom-left-radius: 6px;">
+                        👤 Tài khoản</td>
+                      <td id="up_user" class="has-text-info has-text-weight-bold"
+                        style="border: none; padding: 12px 10px; text-align: right; border-top-right-radius: 6px; border-bottom-right-radius: 6px;">
+                      </td>
+                    </tr>
+                    <tr style="background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.02); border-radius: 6px;">
+                      <td class="has-text-grey"
+                        style="border: none; padding: 12px 10px; font-weight: 500; border-top-left-radius: 6px; border-bottom-left-radius: 6px;">
+                        📝 Họ tên</td>
+                      <td id="up_hoten" class="has-text-weight-bold has-text-dark"
+                        style="text-transform: capitalize; border: none; padding: 12px 10px; text-align: right; border-top-right-radius: 6px; border-bottom-right-radius: 6px;">
+                      </td>
+                    </tr>
+                    <tr style="background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.02); border-radius: 6px;">
+                      <td class="has-text-grey"
+                        style="border: none; padding: 12px 10px; font-weight: 500; border-top-left-radius: 6px; border-bottom-left-radius: 6px;">
+                        🆔 Mã NV</td>
+                      <td id="up_mnv" class="has-text-dark"
+                        style="border: none; padding: 12px 10px; font-weight: 600; text-align: right; border-top-right-radius: 6px; border-bottom-right-radius: 6px;">
+                      </td>
+                    </tr>
+                    <tr style="background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.02); border-radius: 6px;">
+                      <td class="has-text-grey"
+                        style="border: none; padding: 12px 10px; font-weight: 500; border-top-left-radius: 6px; border-bottom-left-radius: 6px;">
+                        📞 SĐT</td>
+                      <td id="up_sdt" class="has-text-dark"
+                        style="border: none; padding: 12px 10px; font-weight: 600; text-align: right; border-top-right-radius: 6px; border-bottom-right-radius: 6px;">
+                      </td>
+                    </tr>
+                    <tr style="background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.02); border-radius: 6px;">
+                      <td class="has-text-grey"
+                        style="border: none; padding: 12px 10px; font-weight: 500; border-top-left-radius: 6px; border-bottom-left-radius: 6px;">
+                        🎂 Ngày sinh</td>
+                      <td id="up_ngaysinh" class="has-text-dark"
+                        style="border: none; padding: 12px 10px; font-weight: 600; text-align: right; border-top-right-radius: 6px; border-bottom-right-radius: 6px;">
+                      </td>
+                    </tr>
+                    <tr style="background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.02); border-radius: 6px;">
+                      <td class="has-text-grey"
+                        style="border: none; padding: 12px 10px; font-weight: 500; border-top-left-radius: 6px; border-bottom-left-radius: 6px;">
+                        🏢 Gia nhập</td>
+                      <td id="up_ngaygianhap" class="has-text-dark"
+                        style="border: none; padding: 12px 10px; font-weight: 600; text-align: right; border-top-right-radius: 6px; border-bottom-right-radius: 6px;">
+                      </td>
+                    </tr>
+                    <tr
+                      style="background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.02); border-radius: 6px; border: 2px solid #48c774;">
+                      <td class="has-text-grey"
+                        style="border: none; padding: 12px 10px; font-weight: 500; border-top-left-radius: 6px; border-bottom-left-radius: 6px;">
+                        ⭐ Chức vụ</td>
+                      <td id="up_role" class="has-text-weight-bold has-text-success"
+                        style="border: none; padding: 12px 10px; text-align: right; text-transform: uppercase; border-top-right-radius: 6px; border-bottom-right-radius: 6px;">
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
         <div class="app-grid">
@@ -2331,7 +2430,7 @@
 
       <!-- ================= TAG: ĐỊNH MỨC (REMOVED INDEPENDENT TAG) ================= -->
       <!-- ================= WARNING MODAL ================= -->
-      <div class="modal" id="warningModal">
+      <div class="modal" id="warningModal" style="z-index: 99999;">
         <div class="modal-background" onclick="closeWarning()"></div>
         <div class="modal-card">
           <header class="modal-card-head has-background-danger-light">
@@ -2340,6 +2439,7 @@
           </header>
           <section class="modal-card-body" id="warningList">
             <!-- List items -->
+          </section>
         </div>
       </div>
       <!-- ================= TAG: BẢNG KẾT QUẢ ĐÁNH GIÁ ================= -->
@@ -2379,7 +2479,7 @@
       }, 4000);
     }
     /* ================= CONFIG ================= */
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbygRuBCqwny1iQLCYL7FmtuoI3DOtHySCahnH0QFY4ngGHyhJvmevaQSm3iJcrb-uOI/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzexnOTzx_XoAndzQCvq3zLwGsqADbvcLyjl_4RPJWdeW1aPSEUmu8ReKiumcUHHqgH/exec";
     const ACCOUNT_SS_ID = "1i0CFkUWJoY18C-DKIlavRpbsYYVIM4fpKtIYGkdPZ-A";
 
     let USER_ROLE = null; // manager | admin | taixe
@@ -2427,11 +2527,20 @@
       sessionStorage.setItem("mnv", USER_MNV);
       document.getElementById("login").classList.add("hidden");
       document.getElementById("home").classList.remove("hidden");
+
+      // Hiển thị thông tin tài khoản trên Header
+      document.getElementById("header_user_name").innerText = USER_MNV;
+      let displayRole = "Tài xế";
+      if (USER_ROLE === "manager") displayRole = "Quản lý / Giám đốc";
+      if (USER_ROLE === "admin") displayRole = "Quản trị viên";
+      document.getElementById("header_user_role").innerText = displayRole;
+
       animateHeaderTitle();
       applyHomeCardByRole();
       applyBackground("home");
       preLoadData();
       checkWarnings();
+      preloadUserProfile();
     }
     function checkWarnings() {
       fetch(`${SCRIPT_URL}?action=get_warnings`)
@@ -2457,6 +2566,48 @@ Hết hạn: ${w.ngay_he} <br>
     function closeWarning() {
       document.getElementById("warningModal").classList.remove("is-active");
     }
+
+    function preloadUserProfile() {
+      if (!USER_MNV) return;
+
+      fetch(`${SCRIPT_URL}?action=get_account_profile&mnv=${USER_MNV}`)
+        .then(res => res.json())
+        .then(res => {
+          if (res.status === "success") {
+            document.getElementById("up_user").innerText = res.data.user || "-";
+            document.getElementById("up_hoten").innerText = res.data.ho_ten || "-";
+            document.getElementById("up_mnv").innerText = res.data.mnv || "-";
+            document.getElementById("up_sdt").innerText = res.data.sdt || "-";
+            document.getElementById("up_ngaysinh").innerText = res.data.ngay_sinh || "-";
+            document.getElementById("up_ngaygianhap").innerText = res.data.ngay_gia_nhap || "-";
+
+            let displayRole = "Tài xế";
+            if (res.data.role === "manager") displayRole = "Quản lý / Giám đốc";
+            if (res.data.role === "admin") displayRole = "Quản trị viên";
+            document.getElementById("up_role").innerText = displayRole;
+          }
+        })
+        .catch(err => {
+          console.error("Lỗi preload cấu hình tài khoản:", err);
+        });
+    }
+
+    function toggleUserProfileDropdown() {
+      const dropdown = document.getElementById("userProfileDropdown");
+      dropdown.classList.toggle("hidden");
+    }
+
+    // Đóng dropdown khi click ra ngoài
+    document.addEventListener('click', function (event) {
+      const widgetStr = '.user-profile-widget';
+      const dropdownId = 'userProfileDropdown';
+      const widget = event.target.closest(widgetStr);
+      const dropdown = document.getElementById(dropdownId);
+
+      if (!widget && dropdown && !dropdown.contains(event.target)) {
+        dropdown.classList.add('hidden');
+      }
+    });
     function openReport() {
       ALL_TAGS.forEach(t => document.getElementById(t)?.classList.add("hidden"));
       document.getElementById("baocao").classList.remove("hidden");
@@ -2760,7 +2911,6 @@ Hết hạn: ${w.ngay_he} <br>
       // Tải ngầm Kế hoạch bảo dưỡng
       const tbodyMaintenance = document.querySelector("#maintenancePlanTable tbody");
       if (tbodyMaintenance) {
-        tbodyMaintenance.innerHTML = '<tr><td colspan="9" class="has-text-centered">Đang tải dữ liệu kế hoạch...</td></tr>';
         fetch(`${SCRIPT_URL}?action=get_maintenance_plan`)
           .then(res => res.json())
           .then(res => {
@@ -3479,21 +3629,6 @@ Lỗi tải dữ liệu
 
     function openMaintenancePlan() {
       openTag("kehoachbaoduong");
-      const tbody = document.querySelector("#maintenancePlanTable tbody");
-      tbody.innerHTML = '<tr><td colspan="9" class="has-text-centered">Đang tải dữ liệu kế hoạch...</td></tr>';
-
-      fetch(`${SCRIPT_URL}?action=get_maintenance_plan`)
-        .then(res => res.json())
-        .then(res => {
-          if (res.status === "success") {
-            renderMaintenancePlan(res.data);
-          } else {
-            tbody.innerHTML = `<tr><td colspan="9" class="has-text-danger has-text-centered">Lỗi: ${res.message}</td></tr>`;
-          }
-        })
-        .catch(err => {
-          tbody.innerHTML = `<tr><td colspan="9" class="has-text-danger has-text-centered">Lỗi kết nối: ${err.message}</td></tr>`;
-        });
     }
 
     function renderMaintenancePlan(data) {
@@ -3703,7 +3838,7 @@ Lỗi tải dữ liệu
         });
     }
     const API_URL =
-      "https://script.google.com/macros/s/AKfycbygRuBCqwny1iQLCYL7FmtuoI3DOtHySCahnH0QFY4ngGHyhJvmevaQSm3iJcrb-uOI/exec";
+      "https://script.google.com/macros/s/AKfycbzexnOTzx_XoAndzQCvq3zLwGsqADbvcLyjl_4RPJWdeW1aPSEUmu8ReKiumcUHHqgH/exec";
     function autoFillTaiXe(mnv, targetInput) {
       if (!mnv) {
         targetInput.value = "";
