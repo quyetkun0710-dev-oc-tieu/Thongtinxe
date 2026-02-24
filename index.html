@@ -851,49 +851,47 @@
       /* Nhỏ hơn để tiết kiệm diện tích */
     }
 
-    /* Cột Biển số, Loại xe, Nội dung - Sticky Left */
-    /* Loại bỏ min-width cố định, sử dụng width: 1% để co lại vừa khít nội dung */
+    /* Cột Biển số - Sticky Left */
     .fuel-grid-table .sticky-col-1 {
       position: sticky;
       left: 0;
       z-index: 5;
       background: #fff;
-      width: 1%;
     }
 
-    .fuel-grid-table .sticky-col-2 {
-      position: sticky;
-      left: 80px;
-      /* Ước lượng vị trí mới sau khi co lại */
-      z-index: 5;
-      background: #fff;
-      width: 1%;
-    }
-
+    /* Loại xe và Nội dung - Không còn sticky */
+    .fuel-grid-table .sticky-col-2,
     .fuel-grid-table .sticky-col-3 {
-      position: sticky;
-      left: 170px;
-      /* Ước lượng vị trí mới */
-      z-index: 5;
-      background: #fff;
-      width: 1%;
-      text-align: left;
+      position: static;
+      background: inherit;
     }
 
     /* Fix z-index for top-left intersection */
-    .fuel-grid-table thead th.sticky-col-1 {
+    .fuel-grid-table thead tr:nth-child(1) th.sticky-col-1 {
       z-index: 15;
+      top: 0;
       left: 0;
     }
 
-    .fuel-grid-table thead th.sticky-col-2 {
+    .fuel-grid-table thead tr:nth-child(2) th.sticky-col-1 {
       z-index: 15;
-      left: 80px;
+      top: 32px;
+      /* Chiều cao hàng tiêu đề thứ nhất */
+      left: 0;
     }
 
-    .fuel-grid-table thead th.sticky-col-3 {
-      z-index: 15;
-      left: 170px;
+    /* Sticky Header Rows */
+    .fuel-grid-table thead tr:nth-child(1) th {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .fuel-grid-table thead tr:nth-child(2) th {
+      position: sticky;
+      top: 32px;
+      /* Chiều cao khoảng 32-35px tùy font */
+      z-index: 10;
     }
 
     /* Màu sắc các ô */
@@ -4000,19 +3998,10 @@ Lỗi tải dữ liệu
 
     function applyAutoStickyOffsets(table) {
       if (!table) return;
-      const cols = ['.sticky-col-1', '.sticky-col-2', '.sticky-col-3'];
-      let currentLeft = 0;
-
-      cols.forEach((selector, index) => {
-        const cells = table.querySelectorAll(selector);
-        if (cells.length === 0) return;
-
-        cells.forEach(cell => {
-          cell.style.left = currentLeft + 'px';
-        });
-
-        // Lấy độ rộng thực tế của cột đầu tiên tìm thấy để tính offset cho cột tiếp theo
-        currentLeft += cells[0].offsetWidth;
+      // Chỉ cố định cột Biển số xe (sticky-col-1)
+      const cells = table.querySelectorAll('.sticky-col-1');
+      cells.forEach(cell => {
+        cell.style.left = '0px';
       });
     }
   </script>
