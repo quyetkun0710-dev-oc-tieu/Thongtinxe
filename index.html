@@ -961,6 +961,85 @@
     .fuel-grid-table tr:hover td {
       filter: brightness(0.95);
     }
+
+    /* ================= SUBTAB CARD (BẢNG KÊ) ================= */
+    .subtab-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      padding: 10px 4px 20px;
+    }
+
+    .subtab-card {
+      background: rgba(255, 255, 255, 0.1) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      border-radius: 18px !important;
+      padding: 12px 6px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+      user-select: none;
+    }
+
+    .subtab-card:hover {
+      background: rgba(255, 255, 255, 0.2) !important;
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+      border-color: rgba(255, 255, 255, 0.4) !important;
+    }
+
+    .subtab-card:active {
+      transform: scale(0.95);
+    }
+
+    .subtab-card.subtab-active {
+      background: rgba(0, 209, 178, 0.25) !important;
+      border-color: #00ffcc !important;
+      box-shadow: 0 0 24px rgba(0, 255, 204, 0.4), 0 8px 32px rgba(0, 0, 0, 0.25);
+    }
+
+    .subtab-icon {
+      font-size: 1.8rem;
+      margin-bottom: 6px;
+      filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.3));
+      transition: transform 0.3s ease;
+    }
+
+    .subtab-card:hover .subtab-icon {
+      transform: scale(1.1);
+    }
+
+    .subtab-name {
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.3px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+      line-height: 1.3;
+    }
+
+    @media (max-width: 480px) {
+      .subtab-grid {
+        gap: 8px;
+        padding: 6px 2px 12px;
+      }
+
+      .subtab-icon {
+        font-size: 1.5rem;
+        margin-bottom: 4px;
+      }
+
+      .subtab-name {
+        font-size: 0.65rem;
+      }
+    }
   </style>
 </head>
 
@@ -973,7 +1052,7 @@
   <div id="login" class="form-box">
     <div class="box login-box">
       <div class="has-text-centered">
-        <img class="login-logo" src="https://drive.google.com/thumbnail?id=1bCo718U6WuH5apKx2mHjqR6PtlbYdA_f&sz=w1200">
+        <img class="login-logo" src="https://drive.google.com/thumbnail?id=1bCo718U6WuH5apKx2mHjqR6PtlbYdA_f&sz=w800">
       </div>
       <h2 class="title is-4 has-text-centered mb-5">🔐 ĐĂNG NHẬP HỆ THỐNG</h2>
       <div class="field">
@@ -998,10 +1077,12 @@
     <div class="container is-fluid">
       <!-- ================= HOME ================= -->
       <div id="home" class="hidden">
-        <div class="home-header" style="justify-content: space-between; position: relative; z-index: 9999;">
+        <div class="home-header" style="justify-content: center; position: relative; z-index: 9999; padding-top: 5px;">
           <div style="display: flex; align-items: center;">
-            <div class="header-inner header-center">
-              <img src="https://drive.google.com/thumbnail?id=1bCo718U6WuH5apKx2mHjqR6PtlbYdA_f&sz=w1200">
+            <div class="header-inner header-center" style="margin-right: 15px;">
+              <!-- BẠN CÓ THỂ ĐỔI SỐ 100px DƯỚI ĐÂY ĐỂ PHÓNG TO / THU NHỎ LOGO -->
+              <img src="https://drive.google.com/thumbnail?id=1bCo718U6WuH5apKx2mHjqR6PtlbYdA_f&sz=w800"
+                style="width: 600px; height: auto;">
             </div>
             <div class="title-box">
               <h1>FLEET MANAGEMENT</h1> <br>
@@ -1010,31 +1091,31 @@
             </div>
           </div>
 
-          <!-- THÔNG TIN TÀI KHOẢN -->
-          <div style="position: relative; z-index: 9999;">
+          <!-- THÔNG TIN TÀI KHOẢN (NỔI GÓC DƯỚI PHẢI) -->
+          <div style="position: fixed; bottom: 25px; right: 25px; z-index: 99999;">
             <div class="user-profile-widget" onclick="toggleUserProfileDropdown()"
-              style="cursor: pointer; display: flex; align-items: center; background: rgba(255,255,255,0.15); padding: 8px 15px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(5px); transition: all 0.3s ease;"
-              onmouseover="this.style.background='rgba(255,255,255,0.25)'"
-              onmouseout="this.style.background='rgba(255,255,255,0.15)'">
+              style="cursor: pointer; display: flex; align-items: center; background: rgba(40,40,40,0.85); padding: 6px 14px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(8px); transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.3);"
+              onmouseover="this.style.background='rgba(0,0,0,0.95)'; this.style.transform='scale(1.05)';"
+              onmouseout="this.style.background='rgba(40,40,40,0.85)'; this.style.transform='scale(1)';">
               <div class="avatar"
-                style="font-size: 24px; margin-right: 10px; background: rgba(255,255,255,0.9); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                style="font-size: 16px; margin-right: 8px; background: linear-gradient(135deg, #00ffcc, #3273dc); width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.4);">
                 👨‍💼
               </div>
               <div>
                 <div id="header_user_name"
-                  style="color: white; font-weight: bold; font-size: 14px; text-transform: uppercase;">
+                  style="color: white; font-weight: bold; font-size: 11px; text-transform: uppercase; line-height: 1.2;">
                   Đang tải...
                 </div>
                 <div id="header_user_role"
-                  style="color: #ffdd57; font-size: 12px; font-weight: 600; text-transform: capitalize;">
+                  style="color: #00ffcc; font-size: 9px; font-weight: 600; text-transform: capitalize; line-height: 1.1; letter-spacing: 0.5px;">
                   Manager
                 </div>
               </div>
             </div>
 
-            <!-- DROPDOWN MENU -->
+            <!-- POPUP MENU (MỞ HẤT LÊN TRÊN) -->
             <div id="userProfileDropdown" class="hidden"
-              style="position: absolute; top: calc(100% + 15px); right: 0; min-width: 330px; width: max-content; background: #ffffff; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); z-index: 9999; overflow: hidden; border: 1px solid rgba(0,0,0,0.08); transition: opacity 0.2s ease, transform 0.2s ease; transform-origin: top right;">
+              style="position: absolute; bottom: calc(100% + 15px); right: 0; min-width: 320px; width: max-content; background: #ffffff; border-radius: 12px; box-shadow: 0 -8px 30px rgba(0,0,0,0.25); z-index: 99999; overflow: hidden; border: 1px solid rgba(0,0,0,0.1); transition: opacity 0.2s ease, transform 0.2s ease; transform-origin: bottom right;">
               <header
                 style="background: linear-gradient(135deg, #3273dc, #1e52a8); color: white; padding: 16px; font-weight: 600; text-align: center; font-size: 15px; letter-spacing: 0.5px; border-bottom: 3px solid #ffdd57;">
                 THÔNG TIN TÀI KHOẢN
@@ -1149,7 +1230,7 @@
 
           <div class="app-card" data-tag="fuelgrid" onclick="openFuelGridTab()">
             <div class="app-icon">📋</div>
-            <div class="app-name">Bảng kê Nhiên liệu</div>
+            <div class="app-name">Bảng kê</div>
           </div>
 
           <!-- Logout Button as an App or separate? Let's make it distinct slightly but in grid -->
@@ -2358,13 +2439,22 @@
       <!-- ================= TAG: BẢNG KÊ NHIÊN LIỆU (STANDALONE TAB) ================= -->
       <div id="fuelgrid" class="hidden form-box">
         <button class="floating-back-btn" type="button" onclick="backHome()">⬅ Quay lại</button>
-        <h2 class="title is-4">📋 QUẢN LÝ NHIÊN LIỆU & ĐỊNH MỨC</h2>
+        <h2 class="title is-4">📋 QUẢN LÝ BẢNG KÊ</h2>
 
-        <!-- SUB-TABS DẠNG BUTTON -->
-        <div class="buttons has-addons is-centered mb-4">
-          <button id="subtab_fuel" class="button is-info is-selected" onclick="switchFuelSubTab('fuel')">🔍 Tra cứu Bảng
-            kê</button>
-          <button id="subtab_quota" class="button" onclick="switchFuelSubTab('quota')">📄 Xem Định mức</button>
+        <!-- SUB-TABS DẠNG CARD GLASSMORPHISM -->
+        <div class="subtab-grid">
+          <div class="subtab-card subtab-active" id="subtab_fuel" onclick="switchFuelSubTab('fuel')">
+            <div class="subtab-icon">🔍</div>
+            <div class="subtab-name">Bảng kê<br>nhiên liệu</div>
+          </div>
+          <div class="subtab-card" id="subtab_km" onclick="switchFuelSubTab('km')">
+            <div class="subtab-icon">🚚</div>
+            <div class="subtab-name">Bảng kê KM</div>
+          </div>
+          <div class="subtab-card" id="subtab_quota" onclick="switchFuelSubTab('quota')">
+            <div class="subtab-icon">📄</div>
+            <div class="subtab-name">Định mức</div>
+          </div>
         </div>
 
         <!-- VIEW 1: TRA CỨU BẢNG KÊ -->
@@ -2426,6 +2516,54 @@
             </div>
           </div>
         </div>
+
+        <!-- VIEW 3: CHI TIẾT KM VẬN HÀNH -->
+        <div id="view_fuel_km" class="hidden">
+          <section class="box">
+            <div class="columns is-mobile">
+              <div class="column is-4">
+                <div class="select is-fullwidth">
+                  <select id="km_month">
+                    <option value="1">Tháng 1</option>
+                    <option value="2">Tháng 2</option>
+                    <option value="3">Tháng 3</option>
+                    <option value="4">Tháng 4</option>
+                    <option value="5">Tháng 5</option>
+                    <option value="6">Tháng 6</option>
+                    <option value="7">Tháng 7</option>
+                    <option value="8">Tháng 8</option>
+                    <option value="9">Tháng 9</option>
+                    <option value="10">Tháng 10</option>
+                    <option value="11">Tháng 11</option>
+                    <option value="12">Tháng 12</option>
+                  </select>
+                </div>
+              </div>
+              <div class="column is-4">
+                <div class="select is-fullwidth">
+                  <select id="km_year">
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                    <option value="2027">2027</option>
+                  </select>
+                </div>
+              </div>
+              <div class="column is-4">
+                <input class="input" id="km_bsx" placeholder="Biển số" oninput="this.value = this.value.toUpperCase()">
+              </div>
+            </div>
+            <button class="button is-info is-fullwidth mt-2" onclick="openKmGrid()">
+              🔍 Tra cứu KM vận hành
+            </button>
+          </section>
+
+          <div class="table-container" style="background: rgba(255,255,255,0.95) !important; border-radius: 12px;">
+            <div id="kmGridContainer" class="fuel-grid-container">
+              <p class="has-text-centered has-text-dark py-5">Nhấn "Tra cứu" để hiển thị dữ liệu</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- ================= TAG: ĐỊNH MỨC (REMOVED INDEPENDENT TAG) ================= -->
@@ -2479,7 +2617,7 @@
       }, 4000);
     }
     /* ================= CONFIG ================= */
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzexnOTzx_XoAndzQCvq3zLwGsqADbvcLyjl_4RPJWdeW1aPSEUmu8ReKiumcUHHqgH/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJPiGV3gxtQfxTcn4RmH6OAGOHu5-x9YfXJKPX23LhPF9OM36grJXpUbhY3aAOVbKQ/exec";
     const ACCOUNT_SS_ID = "1i0CFkUWJoY18C-DKIlavRpbsYYVIM4fpKtIYGkdPZ-A";
 
     let USER_ROLE = null; // manager | admin | taixe
@@ -2625,29 +2763,131 @@ Hết hạn: ${w.ngay_he} <br>
     function openFuelGridTab() {
       openTag("fuelgrid");
       const d = new Date();
-      document.getElementById("grid_month").value = d.getMonth() + 1;
-      document.getElementById("grid_year").value = d.getFullYear();
+      const m = d.getMonth() + 1;
+      const y = d.getFullYear();
+      document.getElementById("grid_month").value = m;
+      document.getElementById("grid_year").value = y;
+      // Đồng bộ tháng/năm cho tab KM
+      if (document.getElementById("km_month")) document.getElementById("km_month").value = m;
+      if (document.getElementById("km_year")) document.getElementById("km_year").value = y;
       switchFuelSubTab('fuel'); // Mặc định mở tab tra cứu
     }
 
     function switchFuelSubTab(type) {
       const vFuel = document.getElementById("view_fuel_main");
+      const vKm = document.getElementById("view_fuel_km");
       const vQuota = document.getElementById("view_fuel_quota");
+
       const bFuel = document.getElementById("subtab_fuel");
+      const bKm = document.getElementById("subtab_km");
       const bQuota = document.getElementById("subtab_quota");
 
+      // Hide all views and deactivate all cards
+      [vFuel, vKm, vQuota].forEach(el => {
+        if (el) el.classList.add("hidden");
+      });
+      [bFuel, bKm, bQuota].forEach(btn => {
+        if (btn) btn.classList.remove("subtab-active");
+      });
+
       if (type === 'fuel') {
-        vFuel.classList.remove("hidden");
-        vQuota.classList.add("hidden");
-        bFuel.classList.add("is-info", "is-selected");
-        bQuota.classList.remove("is-info", "is-selected");
+        if (vFuel) vFuel.classList.remove("hidden");
+        if (bFuel) bFuel.classList.add("subtab-active");
+      } else if (type === 'km') {
+        if (vKm) vKm.classList.remove("hidden");
+        if (bKm) bKm.classList.add("subtab-active");
+        // Auto-load nếu chưa có dữ liệu (giống cơ chế bảng kê nhiên liệu)
+        const kmContainer = document.getElementById("kmGridContainer");
+        if (kmContainer && !kmContainer.querySelector("table")) {
+          openKmGrid();
+        }
       } else {
-        vFuel.classList.add("hidden");
-        vQuota.classList.remove("hidden");
-        bFuel.classList.remove("is-info", "is-selected");
-        bQuota.classList.add("is-info", "is-selected");
+        if (vQuota) vQuota.classList.remove("hidden");
+        if (bQuota) bQuota.classList.add("subtab-active");
         loadQuotaData();
       }
+    }
+
+    async function openKmGrid() {
+      const m = document.getElementById("km_month").value;
+      const y = document.getElementById("km_year").value;
+      const bsx = (document.getElementById("km_bsx")?.value || "").trim().toUpperCase();
+      const container = document.getElementById("kmGridContainer");
+
+      container.innerHTML = `<p class="has-text-centered py-5"><button class="button is-loading is-white">Đang tải dữ liệu...</button></p>`;
+
+      try {
+        const res = await fetch(`${SCRIPT_URL}?action=get_km_grid&month=${m}&year=${y}&bien_so_xe=${encodeURIComponent(bsx)}`);
+        const json = await res.json();
+        if (json.status === "success") {
+          renderKmGrid(json, m, y);
+        } else {
+          container.innerHTML = `<div class="notification is-danger">Lỗi: ${json.message}</div>`;
+        }
+      } catch (err) {
+        container.innerHTML = `<div class="notification is-danger">Lỗi kết nối: ${err.message}</div>`;
+      }
+    }
+
+    function renderKmGrid(d, month, year) {
+      const container = document.getElementById("kmGridContainer");
+      const rows = d.rows || [];
+      const days = d.days || [];
+
+      if (rows.length === 0) {
+        container.innerHTML = `<div class="notification is-info has-text-centered">Không có dữ liệu vận hành cho tháng ${month}/${year}</div>`;
+        return;
+      }
+
+      const fmt = (v) => v ? Number(v).toLocaleString("vi-VN") : "";
+
+      // Track biển số đã gộp để dùng rowspan
+      const bsxRowCount = {};
+      rows.forEach(r => {
+        bsxRowCount[r.bsx] = (bsxRowCount[r.bsx] || 0) + 1;
+      });
+      const bsxSeen = {};
+
+      let html = `<table class="fuel-grid-table" id="km_log_table">`;
+      html += `<thead>`;
+      html += `<tr>`;
+      html += `<th rowspan="2" class="sticky-col-1 bg-red">BIỂN SỐ</th>`;
+      html += `<th rowspan="2" class="bg-red">HỌ VÀ TÊN</th>`;
+      html += `<th colspan="${days.length}" class="bg-red has-text-centered">THÁNG ${month}/${year} – KM VẬN HÀNH</th>`;
+      html += `<th rowspan="2" class="bg-red">TỔNG KM</th>`;
+      html += `</tr><tr>`;
+      days.forEach(day => {
+        html += `<th class="day-col bg-red">${day}</th>`;
+      });
+      html += `</tr></thead><tbody>`;
+
+      rows.forEach(row => {
+        html += `<tr>`;
+
+        // Gộp ô Biển số theo rowspan
+        if (!bsxSeen[row.bsx]) {
+          bsxSeen[row.bsx] = true;
+          html += `<td rowspan="${bsxRowCount[row.bsx]}" class="sticky-col-1 has-text-weight-bold has-text-centered is-vcentered" style="background:#5B9BD5; color:#000; vertical-align:middle;">${row.bsx}</td>`;
+        }
+
+        html += `<td class="has-text-weight-bold" style="background:#e8f5e9;">${row.ten || "—"}</td>`;
+
+        days.forEach(day => {
+          const km = row.days[day];
+          if (km && km > 0) {
+            html += `<td class="data-cell-km has-text-right">${fmt(km)}</td>`;
+          } else {
+            html += `<td></td>`;
+          }
+        });
+
+        html += `<td class="has-text-right has-text-weight-bold" style="background:#fff9c4;">${fmt(row.total)}</td>`;
+        html += `</tr>`;
+      });
+
+      html += `</tbody></table>`;
+      container.innerHTML = html;
+      enablePinchZoom("km_log_table");
     }
 
     function loadQuotaData() {
@@ -2738,7 +2978,7 @@ Hết hạn: ${w.ngay_he} <br>
       const m = document.getElementById("rpt_month").value;
       const y = document.getElementById("rpt_year").value;
       const bsx = document.getElementById("rpt_fuel_bsx") ? document.getElementById("rpt_fuel_bsx").value.trim().toUpperCase() : "";
-      const btn = document.querySelector("#baocao .button is-primary");
+      const btn = document.querySelector("#baocao .button.is-primary");
 
       // Loading state - Chỉ hiện nếu không phải auto refresh
       if (btn && !isAuto) {
@@ -2802,7 +3042,7 @@ Hết hạn: ${w.ngay_he} <br>
               }
 
               let rowHtml = `
-                <tr class="${rowClass}">
+        <tr class="${rowClass}">
                   <td class="has-text-weight-bold has-text-centered">${v.bsx}</td>
                   <td class="has-text-right">${fmt(v.op_km)}</td>
                   <td class="has-text-right">${fmtHours(v.op_hours)}</td>
@@ -2811,14 +3051,14 @@ Hết hạn: ${w.ngay_he} <br>
                   <td class="has-text-right">${fmt(v.fuel_liters)}</td>
                   <td class="has-text-right has-text-danger">${fmt(v.maintain_cost)}</td>
                   <td class="has-text-right">${fmt(v.maintain_count)}</td>
-              `;
+      `;
 
               if (isMgr) {
                 rowHtml += `
-                  <td class="has-text-right">${v.quota_l100 ? v.quota_l100.toFixed(2) : "0"}</td>
+        <td class="has-text-right">${v.quota_l100 ? v.quota_l100.toFixed(2) : "0"}</td>
                   <td class="has-text-right">${v.actual_l100 ? v.actual_l100.toFixed(2) : "0"}</td>
                   <td class="has-text-right ${varClass}">${v.variance ? (v.variance > 0 ? "+" : "") + v.variance.toFixed(2) : "0"}</td>
-                `;
+      `;
               }
 
               rowHtml += `</tr>`;
@@ -2853,7 +3093,7 @@ Hết hạn: ${w.ngay_he} <br>
               if (!canSeeViolation) return;
 
               db.innerHTML += `
- <tr class="${rowClass}">
+        <tr class="${rowClass}">
 <td class="has-text-weight-bold has-text-centered">${dr.mnv}</td>
 <td>${dr.name}</td>
 <td class="has-text-right">${fmt(dr.op_trips)}</td>
@@ -2861,7 +3101,7 @@ Hết hạn: ${w.ngay_he} <br>
 <td class="has-text-right">${fmtHours(dr.op_hours)}</td>
 <td class="has-text-right has-text-danger">${fmt(dr.violation_count)}</td>
  </tr>
-`;
+        `;
             });
           } else {
             showAlert("Lỗi tải báo cáo: " + d.message, "is-danger");
@@ -2900,11 +3140,15 @@ Hết hạn: ${w.ngay_he} <br>
       if (document.getElementById("rpt_month")) document.getElementById("rpt_month").value = m;
       if (document.getElementById("rpt_year")) document.getElementById("rpt_year").value = y;
 
-      // Set default cho Bảng kê
+      // Set default cho Bảng kê Nhiên liệu
       if (document.getElementById("grid_month")) document.getElementById("grid_month").value = m;
       if (document.getElementById("grid_year")) document.getElementById("grid_year").value = y;
 
-      // Kích hoạt tải ngầm
+      // Set default cho Bảng kê KM
+      if (document.getElementById("km_month")) document.getElementById("km_month").value = m;
+      if (document.getElementById("km_year")) document.getElementById("km_year").value = y;
+
+      // Kích hoạt tải ngầm song song
       loadReport(true);
       loadQuotaData();
 
@@ -2927,6 +3171,9 @@ Hết hạn: ${w.ngay_he} <br>
 
       // Tải ngầm Bảng kê Nhiên liệu
       loadFuelGridBackground(m, y, "");
+
+      // Tải ngầm Bảng kê KM
+      loadKmGridBackground(m, y, "");
     }
 
     async function loadFuelGridBackground(m, y, bsx) {
@@ -2939,6 +3186,25 @@ Hết hạn: ${w.ngay_he} <br>
 
           if (json.status === "success") {
             renderFuelLogGrid(json, m, y);
+          } else {
+            container.innerHTML = `<div class="notification is-danger">Lỗi: ${json.message}</div>`;
+          }
+        } catch (err) {
+          container.innerHTML = `<div class="notification is-danger">Lỗi kết nối: ${err.message}</div>`;
+        }
+      }
+    }
+
+    async function loadKmGridBackground(m, y, bsx) {
+      const container = document.getElementById("kmGridContainer");
+      if (container) {
+        container.innerHTML = `<p class="has-text-centered py-5">Đang tải dữ liệu...</p>`;
+        try {
+          const res = await fetch(`${SCRIPT_URL}?action=get_km_grid&month=${m}&year=${y}&bien_so_xe=${encodeURIComponent(bsx)}`);
+          const json = await res.json();
+
+          if (json.status === "success") {
+            renderKmGrid(json, m, y);
           } else {
             container.innerHTML = `<div class="notification is-danger">Lỗi: ${json.message}</div>`;
           }
@@ -3197,14 +3463,14 @@ Hết hạn: ${w.ngay_he} <br>
       const form = document.getElementById(formId);
       // input thường
       Object.keys(data).forEach(k => {
-        const el = form.querySelector(`[name="${k}"]`);
+        const el = form.querySelector(`[name = "${k}"]`);
         if (!el || el.type === "radio") return;
         el.value = data[k] ?? "";
       });
       // radio – xử lý RIÊNG
       Object.keys(data).forEach(k => {
         const radios = form.querySelectorAll(
-          `input[type="radio"][name="${k}"]`
+          `input[type = "radio"][name = "${k}"]`
         );
         if (!radios.length) return;
         radios.forEach(r => {
@@ -3408,7 +3674,7 @@ Hết hạn: ${w.ngay_he} <br>
       const cao = parseFloat(f.thung_cao.value) || 0;
       if (dai > 0 && rong > 0 && cao > 0) {
         f.kich_thuoc_thung.value =
-          `${dai} x ${rong} x ${cao}`;
+          `${dai} x ${rong} x ${cao} `;
         f.the_tich_thung.value =
           (dai * rong * cao).toFixed(2);
       } else {
@@ -3434,7 +3700,7 @@ Hết hạn: ${w.ngay_he} <br>
       const dd = String(d.getDate()).padStart(2, "0");
       const mm = String(d.getMonth() + 1).padStart(2, "0");
       const yyyy = d.getFullYear();
-      f.chinh_thuc.value = `${dd}/${mm}/${yyyy}`;
+      f.chinh_thuc.value = `${dd} /${mm}/${yyyy} `;
     }
     function loadTableByKey(tag, keyName, keyValue, tableId) {
       const table = document.getElementById(tableId);
@@ -3454,12 +3720,12 @@ Hết hạn: ${w.ngay_he} <br>
         .then(list => {
           if (!Array.isArray(list) || list.length === 0) {
             tbody.innerHTML = `
-<tr>
-<td colspan="100%" class="has-text-centered">
-Không có dữ liệu
-</td>
-</tr>
-`;
+        < tr >
+        <td colspan="100%" class="has-text-centered">
+          Không có dữ liệu
+        </td>
+</tr >
+        `;
             return;
           }
           // KIỂM TRA LỖI TỪ SERVER TRẢ VỀ
@@ -3501,12 +3767,12 @@ Không có dữ liệu
         })
         .catch(() => {
           tbody.innerHTML = `
-<tr>
-<td colspan="100%" class="has-text-danger">
-Lỗi tải dữ liệu
-</td>
-</tr>
-`;
+        <tr>
+        <td colspan="100%" class="has-text-danger">
+          Lỗi tải dữ liệu
+        </td>
+        </tr>
+        `;
         });
     }
     /* ================= DATE UTIL ================= */
@@ -3662,7 +3928,7 @@ Lỗi tải dữ liệu
         else if (item.days_remain < 15) dayClass = "has-text-warning has-text-weight-bold";
 
         return `
-          <tr style="background: white; color: black;">
+        <tr style="background: white; color: black;">
             <td class="has-text-centered">${index + 1}</td>
             <td class="has-text-weight-bold">${item.bks}</td>
             <td>${item.loai_xe || ""}</td>
@@ -3673,13 +3939,13 @@ Lỗi tải dữ liệu
             <td class="has-text-right" style="background: #f0f0ff;">${fmt(item.km_L2)}</td>
             <td class="has-text-centered" style="background: #f0f0ff;">${formatDateShort(item.ngay_L2)}</td>
             
-            <!-- Kế hoạch kỳ này -->
+            <!--Kế hoạch kỳ này-->
             <td class="has-text-right">${fmt(item.km_L1)}</td>
             <td class="has-text-centered">${formatDateShort(item.ngay_L1)}</td>
             <td class="has-text-right has-text-weight-bold" style="color: #0000ff;">${fmt(item.km_plan)}</td>
             <td class="has-text-centered has-text-weight-bold" style="color: #0000ff;">${formatDateShort(item.ngay_plan)}</td>
             
-            <!-- Cảnh báo -->
+            <!--Cảnh báo-->
             <td class="has-text-right ${kmClass}" style="background: #ffffcc;">${fmt(item.km_remain)}</td>
             <td class="has-text-centered ${dayClass}" style="background: #ffffcc;">${item.days_remain} ngày</td>
           </tr>
@@ -3838,7 +4104,7 @@ Lỗi tải dữ liệu
         });
     }
     const API_URL =
-      "https://script.google.com/macros/s/AKfycbzexnOTzx_XoAndzQCvq3zLwGsqADbvcLyjl_4RPJWdeW1aPSEUmu8ReKiumcUHHqgH/exec";
+      "https://script.google.com/macros/s/AKfycbwJPiGV3gxtQfxTcn4RmH6OAGOHu5-x9YfXJKPX23LhPF9OM36grJXpUbhY3aAOVbKQ/exec";
     function autoFillTaiXe(mnv, targetInput) {
       if (!mnv) {
         targetInput.value = "";
@@ -3865,7 +4131,7 @@ Lỗi tải dữ liệu
       Object.keys(data).forEach(k => {
         const val = data[k];
         // Xử lý riêng cho Radio buttons
-        const radioList = form.querySelectorAll(`input[name="${k}"][type="radio"]`);
+        const radioList = form.querySelectorAll(`input[name = "${k}"][type = "radio"]`);
         if (radioList.length > 0) {
           radioList.forEach(r => {
             if (r.value === val) r.checked = true;
@@ -3873,7 +4139,7 @@ Lỗi tải dữ liệu
           return; // Done radio
         }
         // Các input khác
-        const el = form.querySelector(`[name="${k}"]`);
+        const el = form.querySelector(`[name = "${k}"]`);
         if (el) el.value = val;
       });
       // cuộn lên form
@@ -3884,7 +4150,7 @@ Lỗi tải dữ liệu
       if (!form) return;
       Object.keys(data).forEach(k => {
         // Tìm input bên trong form-taixe để tránh nhầm lẫn
-        const el = form.querySelector(`[name="${k}"]`);
+        const el = form.querySelector(`[name = "${k}"]`);
         if (el) {
           if (el.type === "checkbox") {
             // Checkbox: "Có" hoặc "true" hoặc "x"
@@ -3906,7 +4172,7 @@ Lỗi tải dữ liệu
                 const parts = String(raw).split('/');
                 if (parts.length === 3) {
                   // Giả sử DD/MM/YYYY -> YYYY-MM-DD
-                  el.value = `${parts[2]}-${parts[1]}-${parts[0]}`;
+                  el.value = `${parts[2]} -${parts[1]} -${parts[0]} `;
                 }
               }
             }
@@ -3975,8 +4241,8 @@ Lỗi tải dữ liệu
           if (currentScale > 1) {
             const w = table.offsetWidth;
             const h = table.offsetHeight;
-            table.style.marginRight = `${w * (currentScale - 1)}px`;
-            table.style.marginBottom = `${h * (currentScale - 1)}px`;
+            table.style.marginRight = `${w * (currentScale - 1)} px`;
+            table.style.marginBottom = `${h * (currentScale - 1)} px`;
           } else {
             table.style.marginRight = '';
             table.style.marginBottom = '';
@@ -4075,9 +4341,9 @@ Lỗi tải dữ liệu
       html += `<th rowspan="2" class="sticky-col-2 bg-red">Loại xe</th>`;
       html += `<th rowspan="2" class="sticky-col-3 bg-red">Nội dung</th>`;
       html += `<th colspan="${columns.length}" class="bg-red">THÁNG ${month}</th>`;
-      html += `<th rowspan="2" class="bg-red">Tổng KM<br>trong tháng</th>`;
-      html += `<th rowspan="2" class="bg-red">Tổng số Lít<br>trong tháng</th>`;
-      html += `<th rowspan="2" class="bg-red">số<br>L/100km</th>`;
+      html += `<th rowspan="2" class="bg-red">Tổng KM <br> trong tháng</th>`;
+      html += `<th rowspan="2" class="bg-red">Tổng số Lít <br> trong tháng</th>`;
+      html += `<th rowspan="2" class="bg-red">số <br> L / 100km</th>`;
       html += `</tr>`;
       html += `<tr>`;
       columns.forEach(col => {
