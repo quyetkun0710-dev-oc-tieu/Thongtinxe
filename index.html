@@ -244,7 +244,7 @@
 
     @media (max-width: 1024px) {
       .section {
-        padding: 1rem 0.5rem !important;
+        padding: 1rem 12px !important;
       }
 
       .container.is-fluid {
@@ -253,7 +253,8 @@
       }
 
       .form-box {
-        padding: 10px 5px !important;
+        max-width: 100% !important;
+        padding: 10px 0 !important;
       }
 
       .box {
@@ -299,14 +300,23 @@
         padding-left: 10px;
       }
 
-      /* Forces all tables to take the full device width, skipping all parent paddings */
+      /* Forces all tables to take the full device width natively without vw bugs */
       .table-container {
-        width: 100vw !important;
-        margin-left: calc(-50vw + 50%) !important;
-        margin-right: calc(-50vw + 50%) !important;
+        width: auto !important;
+        max-width: none !important;
+        margin-left: -12px !important;
+        /* bù đắp chính xác padding của .section */
+        margin-right: -12px !important;
         border-radius: 0 !important;
         padding: 5px 0 !important;
         box-shadow: none !important;
+      }
+
+      /* Ngoại lệ cho bảng bên trong box (có thêm 1rem padding) */
+      .box .table-container {
+        margin-left: -28px !important;
+        /* -12px (section) - 16px (box) */
+        margin-right: -28px !important;
       }
     }
 
