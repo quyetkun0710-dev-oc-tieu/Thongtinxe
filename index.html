@@ -298,6 +298,16 @@
         border-left: 4px solid #00ffcc;
         padding-left: 10px;
       }
+
+      /* Forces all tables to take the full device width, skipping all parent paddings */
+      .table-container {
+        width: 100vw !important;
+        margin-left: calc(-50vw + 50%) !important;
+        margin-right: calc(-50vw + 50%) !important;
+        border-radius: 0 !important;
+        padding: 5px 0 !important;
+        box-shadow: none !important;
+      }
     }
 
     /* ===== HEADER TRANG ĐẦU (HOME ONLY) ===== */
@@ -2684,7 +2694,7 @@
       }, 4000);
     }
     /* ================= CONFIG ================= */
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby4iMI2n8eB3kw-UjrAvmgapJ0bQ0PgmcRd1nOTHJTM4ZHaa2BknvPJLxtGHhhipn5Q/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxolwyNLPm9OVZYeYDO467d_2_JT069IaL5ufkB0Gltk0ayQ3DNRKP_-gr90cKU_ncQ/exec";
     const ACCOUNT_SS_ID = "1i0CFkUWJoY18C-DKIlavRpbsYYVIM4fpKtIYGkdPZ-A";
 
     let USER_ROLE = null; // manager | admin | taixe
@@ -4176,7 +4186,7 @@ Hết hạn: ${w.ngay_he} <br>
         });
     }
     const API_URL =
-      "https://script.google.com/macros/s/AKfycby4iMI2n8eB3kw-UjrAvmgapJ0bQ0PgmcRd1nOTHJTM4ZHaa2BknvPJLxtGHhhipn5Q/exec";
+      "https://script.google.com/macros/s/AKfycbxolwyNLPm9OVZYeYDO467d_2_JT069IaL5ufkB0Gltk0ayQ3DNRKP_-gr90cKU_ncQ/exec";
     function autoFillTaiXe(mnv, targetInput) {
       if (!mnv) {
         targetInput.value = "";
