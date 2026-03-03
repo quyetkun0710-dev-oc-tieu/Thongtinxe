@@ -104,10 +104,11 @@
 
     /* ================= APP LAUNCHER STYLE (HOME) ================= */
     #home .app-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 20px;
-      padding: 20px 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      padding: 15px 5px;
       width: 100%;
     }
 
@@ -116,8 +117,8 @@
       backdrop-filter: blur(12px) !important;
       -webkit-backdrop-filter: blur(12px) !important;
       border: 1px solid rgba(255, 255, 255, 0.2) !important;
-      border-radius: 24px !important;
-      padding: 20px;
+      border-radius: 20px !important;
+      padding: 18px 25px;
       text-align: center;
       cursor: pointer;
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -125,7 +126,6 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      aspect-ratio: 1/1;
       box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
     }
 
@@ -141,8 +141,8 @@
     }
 
     .app-icon {
-      font-size: 3.5rem;
-      margin-bottom: 12px;
+      font-size: 3rem;
+      margin-bottom: 8px;
       filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
       transition: transform 0.3s ease;
     }
@@ -154,10 +154,26 @@
     .app-name {
       color: #ffffff;
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       letter-spacing: 0.5px;
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
       line-height: 1.2;
+    }
+
+    @media (max-width: 480px) {
+      .app-card {
+        padding: 12px 18px;
+        border-radius: 16px !important;
+      }
+
+      .app-icon {
+        font-size: 2.2rem;
+        margin-bottom: 6px;
+      }
+
+      .app-name {
+        font-size: 0.75rem;
+      }
     }
 
     .form-box {
@@ -993,10 +1009,10 @@
 
     /* ================= SUBTAB CARD (BẢNG KÊ) ================= */
     .subtab-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      padding: 10px 4px 20px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 5px 0 15px;
     }
 
     .subtab-card {
@@ -1004,8 +1020,8 @@
       backdrop-filter: blur(12px) !important;
       -webkit-backdrop-filter: blur(12px) !important;
       border: 1px solid rgba(255, 255, 255, 0.2) !important;
-      border-radius: 18px !important;
-      padding: 12px 6px 10px;
+      border-radius: 14px !important;
+      padding: 10px 15px;
       text-align: center;
       cursor: pointer;
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -1035,8 +1051,8 @@
     }
 
     .subtab-icon {
-      font-size: 1.8rem;
-      margin-bottom: 6px;
+      font-size: 1.5rem;
+      margin-bottom: 4px;
       filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.3));
       transition: transform 0.3s ease;
     }
@@ -1056,18 +1072,56 @@
 
     @media (max-width: 480px) {
       .subtab-grid {
-        gap: 8px;
-        padding: 6px 2px 12px;
+        gap: 6px;
+        padding: 5px 0 10px;
+      }
+
+      .subtab-card {
+        padding: 8px 10px;
+        border-radius: 10px !important;
       }
 
       .subtab-icon {
-        font-size: 1.5rem;
-        margin-bottom: 4px;
+        font-size: 1.25rem;
+        margin-bottom: 2px;
       }
 
       .subtab-name {
-        font-size: 0.65rem;
+        font-size: 0.6rem;
       }
+    }
+
+    /* === User Profile Animations & Glassmorphism === */
+    .glass-dropdown {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+
+    .glass-row {
+      background: rgba(255, 255, 255, 0.95) !important;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08) !important;
+      border-radius: 8px;
+    }
+
+    @keyframes slideInRow {
+      0% {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Chỉ chạy khi không có class hidden */
+    #userProfileDropdown:not(.hidden) .animate-row {
+      opacity: 0;
+      animation: slideInRow 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
   </style>
 </head>
@@ -1109,7 +1163,7 @@
         <div class="home-header"
           style="justify-content: center; position: relative; z-index: 9999; padding-top: 15px; padding-bottom: 15px;">
           <div class="header-inner header-center">
-            <img src="https://drive.google.com/thumbnail?id=1bCo718U6WuH5apKx2mHjqR6PtlbYdA_f&sz=w800"
+            <img src="https://drive.google.com/thumbnail?id=1bCo718U6WuH5apKx2mHjqR6PtlbYdA_f&sz=w1200"
               class="home-logo">
           </div>
           <div class="title-box">
@@ -1119,79 +1173,76 @@
           </div>
 
           <!-- THÔNG TIN TÀI KHOẢN (NỔI GÓC TRÊN PHẢI HEADER) -->
-          <div class="user-widget-container" style="position: absolute; top: 25px; right: 30px; z-index: 99999;">
+          <div class="user-widget-container" style="position: absolute; top: 15px; right: 15px; z-index: 99999;">
             <div class="user-profile-widget" onclick="toggleUserProfileDropdown()"
-              style="cursor: pointer; display: flex; align-items: center; justify-content: center; background: rgba(40,40,40,0.85); width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(8px); transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.3);"
+              style="cursor: pointer; display: flex; align-items: center; justify-content: center; background: rgba(40,40,40,0.85); width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(8px); transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.3);"
               onmouseover="this.style.background='rgba(0,0,0,0.95)'; this.style.transform='scale(1.1)';"
               onmouseout="this.style.background='rgba(40,40,40,0.85)'; this.style.transform='scale(1)';">
               <div class="avatar"
-                style="font-size: 20px; background: linear-gradient(135deg, #00ffcc, #3273dc); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; border-radius: 50%; box-shadow: inset 0 2px 5px rgba(0,0,0,0.4);">
-                👨‍💼
+                style="font-size: 16px; background: linear-gradient(135deg, #00ffcc, #3273dc); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; border-radius: 50%; box-shadow: inset 0 2px 5px rgba(0,0,0,0.4);">
+
               </div>
             </div>
 
             <!-- POPUP MENU (MỞ HẤT XUỐNG DƯỚI) -->
-            <div id="userProfileDropdown" class="hidden"
-              style="position: absolute; top: calc(100% + 15px); right: 0; min-width: 300px; width: max-content; background: #ffffff; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.25); z-index: 99999; overflow: hidden; border: 1px solid rgba(0,0,0,0.1); transition: opacity 0.2s ease, transform 0.2s ease; transform-origin: top right;">
+            <div id="userProfileDropdown" class="hidden glass-dropdown"
+              style="position: absolute; top: calc(100% + 10px); right: 0; min-width: 300px; border-radius: 16px; z-index: 99999; overflow: hidden; transition: opacity 0.2s ease, transform 0.2s ease; transform-origin: top right;">
 
               <div
-                style="background: linear-gradient(135deg, #3273dc, #1e52a8); color: white; padding: 20px 15px 15px; text-align: center; position: relative;">
-                <div
-                  style="font-size: 40px; margin: 0 auto 10px; background: white; width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); border: 2px solid #00ffcc;">
-                  👨‍💼
-                </div>
+                style="padding: 15px; text-align: center; position: relative; background: rgba(255,255,255,0.95); border-radius: 12px; margin: 15px 15px 0; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);">
                 <div id="up_hoten"
-                  style="font-size: 18px; font-weight: 700; text-transform: capitalize; letter-spacing: 0.5px;">Đang
+                  style="font-size: 18px; font-weight: 700; text-transform: capitalize; letter-spacing: 0.5px; color: #333;">
+                  Đang
                   tải...</div>
                 <div id="up_role"
-                  style="font-size: 13px; color: #00ffcc; font-weight: 600; text-transform: uppercase; margin-top: 4px; letter-spacing: 0.5px;">
+                  style="font-size: 13px; color: #3273dc; font-weight: 600; text-transform: uppercase; margin-top: 4px; letter-spacing: 0.5px;">
                   -</div>
               </div>
 
-              <div id="userProfileContent" class="p-4" style="background: #fafafa;">
+              <div id="userProfileContent" class="p-4" style="background: transparent;">
                 <table class="table is-fullwidth align-middle"
                   style="font-size: 14px; margin-bottom: 0; background: transparent; border-collapse: separate; border-spacing: 0 8px;">
                   <tbody>
-                    <tr style="background: white; box-shadow: 0 2px 6px rgba(0,0,0,0.04); border-radius: 8px;">
+                    <tr class="animate-row glass-row" style="animation-delay: 0.1s;">
                       <td class="has-text-grey"
                         style="width: 45%; border: none; padding: 10px 12px; font-weight: 500; border-top-left-radius: 8px; border-bottom-left-radius: 8px;">
-                        👤 Tài khoản</td>
+                        Tài khoản</td>
                       <td id="up_user" class="has-text-weight-bold has-text-dark"
                         style="border: none; padding: 10px 12px; text-align: right; border-top-right-radius: 8px; border-bottom-right-radius: 8px;">
                         -
                       </td>
                     </tr>
-                    <tr style="background: white; box-shadow: 0 2px 6px rgba(0,0,0,0.04); border-radius: 8px;">
+                    <tr class="animate-row glass-row" style="animation-delay: 0.2s;">
                       <td class="has-text-grey"
                         style="border: none; padding: 10px 12px; font-weight: 500; border-top-left-radius: 8px; border-bottom-left-radius: 8px;">
-                        🆔 Mã NV</td>
+                        Mã NV</td>
                       <td id="up_mnv" class="has-text-weight-bold has-text-info"
                         style="border: none; padding: 10px 12px; text-align: right; border-top-right-radius: 8px; border-bottom-right-radius: 8px;">
                         -
                       </td>
                     </tr>
-                    <tr style="background: white; box-shadow: 0 2px 6px rgba(0,0,0,0.04); border-radius: 8px;">
+                    <tr class="animate-row glass-row" style="animation-delay: 0.3s;">
                       <td class="has-text-grey"
                         style="border: none; padding: 10px 12px; font-weight: 500; border-top-left-radius: 8px; border-bottom-left-radius: 8px;">
-                        📞 SĐT</td>
+                        SĐT</td>
                       <td id="up_sdt" class="has-text-weight-bold has-text-dark"
                         style="border: none; padding: 10px 12px; text-align: right; border-top-right-radius: 8px; border-bottom-right-radius: 8px;">
                         -
                       </td>
                     </tr>
-                    <tr style="background: white; box-shadow: 0 2px 6px rgba(0,0,0,0.04); border-radius: 8px;">
+                    <tr class="animate-row glass-row" style="animation-delay: 0.4s;">
                       <td class="has-text-grey"
                         style="border: none; padding: 10px 12px; font-weight: 500; border-top-left-radius: 8px; border-bottom-left-radius: 8px;">
-                        🎂 Ngày sinh</td>
+                        Ngày sinh</td>
                       <td id="up_ngaysinh" class="has-text-weight-bold has-text-dark"
                         style="border: none; padding: 10px 12px; text-align: right; border-top-right-radius: 8px; border-bottom-right-radius: 8px;">
                         -
                       </td>
                     </tr>
-                    <tr style="background: white; box-shadow: 0 2px 6px rgba(0,0,0,0.04); border-radius: 8px;">
+                    <tr class="animate-row glass-row" style="animation-delay: 0.5s;">
                       <td class="has-text-grey"
                         style="border: none; padding: 10px 12px; font-weight: 500; border-top-left-radius: 8px; border-bottom-left-radius: 8px;">
-                        🏢 Gia nhập</td>
+                        Gia nhập</td>
                       <td id="up_ngaygianhap" class="has-text-weight-bold has-text-dark"
                         style="border: none; padding: 10px 12px; text-align: right; border-top-right-radius: 8px; border-bottom-right-radius: 8px;">
                         -
@@ -1236,7 +1287,7 @@
 
           <div class="app-card" data-tag="kehoachbaoduong" onclick="openMaintenancePlan()">
             <div class="app-icon">📅</div>
-            <div class="app-name">Kế hoạch bảo dưỡng</div>
+            <div class="app-name">Kế hoạch</div>
           </div>
 
           <div class="app-card" data-tag="baocao" onclick="openReport()">
@@ -1446,10 +1497,10 @@
         <h2 class="title is-4">👨‍✈️ THÔNG TIN TÀI XẾ</h2>
         <!-- ===== TRA CỨU ===== -->
         <section class="box">
-          <h3 class="subtitle">🔍 Tra cứu MÃ NHÂN VIÊN</h3>
+          <h3 class="subtitle">🔍 Tra cứu MÃ NHÂN VIÊN / HỌ TÊN</h3>
           <div class="columns is-mobile">
             <div class="column is-8-mobile is-4-tablet">
-              <input class="input" id="search_mnv" placeholder="Nhập mã nhân viên">
+              <input class="input" id="search_mnv" placeholder="Nhập mã nhân viên hoặc họ tên">
             </div>
             <div class="column is-4-mobile is-2-tablet">
               <button type="button" class="button is-info is-fullwidth" onclick="searchTaiXe()">
@@ -2633,7 +2684,7 @@
       }, 4000);
     }
     /* ================= CONFIG ================= */
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJPiGV3gxtQfxTcn4RmH6OAGOHu5-x9YfXJKPX23LhPF9OM36grJXpUbhY3aAOVbKQ/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby4iMI2n8eB3kw-UjrAvmgapJ0bQ0PgmcRd1nOTHJTM4ZHaa2BknvPJLxtGHhhipn5Q/exec";
     const ACCOUNT_SS_ID = "1i0CFkUWJoY18C-DKIlavRpbsYYVIM4fpKtIYGkdPZ-A";
 
     let USER_ROLE = null; // manager | admin | taixe
@@ -4125,7 +4176,7 @@ Hết hạn: ${w.ngay_he} <br>
         });
     }
     const API_URL =
-      "https://script.google.com/macros/s/AKfycbwJPiGV3gxtQfxTcn4RmH6OAGOHu5-x9YfXJKPX23LhPF9OM36grJXpUbhY3aAOVbKQ/exec";
+      "https://script.google.com/macros/s/AKfycby4iMI2n8eB3kw-UjrAvmgapJ0bQ0PgmcRd1nOTHJTM4ZHaa2BknvPJLxtGHhhipn5Q/exec";
     function autoFillTaiXe(mnv, targetInput) {
       if (!mnv) {
         targetInput.value = "";
