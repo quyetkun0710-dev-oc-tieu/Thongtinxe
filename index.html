@@ -1176,6 +1176,40 @@
     </div>
   </div>
   <!-- ================= END LOGIN ================= -->
+
+  <!-- MODAL ĐỔI MẬT KHẨU -->
+  <div id="modalChangePassword" class="modal">
+    <div class="modal-background" onclick="closeChangePasswordModal()"></div>
+    <div class="modal-content" style="max-width: 400px; width: 90%;">
+      <div class="box" style="border-radius: 16px;">
+        <h3 class="title is-5 has-text-centered mb-4">🔑 Đổi mật khẩu</h3>
+        <div class="field">
+          <label class="label">Mật khẩu cũ</label>
+          <div class="control">
+            <input class="input" type="password" id="cp_old" placeholder="Nhập mật khẩu hiện tại">
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Mật khẩu mới</label>
+          <div class="control">
+            <input class="input" type="password" id="cp_new" placeholder="Nhập mật khẩu mới">
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Xác nhận mật khẩu</label>
+          <div class="control">
+            <input class="input" type="password" id="cp_confirm" placeholder="Nhập lại mật khẩu mới">
+          </div>
+        </div>
+        <button class="button is-primary is-fullwidth mt-5" id="btnChangePass" onclick="submitChangePassword()"
+          style="border-radius: 8px;">
+          Lưu mật khẩu
+        </button>
+      </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close" onclick="closeChangePasswordModal()"></button>
+  </div>
+
   <section class="section">
     <div class="container is-fluid">
       <!-- ================= HOME ================= -->
@@ -1268,6 +1302,22 @@
                         -
                       </td>
                     </tr>
+                    <tr class="animate-row glass-row" style="animation-delay: 0.6s;">
+                      <td
+                        style="border: none; padding: 10px 6px 10px 12px; text-align: center; border-radius: 8px 0 0 8px; width: 50%;">
+                        <button class="button is-small is-info is-light is-fullwidth"
+                          onclick="openChangePasswordModal()" style="border-radius: 8px; font-weight: 600;">
+                          Đổi mật khẩu
+                        </button>
+                      </td>
+                      <td
+                        style="border: none; padding: 10px 12px 10px 6px; text-align: center; border-radius: 0 8px 8px 0; width: 50%;">
+                        <button class="button is-small is-danger is-light is-fullwidth" onclick="doLogout()"
+                          style="border-radius: 8px; font-weight: 600;">
+                          Đăng xuất
+                        </button>
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -1320,12 +1370,6 @@
             <div class="app-name">Bảng kê</div>
           </div>
 
-          <!-- Logout Button as an App or separate? Let's make it distinct slightly but in grid -->
-          <div class="app-card" style="background: rgba(255, 77, 79, 0.2); border-color: rgba(255, 77, 79, 0.3);"
-            onclick="doLogout()">
-            <div class="app-icon">⎋</div>
-            <div class="app-name">Đăng xuất</div>
-          </div>
         </div>
       </div>
       <!-- ================= START TAG: THÔNG TIN XE ================= -->
@@ -2704,7 +2748,7 @@
       }, 4000);
     }
     /* ================= CONFIG ================= */
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxolwyNLPm9OVZYeYDO467d_2_JT069IaL5ufkB0Gltk0ayQ3DNRKP_-gr90cKU_ncQ/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw5kksz67jeNW73NWbN6XbiF2ukF5txtsTgh39TP0zyuBSkPXvxQCY7rxCcDB4LosE/exec";
     const ACCOUNT_SS_ID = "1i0CFkUWJoY18C-DKIlavRpbsYYVIM4fpKtIYGkdPZ-A";
 
     let USER_ROLE = null; // manager | admin | taixe
@@ -2794,6 +2838,60 @@ Hết hạn: ${w.ngay_he} <br>
     }
     function closeWarning() {
       document.getElementById("warningModal").classList.remove("is-active");
+    }
+
+    /* ĐỔI MẬT KHẨU LOGIC */
+    function openChangePasswordModal() {
+      document.getElementById("userProfileDropdown").classList.add("hidden");
+      document.getElementById("cp_old").value = "";
+      document.getElementById("cp_new").value = "";
+      document.getElementById("cp_confirm").value = "";
+      document.getElementById("modalChangePassword").classList.add("is-active");
+    }
+
+    function closeChangePasswordModal() {
+      document.getElementById("modalChangePassword").classList.remove("is-active");
+    }
+
+    async function submitChangePassword() {
+      const oldP = document.getElementById("cp_old").value.trim();
+      const newP = document.getElementById("cp_new").value.trim();
+      const confP = document.getElementById("cp_confirm").value.trim();
+
+      if (!oldP || !newP || !confP) {
+        showAlert("Vui lòng nhập đầy đủ thông tin", "is-danger");
+        return;
+      }
+      if (newP !== confP) {
+        showAlert("Mật khẩu mới không trùng khớp", "is-danger");
+        return;
+      }
+
+      const fd = new FormData();
+      fd.append("action", "change_password");
+      fd.append("user", USER_MNV);
+      fd.append("old_pass", oldP);
+      fd.append("new_pass", newP);
+
+      try {
+        const btn = document.getElementById("btnChangePass");
+        btn.classList.add("is-loading");
+
+        const res = await fetch(SCRIPT_URL, { method: "POST", body: fd });
+        const data = await res.json();
+
+        btn.classList.remove("is-loading");
+
+        if (data.status === "success") {
+          showAlert("Đổi mật khẩu thành công!", "is-success");
+          closeChangePasswordModal();
+        } else {
+          showAlert(data.message || "Đã xảy ra lỗi khi đổi mật khẩu", "is-danger");
+        }
+      } catch (err) {
+        document.getElementById("btnChangePass").classList.remove("is-loading");
+        showAlert("Lỗi kết nối máy chủ", "is-danger");
+      }
     }
 
     function preloadUserProfile() {
@@ -4196,7 +4294,7 @@ Hết hạn: ${w.ngay_he} <br>
         });
     }
     const API_URL =
-      "https://script.google.com/macros/s/AKfycbxolwyNLPm9OVZYeYDO467d_2_JT069IaL5ufkB0Gltk0ayQ3DNRKP_-gr90cKU_ncQ/exec";
+      "https://script.google.com/macros/s/AKfycbw5kksz67jeNW73NWbN6XbiF2ukF5txtsTgh39TP0zyuBSkPXvxQCY7rxCcDB4LosE/exec";
     function autoFillTaiXe(mnv, targetInput) {
       if (!mnv) {
         targetInput.value = "";
