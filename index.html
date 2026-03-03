@@ -371,11 +371,40 @@
       transform: translateY(0) rotateX(0);
     }
 
+    .home-logo {
+      width: 160px;
+      height: auto;
+      transition: all 0.3s ease;
+    }
+
     /* mobile */
     @media (max-width: 768px) {
       .home-header {
         flex-direction: column;
         text-align: center;
+        padding: 20px 15px;
+      }
+
+      .home-header .title-box h1 {
+        font-size: 22px !important;
+      }
+
+      .home-logo {
+        max-width: 120px;
+      }
+
+      .user-widget-container {
+        top: 15px !important;
+        right: 15px !important;
+      }
+
+      .user-profile-widget {
+        width: 40px !important;
+        height: 40px !important;
+      }
+
+      .avatar {
+        font-size: 18px !important;
       }
     }
 
@@ -1077,22 +1106,20 @@
     <div class="container is-fluid">
       <!-- ================= HOME ================= -->
       <div id="home" class="hidden">
-        <div class="home-header" style="justify-content: center; position: relative; z-index: 9999; padding-top: 5px;">
-          <div style="display: flex; align-items: center;">
-            <div class="header-inner header-center" style="margin-right: 15px;">
-              <!-- BẠN CÓ THỂ ĐỔI SỐ 100px DƯỚI ĐÂY ĐỂ PHÓNG TO / THU NHỎ LOGO -->
-              <img src="https://drive.google.com/thumbnail?id=1bCo718U6WuH5apKx2mHjqR6PtlbYdA_f&sz=w800"
-                style="width: 600px; height: auto;">
-            </div>
-            <div class="title-box">
-              <h1>FLEET MANAGEMENT</h1> <br>
-              <h1 class="animated-title" id="headerTitle">SYSTEM</h1>
-              <p></p>
-            </div>
+        <div class="home-header"
+          style="justify-content: center; position: relative; z-index: 9999; padding-top: 15px; padding-bottom: 15px;">
+          <div class="header-inner header-center">
+            <img src="https://drive.google.com/thumbnail?id=1bCo718U6WuH5apKx2mHjqR6PtlbYdA_f&sz=w800"
+              class="home-logo">
+          </div>
+          <div class="title-box">
+            <h1 style="margin-bottom: 5px;">FLEET MANAGEMENT</h1>
+            <h1 class="animated-title" id="headerTitle" style="margin-top: 5px;">SYSTEM</h1>
+            <p></p>
           </div>
 
-          <!-- THÔNG TIN TÀI KHOẢN (NỔI GÓC DƯỚI PHẢI) -->
-          <div style="position: fixed; bottom: 15px; right: 15px; z-index: 99999;">
+          <!-- THÔNG TIN TÀI KHOẢN (NỔI GÓC TRÊN PHẢI HEADER) -->
+          <div class="user-widget-container" style="position: absolute; top: 25px; right: 30px; z-index: 99999;">
             <div class="user-profile-widget" onclick="toggleUserProfileDropdown()"
               style="cursor: pointer; display: flex; align-items: center; justify-content: center; background: rgba(40,40,40,0.85); width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(8px); transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.3);"
               onmouseover="this.style.background='rgba(0,0,0,0.95)'; this.style.transform='scale(1.1)';"
@@ -1103,9 +1130,9 @@
               </div>
             </div>
 
-            <!-- POPUP MENU (MỞ HẤT LÊN TRÊN) -->
+            <!-- POPUP MENU (MỞ HẤT XUỐNG DƯỚI) -->
             <div id="userProfileDropdown" class="hidden"
-              style="position: absolute; bottom: calc(100% + 15px); right: 0; min-width: 300px; width: max-content; background: #ffffff; border-radius: 16px; box-shadow: 0 -8px 30px rgba(0,0,0,0.25); z-index: 99999; overflow: hidden; border: 1px solid rgba(0,0,0,0.1); transition: opacity 0.2s ease, transform 0.2s ease; transform-origin: bottom right;">
+              style="position: absolute; top: calc(100% + 15px); right: 0; min-width: 300px; width: max-content; background: #ffffff; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.25); z-index: 99999; overflow: hidden; border: 1px solid rgba(0,0,0,0.1); transition: opacity 0.2s ease, transform 0.2s ease; transform-origin: top right;">
 
               <div
                 style="background: linear-gradient(135deg, #3273dc, #1e52a8); color: white; padding: 20px 15px 15px; text-align: center; position: relative;">
