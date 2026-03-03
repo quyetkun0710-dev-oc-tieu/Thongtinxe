@@ -430,13 +430,14 @@
       }
 
       .user-widget-container {
-        top: 15px !important;
+        bottom: 15px !important;
+        top: auto !important;
         right: 15px !important;
       }
 
       .user-profile-widget {
-        width: 40px !important;
-        height: 40px !important;
+        width: 32px !important;
+        height: 32px !important;
       }
 
       .avatar {
@@ -1143,6 +1144,103 @@
       opacity: 0;
       animation: slideInRow 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
+
+    /* ================= LỊCH LÀM VIỆC ================= */
+    #lichlamviec_table {
+      background: #fff;
+      border-collapse: collapse;
+      white-space: nowrap;
+    }
+
+    #lichlamviec_table th,
+    #lichlamviec_table td {
+      border: 1px solid #777 !important;
+      text-align: center;
+      vertical-align: middle;
+      padding: 4px 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #000 !important;
+    }
+
+    .llv-sticky-col-1 {
+      position: sticky;
+      left: 0;
+      z-index: 5;
+      background: #e2efda;
+    }
+
+    .llv-sticky-col-2 {
+      position: sticky;
+      left: 40px;
+      z-index: 5;
+      background: #fff;
+    }
+
+    .llv-sticky-col-3 {
+      position: sticky;
+      left: 160px;
+      z-index: 5;
+      background: #fff;
+    }
+
+    .llv-sticky-col-4 {
+      position: sticky;
+      left: 240px;
+      z-index: 5;
+      background: #fff;
+    }
+
+    .llv-sticky-col-5 {
+      position: sticky;
+      left: 340px;
+      z-index: 5;
+      background: #fff;
+    }
+
+    /* Custom Color Map */
+    .llv-bg-yellow {
+      background-color: #ffff00 !important;
+    }
+
+    /* Không Lương, HC */
+    .llv-bg-green {
+      background-color: #92d050 !important;
+    }
+
+    /* CN */
+    .llv-bg-red {
+      background-color: #ff0000 !important;
+      color: white !important;
+    }
+
+    /* 0 đỏ */
+    .llv-bg-blue {
+      background-color: #0070c0 !important;
+      color: white !important;
+    }
+
+    /* 1 xanh biển */
+    .llv-bg-cyan {
+      background-color: #00b0f0 !important;
+    }
+
+    /* P phép */
+    .llv-bg-orange {
+      background-color: #ffc000 !important;
+    }
+
+    /* HC */
+    .llv-bg-purple {
+      background-color: #cc99ff !important;
+    }
+
+    /* 0 tím */
+    .llv-bg-white {
+      background-color: #ffffff !important;
+    }
+
+    /* Trắng */
   </style>
 </head>
 
@@ -1226,16 +1324,13 @@
             <p></p>
           </div>
 
-          <!-- THÔNG TIN TÀI KHOẢN (NỔI GÓC TRÊN PHẢI HEADER) -->
-          <div class="user-widget-container" style="position: absolute; top: 15px; right: 15px; z-index: 99999;">
+          <!-- THÔNG TIN TÀI KHOẢN (NỔI GÓC DƯỚI PHẢI HEADER) -->
+          <div class="user-widget-container" style="position: absolute; bottom: 15px; right: 15px; z-index: 99999;">
             <div class="user-profile-widget" onclick="toggleUserProfileDropdown()"
-              style="cursor: pointer; display: flex; align-items: center; justify-content: center; background: rgba(40,40,40,0.85); width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(8px); transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.3);"
+              style="cursor: pointer; display: flex; align-items: center; justify-content: center; background: rgba(40,40,40,0.85); width: 34px; height: 34px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(8px); transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.3);"
               onmouseover="this.style.background='rgba(0,0,0,0.95)'; this.style.transform='scale(1.1)';"
               onmouseout="this.style.background='rgba(40,40,40,0.85)'; this.style.transform='scale(1)';">
-              <div class="avatar"
-                style="font-size: 16px; background: linear-gradient(135deg, #00ffcc, #3273dc); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; border-radius: 50%; box-shadow: inset 0 2px 5px rgba(0,0,0,0.4);">
-
-              </div>
+              <span style="font-size: 24px; font-weight: bold; color: #fff; line-height: 1; margin-top: -2px;">-</span>
             </div>
 
             <!-- POPUP MENU (MỞ HẤT XUỐNG DƯỚI) -->
@@ -1370,6 +1465,88 @@
             <div class="app-name">Bảng kê</div>
           </div>
 
+          <div class="app-card" data-tag="lichlamviec" onclick="openLichLamViec()">
+            <div class="app-icon">🗓️</div>
+            <div class="app-name">Lịch làm việc</div>
+          </div>
+
+        </div>
+      </div>
+      <!-- ================= START TAG: LỊCH LÀM VIỆC ================= -->
+      <div id="lichlamviec" class="hidden form-box">
+        <button class="floating-back-btn" type="button" onclick="backHome()">⬅ Quay lại</button>
+        <h2 class="title is-4 has-text-weight-bold">🗓️ LỊCH LÀM VIỆC</h2>
+
+        <div class="box p-0" style="overflow: hidden;">
+          <div class="table-container"
+            style="background: transparent; padding: 0 !important; margin: 0 !important; border-radius: 8px;">
+            <table class="table is-bordered" id="lichlamviec_table" style="margin-bottom: 0;">
+              <thead>
+                <!-- Row 1: Headers -->
+                <tr class="has-background-grey-lighter">
+                  <th rowspan="3" class="llv-sticky-col-1" style="min-width: 40px;">STT</th>
+                  <th rowspan="3" class="llv-sticky-col-2" style="min-width: 120px; background: #ddebf7;">HỌ TÊN</th>
+                  <th rowspan="3" class="llv-sticky-col-3" style="min-width: 80px;">Mã<br>NV</th>
+                  <th rowspan="3" class="llv-sticky-col-4" style="min-width: 100px;">SĐT<br>LIÊN HỆ</th>
+                  <th rowspan="3" class="llv-sticky-col-5" style="min-width: 150px; background: #fff2cc;">TUYẾN</th>
+                  <th colspan="31" class="has-text-centered" style="background: #ffe699;" id="llv_month_year">THÁNG 3
+                    NĂM 2026</th>
+                </tr>
+                <!-- Row 2: Days (1-31) -->
+                <tr id="llv_days_row" style="background: #fff2cc;">
+                  <!-- JS đổ ngày -->
+                </tr>
+                <!-- Row 3: Day of week -->
+                <tr id="llv_dow_row" style="background: #ffc000;">
+                  <!-- JS đổ t2, t3 -->
+                </tr>
+              </thead>
+              <tbody id="llv_body">
+                <!-- JS Render Mock -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="box mt-4">
+          <h3 class="subtitle is-6 mb-2">📌 Ký hiệu Ca làm việc</h3>
+          <div class="content is-small"
+            style="background: #fff; padding: 10px; border-radius: 8px; color: #000; border: 1px solid #777;">
+            <table class="table is-bordered" style="width: auto; margin:0; background: transparent;">
+              <tr>
+                <td class="has-text-centered has-text-weight-bold">1</td>
+                <td>CA 1: TỪ 4H30 ĐẾN 20H00 LÀM ...</td>
+              </tr>
+              <tr>
+                <td class="has-text-centered has-text-weight-bold">2</td>
+                <td>CA 2: TỪ 08H ĐẾN 16H</td>
+              </tr>
+              <tr>
+                <td class="has-text-centered has-text-weight-bold">3</td>
+                <td>CA 3: TỪ 20H00 ĐẾN 4H00 ...</td>
+              </tr>
+              <tr>
+                <td class="has-text-centered has-text-weight-bold">4</td>
+                <td>CA 4: TỪ 20H00 ĐẾN 06H00 ...</td>
+              </tr>
+              <tr>
+                <td class="has-text-centered has-text-weight-bold llv-bg-green" style="color:#000;">CN</td>
+                <td>CHỦ NHẬT: TỪ 8H ĐẾN 17H30</td>
+              </tr>
+              <tr>
+                <td class="has-text-centered has-text-weight-bold">HC</td>
+                <td>HÀNH CHÍNH</td>
+              </tr>
+              <tr>
+                <td class="has-text-centered has-text-weight-bold llv-bg-cyan">P</td>
+                <td>PHÉP NĂM</td>
+              </tr>
+              <tr>
+                <td class="has-text-centered has-text-weight-bold llv-bg-yellow">KL</td>
+                <td>KHÔNG LƯƠNG</td>
+              </tr>
+            </table>
+          </div>
         </div>
       </div>
       <!-- ================= START TAG: THÔNG TIN XE ================= -->
@@ -2754,9 +2931,9 @@
     let USER_ROLE = null; // manager | admin | taixe
     let USER_MNV = null;
     const ROLE_PERMISSION = {
-      manager: ["xe", "taixe", "nhatky", "baoduong", "fuel", "danhgia", "baocao", "kehoachbaoduong", "fuelgrid"],
-      admin: ["nhatky", "baoduong", "fuel", "danhgia", "kehoachbaoduong", "baocao", "fuelgrid"],
-      taixe: ["nhatky", "baoduong", "fuel", "kehoachbaoduong", "baocao", "fuelgrid"]
+      manager: ["xe", "taixe", "nhatky", "baoduong", "fuel", "danhgia", "baocao", "kehoachbaoduong", "fuelgrid", "lichlamviec"],
+      admin: ["nhatky", "baoduong", "fuel", "danhgia", "kehoachbaoduong", "baocao", "fuelgrid", "lichlamviec"],
+      taixe: ["nhatky", "baoduong", "fuel", "kehoachbaoduong", "baocao", "fuelgrid", "lichlamviec"]
     };
 
     const ALL_TAGS = [
@@ -2773,7 +2950,8 @@
       "danhgia_table",
       "baocao",
       "kehoachbaoduong",
-      "fuelgrid"
+      "fuelgrid",
+      "lichlamviec"
     ];
     /* ================= LOGIN ================= */
     const LOGIN_API = "https://script.google.com/macros/s/AKfycbw3MTRDfoEpxL8JJQxgmYYO6YKRIUZLnuHzt5ff5lCWQYhHwRYTAvlcRndXBU5ydgj1Zg/exec";
@@ -4639,6 +4817,91 @@ Hết hạn: ${w.ngay_he} <br>
       cells.forEach(cell => {
         cell.style.left = '0px';
       });
+    }
+
+    /* ================= LỊCH LÀM VIỆC LOGIC ================= */
+    function openLichLamViec() {
+      // Dấu các view khác
+      ALL_TAGS.forEach(t => { const el = document.getElementById(t); if (el) el.classList.add("hidden"); });
+      document.getElementById("home").classList.add("hidden");
+      document.getElementById('lichlamviec').classList.remove('hidden');
+
+      // Render layout mock
+      renderMockLichLamViec();
+
+      showToggleBtn(false); // Ẩn nút gập bảng
+    }
+
+    function renderMockLichLamViec() {
+      // Tháng 3/2026 có 31 ngày. Mùng 1 là Chủ Nhật (CN)
+      const days = 31;
+      const dowMap = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
+
+      let dayHtml = "";
+      let dowHtml = "";
+
+      for (let i = 1; i <= days; i++) {
+        // Tạm tính DOW cho t3/2026 (1/3/2026 là Chủ nhật -> index 0)
+        const dowIndex = (i - 1) % 7;
+        const dowText = dowMap[dowIndex];
+
+        // Tô màu đỏ cho cột Chủ Nhật ở Header
+        const isSun = dowText === "CN";
+        const thClass = isSun ? "has-background-danger has-text-white" : "";
+
+        dayHtml += `<th class="${thClass}" style="min-width: 30px; text-align: center;">${i.toString().padStart(2, '0')}</th>`;
+        dowHtml += `<th class="${thClass}" style="min-width: 30px; text-align: center;">${dowText}</th>`;
+      }
+
+      document.getElementById("llv_days_row").innerHTML = dayHtml;
+      document.getElementById("llv_dow_row").innerHTML = dowHtml;
+
+      // Mock Data
+      const mockData = [
+        {
+          stt: 1, name: "Nguyễn Xuân Thọ", mnv: "036717", phone: "0979117569", tuyen: "SỢ CUA",
+          shifts: ["1", "1", "1", "CN", "0.5", "1", "1", "1", "1", "CN", "1", "1", "1", "1", "1", "1", "CN", "1", "1", "1", "1", "1", "CN", "1", "1", "1", "1", "1", "P", "1", "1"]
+        },
+        {
+          stt: 2, name: "Cao Văn Danh", mnv: "050949", phone: "0984955616", tuyen: "SỢ CUA",
+          shifts: ["0", "1", "1", "1", "CN", "0.5", "1", "1", "1", "1", "CN", "1", "1", "1", "1", "1", "1", "CN", "1", "1", "1", "1", "1", "CN", "1", "1", "1", "1", "1", "P", "1"]
+        },
+        {
+          stt: 3, name: "Lê Văn Thi", mnv: "064368", phone: "0869658622", tuyen: "51D40641 Hà Nam",
+          shifts: ["0", "0", "0", "0", "0", "0", "0", "P", "1", "1", "1", "1", "1", "CN", "1", "1", "1", "1", "1", "0", "CN", "0", "0", "0", "0", "0", "CN", "1", "1", "1", "1"]
+        },
+        {
+          stt: 4, name: "Đỗ Văn Quyết", mnv: "038554", phone: "0964610223", tuyen: "QLĐX",
+          shifts: ["4", "4", "4", "4", "CN", "HC", "HC", "HC", "HC", "HC", "HC", "CN", "4", "4", "4", "4", "4", "4", "CN", "HC", "HC", "HC", "HC", "HC", "HC", "CN", "4", "4", "4", "4", "4"]
+        }
+      ];
+
+      let bodyHtml = "";
+      mockData.forEach(r => {
+        bodyHtml += `<tr>`;
+        bodyHtml += `<td class="llv-sticky-col-1 has-background-grey-lighter">${r.stt}</td>`;
+        bodyHtml += `<td class="llv-sticky-col-2 has-text-left" style="background:#fff;"><strong>${r.name}</strong></td>`;
+        bodyHtml += `<td class="llv-sticky-col-3 has-text-weight-bold" style="background:#fff;">${r.mnv}</td>`;
+        bodyHtml += `<td class="llv-sticky-col-4 has-text-weight-bold" style="background:#fff;">${r.phone}</td>`;
+        bodyHtml += `<td class="llv-sticky-col-5 has-text-weight-bold" style="background:#fff2cc;">${r.tuyen}</td>`;
+
+        r.shifts.forEach(s => {
+          let sClass = "llv-bg-white"; // default
+          if (s === "CN") sClass = "llv-bg-green";
+          if (s === "0") sClass = "llv-bg-purple"; // Theo ảnh dòng 3, T7 là 0 tím nhạt nhưng có dòng Danh là 0 đỏ. Tùy biến sau
+          if (r.stt === 2 && s === "0") sClass = "llv-bg-red"; // Trick mock
+          if (r.stt === 2 && s === "1" && r.shifts.indexOf(s) === 3) sClass = "llv-bg-blue"; // Trick mock
+          if (s === "P") sClass = "llv-bg-cyan";
+          if (s === "HC" || s === "4") sClass = "llv-bg-orange";
+          if (s === "KL") sClass = "llv-bg-yellow";
+
+          bodyHtml += `<td class="${sClass}">${s}</td>`;
+        });
+
+        bodyHtml += `</tr>`;
+      });
+
+      document.getElementById("llv_body").innerHTML = bodyHtml;
     }
   </script>
   <!-- Nút ẩn hiện bảng -->
