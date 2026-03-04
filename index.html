@@ -5235,26 +5235,37 @@ Hết hạn: ${w.ngay_he} <br>
             const dkRes = await fetch(`${SCRIPT_URL}?tag=dangkylich`);
             let dkData = await dkRes.json();
             if (Array.isArray(dkData)) {
-              const targetThangNam = `${m}/${y}`;
-              const approvedRequests = dkData.filter(d =>
-                (String(d.trang_thai).toLowerCase() === "đã duyệt") &&
-                (String(d.thang_nam) === targetThangNam)
-              );
+              const approvedRequests = dkData.filter(d => {
+                const trangThai = String(d.trang_thai || "").trim().toLowerCase();
+                if (trangThai !== "đã duyệt") return false;
+                // So sánh tháng/năm bằng số nguyên (tránh lỗi format/khoảng trắng)
+                const parts = String(d.thang_nam || "").trim().split("/");
+                if (parts.length < 2) return false;
+                return parseInt(parts[0]) === m && parseInt(parts[1]) === y;
+              });
+
+              console.log(`[DangKyLich] Tháng ${m}/${y}: tổng ${dkData.length} đơn, đã duyệt: ${approvedRequests.length}`);
 
               approvedRequests.forEach(req => {
-                const reqMnv = String(req.ma_nv).trim();
-                const reqLoai = req.loai_nghi || "P";
+                const reqMnv = String(req.ma_nv || "").trim().toUpperCase();
+                const reqLoai = String(req.loai_nghi || "P").trim();
                 const reqNgayStr = String(req.cac_ngay || "");
 
-                const txIndex = activeDrivers.findIndex(d => String(d.ma_nv).trim() === reqMnv);
+                const txIndex = activeDrivers.findIndex(d =>
+                  String(d.ma_nv || "").trim().toUpperCase() === reqMnv
+                );
+
                 if (txIndex > -1) {
-                  const reqNgays = reqNgayStr.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+                  const reqNgays = reqNgayStr.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n) && n >= 1 && n <= daysInMonth);
                   reqNgays.forEach(day => {
                     const realDayIndex = day - 1;
                     if (realDayIndex >= 0 && realDayIndex < daysInMonth && schedule[txIndex][realDayIndex] !== "") {
                       schedule[txIndex][realDayIndex] = reqLoai;
+                      console.log(`[DangKyLich] Áp dụng: ${reqMnv} ngày ${day} → ${reqLoai}`);
                     }
                   });
+                } else {
+                  console.warn(`[DangKyLich] Không tìm thấy tài xế: ${reqMnv}`);
                 }
               });
             }
@@ -5457,8 +5468,16 @@ Hết hạn: ${w.ngay_he} <br>
 
         const thang = document.getElementById("dkl_thang").value;
         const nam = document.getElementById("dkl_nam").value;
-        const myMnv = (sessionStorage.getItem("mnv") || "").toUpperCase();
-        const myHoTen = document.getElementById("up_hoten")?.innerText || myMnv;
+
+        // Lấy mã NV thực tế từ profile (up_mnv), KHÔNG phải username đăng nhập
+        const myMnv = (document.getElementById("up_mnv")?.innerText || "").trim();
+        const myHoTen = (document.getElementById("up_hoten")?.innerText || "").trim();
+
+        if (!myMnv || myMnv === "-") {
+          btn.classList.remove("is-loading");
+          showAlert("Không xác định được Mã NV. Vui lòng kiểm tra lại hồ sơ.", "is-danger");
+          return;
+        }
 
         const fd = new FormData();
         fd.append("tag", "dangkylich");
@@ -5486,8 +5505,8 @@ Hết hạn: ${w.ngay_he} <br>
       }
 
       async function approveDangKyLich(id) {
-        if (!confirm("Duyệt đơn này?")) return;
-        const myHoTen = document.getElementById("up_hoten")?.innerText || "Quản lý";
+        if (!confirm("Duyệt đơn này? Lịch làm việc sẽ tự động cập nhật!")) return;
+        const myHoTen = (document.getElementById("up_hoten")?.innerText || "Quản lý").trim();
         const fd = new FormData();
         fd.append("tag", "dangkylich"); fd.append("id", id);
         fd.append("trang_thai", "Đã duyệt"); fd.append("nguoi_duyet", myHoTen);
@@ -5495,9 +5514,10 @@ Hết hạn: ${w.ngay_he} <br>
           const res = await fetch(SCRIPT_URL, { method: "POST", body: fd });
           const result = await res.json();
           if (result.status === "success") {
-            showAlert("Đã duyệt! Lịch sẽ được cập nhật.", "is-success");
+            showAlert("Đã duyệt thành công! Đang cập nhật lịch...", "is-success");
             loadDangKyLich();
-            generateAutoLichLamViec();
+            // Tải lại lịch — LUÔN render lại để áp dụng đơn đã duyệt
+            await generateAutoLichLamViec();
           } else { showAlert("Lỗi: " + (result.message || ""), "is-danger"); }
         } catch (err) { showAlert("Lỗi kết nối", "is-danger"); }
       }
