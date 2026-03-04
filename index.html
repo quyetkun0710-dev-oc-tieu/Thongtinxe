@@ -1177,25 +1177,23 @@
       background: #fff;
     }
 
-    .llv-sticky-col-3 {
+    #lichlamviec_table thead {
       position: sticky;
-      left: 160px;
-      z-index: 5;
-      background: #fff;
+      top: 0;
+      z-index: 10;
     }
 
-    .llv-sticky-col-4 {
+    #lichlamviec_table thead th {
       position: sticky;
-      left: 240px;
-      z-index: 5;
-      background: #fff;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 1px 0 #777;
+      /* tạo viền chìm giả khi cuộn */
     }
 
-    .llv-sticky-col-5 {
-      position: sticky;
-      left: 340px;
-      z-index: 5;
-      background: #fff;
+    #lichlamviec_table thead .llv-sticky-col-1,
+    #lichlamviec_table thead .llv-sticky-col-2 {
+      z-index: 20;
     }
 
     /* Custom Color Map */
@@ -1522,23 +1520,23 @@
               </div>
             </div>
           </div>
-          <p class="help is-info has-text-black">*Lịch sẽ tự động lấy danh sách tài xế Đang làm việc, tính số Chủ Nhật
-            trong tháng, và luân phiên xếp ngày nghỉ.</p>
         </div>
 
         <div class="box p-0" style="overflow: hidden;">
           <div class="table-container"
-            style="background: transparent; padding: 0 !important; margin: 0 !important; border-radius: 8px;">
-            <table class="table is-bordered" id="lichlamviec_table" style="margin-bottom: 0;">
+            style="background: transparent; padding: 0 !important; margin: 0 !important; border-radius: 8px; max-height: 70vh; overflow: auto;">
+            <table class="table is-bordered is-fullwidth" id="lichlamviec_table" style="margin-bottom: 0;">
               <thead>
                 <!-- Row 1: Headers -->
                 <tr class="has-background-grey-lighter">
-                  <th rowspan="3" class="llv-sticky-col-1" style="min-width: 40px;">STT</th>
-                  <th rowspan="3" class="llv-sticky-col-2" style="min-width: 120px; background: #ddebf7;">HỌ TÊN</th>
-                  <th rowspan="3" class="llv-sticky-col-3" style="min-width: 80px;">Mã<br>NV</th>
-                  <th rowspan="3" class="llv-sticky-col-4" style="min-width: 100px;">SĐT<br>LIÊN HỆ</th>
-                  <th rowspan="3" class="llv-sticky-col-5" style="min-width: 150px; background: #fff2cc;">TUYẾN</th>
-                  <th colspan="31" class="has-text-centered" style="background: #ffe699;" id="llv_month_year">THÁNG 3
+                  <th rowspan="3" class="llv-sticky-col-1" style="min-width: 40px; top:0;">STT</th>
+                  <th rowspan="3" class="llv-sticky-col-2" style="min-width: 120px; background: #ddebf7; top:0;">HỌ TÊN
+                  </th>
+                  <th rowspan="3" class="" style="min-width: 80px; top:0; background: #fff;">Mã<br>NV</th>
+                  <th rowspan="3" class="" style="min-width: 100px; top:0; background: #fff;">SĐT<br>LIÊN HỆ</th>
+                  <th rowspan="3" class="" style="min-width: 150px; background: #fff2cc; top:0;">TUYẾN</th>
+                  <th colspan="31" class="has-text-centered" style="background: #ffe699; top:0;" id="llv_month_year">
+                    THÁNG 3
                     NĂM 2026</th>
                 </tr>
                 <!-- Row 2: Days (1-31) -->
@@ -3585,9 +3583,14 @@ Hết hạn: ${w.ngay_he} <br>
       if (document.getElementById("km_month")) document.getElementById("km_month").value = m;
       if (document.getElementById("km_year")) document.getElementById("km_year").value = y;
 
+      // Set default cho Lịch Làm Việc
+      if (document.getElementById("llv_select_month")) document.getElementById("llv_select_month").value = m;
+      if (document.getElementById("llv_select_year")) document.getElementById("llv_select_year").value = y;
+
       // Kích hoạt tải ngầm song song
       loadReport(true);
       loadQuotaData();
+      generateAutoLichLamViec(true); // Tải ngầm lịch làm việc không bật alert
 
       // Tải ngầm Kế hoạch bảo dưỡng
       const tbodyMaintenance = document.querySelector("#maintenancePlanTable tbody");
@@ -4914,15 +4917,10 @@ Hết hạn: ${w.ngay_he} <br>
       document.getElementById("home").classList.add("hidden");
       document.getElementById('lichlamviec').classList.remove('hidden');
 
-      // Setup giao diện ban đầu
-      const now = new Date();
-      if (document.getElementById("llv_select_month")) document.getElementById("llv_select_month").value = now.getMonth() + 1;
-      if (document.getElementById("llv_select_year")) document.getElementById("llv_select_year").value = now.getFullYear();
-
       showToggleBtn(false); // Ẩn nút gập bảng
     }
 
-    async function generateAutoLichLamViec() {
+    async function generateAutoLichLamViec(isPreload = false) {
       const monthSelect = document.getElementById("llv_select_month");
       const yearSelect = document.getElementById("llv_select_year");
 
@@ -4964,7 +4962,7 @@ Hết hạn: ${w.ngay_he} <br>
         });
 
         if (activeDrivers.length === 0) {
-          alert("Không có tài xế nào đang làm việc trong danh sách!");
+          if (!isPreload) alert("Không có tài xế nào đang làm việc trong danh sách!");
           if (tbody) tbody.innerHTML = "";
           return;
         }
@@ -4986,8 +4984,8 @@ Hết hạn: ${w.ngay_he} <br>
           const isSun = dowText === "CN";
           const thClass = isSun ? "has-background-danger has-text-white" : "";
 
-          dayHtml += `<th class="${thClass}" style="min-width: 30px; text-align: center;">${i.toString().padStart(2, '0')}</th>`;
-          dowHtml += `<th class="${thClass}" style="min-width: 30px; text-align: center;">${dowText}</th>`;
+          dayHtml += `<th class="${thClass}" style="min-width: 30px; text-align: center; top: 38px; position: sticky; border-bottom: 1px solid #777;">${i.toString().padStart(2, '0')}</th>`;
+          dowHtml += `<th class="${thClass}" style="min-width: 30px; text-align: center; top: 76px; position: sticky;">${dowText}</th>`;
         }
 
         document.getElementById("llv_days_row").innerHTML = dayHtml;
@@ -5018,7 +5016,7 @@ Hết hạn: ${w.ngay_he} <br>
           // Luôn tạo lịch làm việc trước khi kết thúc tháng 3 ngày
           const daysInCurrentMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
           if (targetMonth > currentMonth && now.getDate() > daysInCurrentMonth - 3) {
-            alert(`[LƯU Ý] Bạn đang tạo lịch quá trễ!\nTheo quy định, lịch làm việc tháng mới phải được lập trước ngày ${daysInCurrentMonth - 3 + 1} của tháng trước đó.`);
+            if (!isPreload) alert(`[LƯU Ý] Bạn đang tạo lịch quá trễ!\nTheo quy định, lịch làm việc tháng mới phải được lập trước ngày ${daysInCurrentMonth - 3 + 1} của tháng trước đó.`);
           }
 
           // Fetch Cars (chỉ chạy tải khi tính toán mới)
@@ -5126,9 +5124,9 @@ Hết hạn: ${w.ngay_he} <br>
           bodyHtml += `<tr>`;
           bodyHtml += `<td class="llv-sticky-col-1 has-background-grey-lighter">${idx + 1}</td>`;
           bodyHtml += `<td class="llv-sticky-col-2 has-text-left" style="background:#fff;"><strong>${r.ho_ten || ""}</strong></td>`;
-          bodyHtml += `<td class="llv-sticky-col-3 has-text-weight-bold" style="background:#fff;">${r.ma_nv || ""}</td>`;
-          bodyHtml += `<td class="llv-sticky-col-4 has-text-weight-bold" style="background:#fff;">${r.sdt || ""}</td>`;
-          bodyHtml += `<td class="llv-sticky-col-5 has-text-weight-bold" style="background:#fff2cc; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width: 150px;">${r.tuyen_phu_trach || ""}</td>`;
+          bodyHtml += `<td class="has-text-weight-bold" style="background:#fff;">${r.ma_nv || ""}</td>`;
+          bodyHtml += `<td class="has-text-weight-bold" style="background:#fff;">${r.sdt || ""}</td>`;
+          bodyHtml += `<td class="has-text-weight-bold" style="background:#fff2cc; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width: 150px;">${r.tuyen_phu_trach || ""}</td>`;
 
           const localSchedule = schedule[txIdx] || new Array(daysInMonth).fill("1");
           for (let day = 0; day < daysInMonth; day++) {
@@ -5149,18 +5147,34 @@ Hết hạn: ${w.ngay_he} <br>
 
         if (tbody) {
           tbody.innerHTML = bodyHtml;
+
+          // TÍNH TOÁN LẠI CHÍNH XÁC QUÂN SỐ TỪ DỮ LIỆU RENDER THỰC TẾ
+          let realDriversWorkingDay = new Array(daysInMonth).fill(0);
+          let txIndex = 0;
+          activeDrivers.forEach((r) => {
+            const localSchedule = schedule[txIndex] || new Array(daysInMonth).fill("1");
+            for (let day = 0; day < daysInMonth; day++) {
+              const s = localSchedule[day];
+              // Loại bỏ các trường hợp lịch không tính là đang làm việc
+              if (s !== "CN" && s !== "" && s !== "0" && s !== "P" && s !== "KL") {
+                realDriversWorkingDay[day]++;
+              }
+            }
+            txIndex++;
+          });
+
           // Thêm 1 dòng báo cáo số xe
           const footerRow = document.createElement("tr");
           let footerHtml = `<td colspan="5" class="has-text-right has-text-weight-bold" style="background:#ddd;">`;
 
-          if (soLuongXeHienTai > 0 && Array.from(driversWorkingPerDay).some(dayCount => dayCount < soLuongXeHienTai)) {
+          if (soLuongXeHienTai > 0 && Array.from(realDriversWorkingDay).some(dayCount => dayCount < soLuongXeHienTai)) {
             footerHtml += `⚠ THIẾU TÀI XẾ DO VỚI SỐ XE (${soLuongXeHienTai})<br>`;
           }
           footerHtml += `SỐ TÀI XẾ HOẠT ĐỘNG TRONG NGÀY (${soLuongXeHienTai} Xe):</td>`;
 
           footerRow.innerHTML = footerHtml;
           for (let day = 0; day < daysInMonth; day++) {
-            const numWorking = driversWorkingPerDay[day] || 0;
+            const numWorking = realDriversWorkingDay[day] || 0;
             const bgStatus = (soLuongXeHienTai > 0 && numWorking < soLuongXeHienTai) ? "bg-red has-text-white" : "background:#ddd";
             footerRow.innerHTML += `<td class="has-text-centered has-text-weight-bold" style="${bgStatus}; border: 1px solid #999;">${numWorking}</td>`;
           }
