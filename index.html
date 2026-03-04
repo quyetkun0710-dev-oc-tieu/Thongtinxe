@@ -1475,7 +1475,56 @@
       <!-- ================= START TAG: LỊCH LÀM VIỆC ================= -->
       <div id="lichlamviec" class="hidden form-box">
         <button class="floating-back-btn" type="button" onclick="backHome()">⬅ Quay lại</button>
-        <h2 class="title is-4 has-text-weight-bold">🗓️ LỊCH LÀM VIỆC</h2>
+        <h2 class="title is-4 has-text-weight-bold">🗓️ LỊCH LÀM VIỆC TỰ ĐỘNG</h2>
+
+        <!-- Khung điều khiển tạo lịch -->
+        <div class="box" style="margin-bottom: 20px;">
+          <div class="columns is-mobile is-vcentered">
+            <div class="column is-3-tablet is-4-mobile">
+              <label class="label" style="color:#000 !important; text-shadow:none;">Tháng</label>
+              <div class="select is-fullwidth">
+                <select id="llv_select_month">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                </select>
+              </div>
+            </div>
+            <div class="column is-3-tablet is-4-mobile">
+              <label class="label" style="color:#000 !important; text-shadow:none;">Năm</label>
+              <div class="select is-fullwidth">
+                <select id="llv_select_year">
+                  <option value="2025">2025</option>
+                  <option value="2026">2026</option>
+                  <option value="2027">2027</option>
+                </select>
+              </div>
+            </div>
+            <div class="column is-6-tablet is-4-mobile">
+              <label class="label">&nbsp;</label>
+              <div class="buttons is-flex-wrap-nowrap">
+                <button class="button is-primary is-fullwidth has-text-weight-bold" onclick="generateAutoLichLamViec()">
+                  TẠO LỊCH
+                </button>
+                <button class="button is-warning is-light has-text-weight-bold px-2" onclick="resetLichLamViec()"
+                  title="Xóa lịch đã tạo và làm mới" style="width: auto;">
+                  🔄 TẠO LẠI
+                </button>
+              </div>
+            </div>
+          </div>
+          <p class="help is-info has-text-black">*Lịch sẽ tự động lấy danh sách tài xế Đang làm việc, tính số Chủ Nhật
+            trong tháng, và luân phiên xếp ngày nghỉ.</p>
+        </div>
 
         <div class="box p-0" style="overflow: hidden;">
           <div class="table-container"
@@ -1917,6 +1966,27 @@
               </label>
             </div>
           </div>
+
+          <!-- 7. TRẠNG THÁI -->
+          <h3 class="subtitle">7️⃣ Trạng thái</h3>
+          <div class="columns is-mobile">
+            <div class="column is-12-mobile is-4-tablet">
+              <label class="label">Tình trạng nhân viên</label>
+              <div class="select is-fullwidth">
+                <select name="trang_thai" onchange="toggleTrangThaiTaiXe()">
+                  <option value="">-- Chọn --</option>
+                  <option value="Đang làm việc">Đang làm việc</option>
+                  <option value="Đã nghỉ">Đã nghỉ việc</option>
+                  <option value="Đã chuyển công tác">Đã chuyển công tác</option>
+                </select>
+              </div>
+            </div>
+            <div class="column is-12-mobile is-4-tablet hidden" id="box_ngay_nghi_viec">
+              <label class="label">Ngày nghỉ / điều chuyển</label>
+              <input class="input" type="date" name="ngay_nghi_viec">
+            </div>
+          </div>
+
           <div class="form-spacer"></div>
           <button class="floating-save-btn" type="submit">
             💾 LƯU
@@ -4070,6 +4140,22 @@ Hết hạn: ${w.ngay_he} <br>
       const yyyy = d.getFullYear();
       f.chinh_thuc.value = `${dd} /${mm}/${yyyy} `;
     }
+
+    function toggleTrangThaiTaiXe() {
+      const form = document.getElementById("taixeForm");
+      if (!form) return;
+
+      const tt = form.trang_thai.value;
+      const box = document.getElementById("box_ngay_nghi_viec");
+      if (!box) return;
+
+      if (tt === "Đã nghỉ" || tt === "Đã chuyển công tác") {
+        box.classList.remove("hidden");
+      } else {
+        box.classList.add("hidden");
+        form.ngay_nghi_viec.value = ""; // xóa ngày nếu đang làm việc
+      }
+    }
     function loadTableByKey(tag, keyName, keyValue, tableId) {
       const table = document.getElementById(tableId);
       if (!table) return;
@@ -4549,6 +4635,8 @@ Hết hạn: ${w.ngay_he} <br>
           }
         }
       });
+      // Kích hoạt ẩn/hiện cột Ngày nghỉ việc dựa theo dữ liệu tải về
+      toggleTrangThaiTaiXe();
       form.scrollIntoView({ behavior: "smooth" });
     }
     // Hàm này hiện tại đã được gộp vào applyHomeCardByRole hoặc logic load trang
@@ -4826,82 +4914,276 @@ Hết hạn: ${w.ngay_he} <br>
       document.getElementById("home").classList.add("hidden");
       document.getElementById('lichlamviec').classList.remove('hidden');
 
-      // Render layout mock
-      renderMockLichLamViec();
+      // Setup giao diện ban đầu
+      const now = new Date();
+      if (document.getElementById("llv_select_month")) document.getElementById("llv_select_month").value = now.getMonth() + 1;
+      if (document.getElementById("llv_select_year")) document.getElementById("llv_select_year").value = now.getFullYear();
 
       showToggleBtn(false); // Ẩn nút gập bảng
     }
 
-    function renderMockLichLamViec() {
-      // Tháng 3/2026 có 31 ngày. Mùng 1 là Chủ Nhật (CN)
-      const days = 31;
-      const dowMap = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
+    async function generateAutoLichLamViec() {
+      const monthSelect = document.getElementById("llv_select_month");
+      const yearSelect = document.getElementById("llv_select_year");
 
-      let dayHtml = "";
-      let dowHtml = "";
+      const m = monthSelect ? parseInt(monthSelect.value) : new Date().getMonth() + 1;
+      const y = yearSelect ? parseInt(yearSelect.value) : new Date().getFullYear();
 
-      for (let i = 1; i <= days; i++) {
-        // Tạm tính DOW cho t3/2026 (1/3/2026 là Chủ nhật -> index 0)
-        const dowIndex = (i - 1) % 7;
-        const dowText = dowMap[dowIndex];
+      const storageKey = `lich_lam_viec_data_${y}_${m}`;
 
-        // Tô màu đỏ cho cột Chủ Nhật ở Header
-        const isSun = dowText === "CN";
-        const thClass = isSun ? "has-background-danger has-text-white" : "";
+      const tbody = document.getElementById("llv_body");
+      if (tbody) tbody.innerHTML = `<tr><td colspan="40" class="has-text-centered py-5 has-text-black"><div class="button is-loading is-large" style="border:none; background:transparent;"></div><br>Đang tải Dữ liệu Phương tiện và Tài xế, tính toán lịch...</td></tr>`;
 
-        dayHtml += `<th class="${thClass}" style="min-width: 30px; text-align: center;">${i.toString().padStart(2, '0')}</th>`;
-        dowHtml += `<th class="${thClass}" style="min-width: 30px; text-align: center;">${dowText}</th>`;
-      }
+      try {
+        // Fetch Drivers
+        const txRes = await fetch(`${SCRIPT_URL}?tag=taixe`);
+        let txData = await txRes.json();
+        if (!Array.isArray(txData)) txData = [];
 
-      document.getElementById("llv_days_row").innerHTML = dayHtml;
-      document.getElementById("llv_dow_row").innerHTML = dowHtml;
+        const currentMonthStart = new Date(y, m - 1, 1);
+        // LOẠI NHÂN VIÊN ĐÃ NGHỈ Việc TỪ TRƯỚC THÁNG ĐÓ
+        const activeDrivers = txData.filter(d => {
+          const st = (d.trang_thai || "").toLowerCase();
+          const isResigned = st.includes("nghỉ") || st.includes("công tác") || st.includes("bàn giao");
+          if (!isResigned) return true; // Đang làm việc
 
-      // Mock Data
-      const mockData = [
-        {
-          stt: 1, name: "Nguyễn Xuân Thọ", mnv: "036717", phone: "0979117569", tuyen: "SỢ CUA",
-          shifts: ["1", "1", "1", "CN", "0.5", "1", "1", "1", "1", "CN", "1", "1", "1", "1", "1", "1", "CN", "1", "1", "1", "1", "1", "CN", "1", "1", "1", "1", "1", "P", "1", "1"]
-        },
-        {
-          stt: 2, name: "Cao Văn Danh", mnv: "050949", phone: "0984955616", tuyen: "SỢ CUA",
-          shifts: ["0", "1", "1", "1", "CN", "0.5", "1", "1", "1", "1", "CN", "1", "1", "1", "1", "1", "1", "CN", "1", "1", "1", "1", "1", "CN", "1", "1", "1", "1", "1", "P", "1"]
-        },
-        {
-          stt: 3, name: "Lê Văn Thi", mnv: "064368", phone: "0869658622", tuyen: "51D40641 Hà Nam",
-          shifts: ["0", "0", "0", "0", "0", "0", "0", "P", "1", "1", "1", "1", "1", "CN", "1", "1", "1", "1", "1", "0", "CN", "0", "0", "0", "0", "0", "CN", "1", "1", "1", "1"]
-        },
-        {
-          stt: 4, name: "Đỗ Văn Quyết", mnv: "038554", phone: "0964610223", tuyen: "QLĐX",
-          shifts: ["4", "4", "4", "4", "CN", "HC", "HC", "HC", "HC", "HC", "HC", "CN", "4", "4", "4", "4", "4", "4", "CN", "HC", "HC", "HC", "HC", "HC", "HC", "CN", "4", "4", "4", "4", "4"]
-        }
-      ];
+          if (!d.ngay_nghi_viec) return false; // Không ngày -> mặc định loại
+          let dateOff = null;
+          if (String(d.ngay_nghi_viec).includes('/')) {
+            const p = String(d.ngay_nghi_viec).split('/'); // Giả sử DD/MM/YYYY
+            if (p.length === 3) dateOff = new Date(p[2], p[1] - 1, p[0]);
+          } else {
+            dateOff = new Date(d.ngay_nghi_viec);
+          }
 
-      let bodyHtml = "";
-      mockData.forEach(r => {
-        bodyHtml += `<tr>`;
-        bodyHtml += `<td class="llv-sticky-col-1 has-background-grey-lighter">${r.stt}</td>`;
-        bodyHtml += `<td class="llv-sticky-col-2 has-text-left" style="background:#fff;"><strong>${r.name}</strong></td>`;
-        bodyHtml += `<td class="llv-sticky-col-3 has-text-weight-bold" style="background:#fff;">${r.mnv}</td>`;
-        bodyHtml += `<td class="llv-sticky-col-4 has-text-weight-bold" style="background:#fff;">${r.phone}</td>`;
-        bodyHtml += `<td class="llv-sticky-col-5 has-text-weight-bold" style="background:#fff2cc;">${r.tuyen}</td>`;
-
-        r.shifts.forEach(s => {
-          let sClass = "llv-bg-white"; // default
-          if (s === "CN") sClass = "llv-bg-green";
-          if (s === "0") sClass = "llv-bg-purple"; // Theo ảnh dòng 3, T7 là 0 tím nhạt nhưng có dòng Danh là 0 đỏ. Tùy biến sau
-          if (r.stt === 2 && s === "0") sClass = "llv-bg-red"; // Trick mock
-          if (r.stt === 2 && s === "1" && r.shifts.indexOf(s) === 3) sClass = "llv-bg-blue"; // Trick mock
-          if (s === "P") sClass = "llv-bg-cyan";
-          if (s === "HC" || s === "4") sClass = "llv-bg-orange";
-          if (s === "KL") sClass = "llv-bg-yellow";
-
-          bodyHtml += `<td class="${sClass}">${s}</td>`;
+          // Lấy người nghỉ việc trong tháng hoặc sau tháng này
+          if (dateOff && !isNaN(dateOff.getTime())) {
+            if (dateOff >= currentMonthStart) return true;
+          }
+          return false;
         });
 
-        bodyHtml += `</tr>`;
-      });
+        if (activeDrivers.length === 0) {
+          alert("Không có tài xế nào đang làm việc trong danh sách!");
+          if (tbody) tbody.innerHTML = "";
+          return;
+        }
 
-      document.getElementById("llv_body").innerHTML = bodyHtml;
+        const daysInMonth = new Date(y, m, 0).getDate();
+        let sundaysCount = 0;
+        const dowMap = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
+
+        let dayHtml = "";
+        let dowHtml = "";
+
+        // Build Table headers
+        for (let i = 1; i <= daysInMonth; i++) {
+          const d = new Date(y, m - 1, i);
+          const dowIndex = d.getDay();
+          if (dowIndex === 0) sundaysCount++; // Đếm số CN
+
+          const dowText = dowMap[dowIndex];
+          const isSun = dowText === "CN";
+          const thClass = isSun ? "has-background-danger has-text-white" : "";
+
+          dayHtml += `<th class="${thClass}" style="min-width: 30px; text-align: center;">${i.toString().padStart(2, '0')}</th>`;
+          dowHtml += `<th class="${thClass}" style="min-width: 30px; text-align: center;">${dowText}</th>`;
+        }
+
+        document.getElementById("llv_days_row").innerHTML = dayHtml;
+        document.getElementById("llv_dow_row").innerHTML = dowHtml;
+        document.getElementById("llv_month_year").innerText = `THÁNG ${m} NĂM ${y}`;
+        document.getElementById("llv_month_year").colSpan = daysInMonth;
+
+        const D = activeDrivers.length;
+        let schedule = [];
+        let driversWorkingPerDay = new Array(daysInMonth).fill(D);
+        let soLuongXeHienTai = 0;
+
+        // KIỂM TRA ĐÃ CÓ LỊCH LƯU TRONG LOCALSTORAGE CHƯA
+        const savedData = localStorage.getItem(storageKey);
+        if (savedData) {
+          // ==== NẾU ĐÃ CÓ LỊCH: CỐ ĐỊNH ===================
+          const parsed = JSON.parse(savedData);
+          schedule = parsed.schedule;
+          driversWorkingPerDay = parsed.driversWorkingPerDay;
+          soLuongXeHienTai = parsed.soLuongXeHienTai;
+        }
+        else {
+          // ==== NẾU CHƯA CÓ LỊCH: KIỂM TRA THỜI GIAN VÀ KHỞI TẠO =======
+          const now = new Date();
+          const targetMonth = new Date(y, m - 1, 1);
+          const currentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+          // Luôn tạo lịch làm việc trước khi kết thúc tháng 3 ngày
+          const daysInCurrentMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+          if (targetMonth > currentMonth && now.getDate() > daysInCurrentMonth - 3) {
+            alert(`[LƯU Ý] Bạn đang tạo lịch quá trễ!\nTheo quy định, lịch làm việc tháng mới phải được lập trước ngày ${daysInCurrentMonth - 3 + 1} của tháng trước đó.`);
+          }
+
+          // Fetch Cars (chỉ chạy tải khi tính toán mới)
+          const xeRes = await fetch(`${SCRIPT_URL}?tag=xe`);
+          const xeData = await xeRes.json();
+
+          if (Array.isArray(xeData)) {
+            soLuongXeHienTai = xeData.filter(x => {
+              const tt = (x.tinh_trang_hoat_dong || "").toLowerCase();
+              return !tt.includes("nhưng") && !tt.includes("dừng") && !tt.includes("bàn giao") && !tt.includes("thanh lý") && !tt.includes("đã ngừng");
+            }).length;
+            if (soLuongXeHienTai === 0) soLuongXeHienTai = xeData.length;
+          }
+
+          schedule = Array.from({ length: D }, () => new Array(daysInMonth).fill("1"));
+
+          // Tính gap chia đều khoảng cách nghỉ ngày theo tháng
+          const gap = Math.floor(daysInMonth / sundaysCount);
+
+          for (let tx = 0; tx < D; tx++) {
+            const dInfo = activeDrivers[tx];
+            const isResigned = (dInfo.trang_thai || "").toLowerCase().includes("nghỉ") || (dInfo.trang_thai || "").toLowerCase().includes("công tác") || (dInfo.trang_thai || "").toLowerCase().includes("bàn giao");
+
+            let finalDayIndex = daysInMonth - 1;
+            if (isResigned && dInfo.ngay_nghi_viec) {
+              let dateOff = null;
+              if (String(dInfo.ngay_nghi_viec).includes('/')) {
+                const p = String(dInfo.ngay_nghi_viec).split('/'); // Giả sử DD/MM/YYYY
+                if (p.length === 3) dateOff = new Date(p[2], p[1] - 1, p[0]);
+              } else {
+                dateOff = new Date(dInfo.ngay_nghi_viec);
+              }
+
+              if (dateOff && !isNaN(dateOff.getTime())) {
+                if (dateOff.getFullYear() === y && dateOff.getMonth() + 1 === m) {
+                  finalDayIndex = dateOff.getDate() - 1; // ngày làm việc cuối cùng 
+                } else if (dateOff < new Date(y, m - 1, 1)) {
+                  finalDayIndex = -1; // Đã nghỉ từ trước tháng này
+                }
+              }
+            }
+
+            let startDayIndex = 0;
+            if (dInfo.ngay_nhan_viec) {
+              let dateStart = null;
+              if (String(dInfo.ngay_nhan_viec).includes('/')) {
+                const p = String(dInfo.ngay_nhan_viec).split('/'); // Giả sử DD/MM/YYYY
+                if (p.length === 3) dateStart = new Date(p[2], p[1] - 1, p[0]);
+              } else {
+                dateStart = new Date(dInfo.ngay_nhan_viec);
+              }
+
+              if (dateStart && !isNaN(dateStart.getTime())) {
+                if (dateStart.getFullYear() === y && dateStart.getMonth() + 1 === m) {
+                  startDayIndex = dateStart.getDate() - 1; // Ngày bắt đầu làm việc
+                } else if (dateStart > new Date(y, m, 0)) {
+                  startDayIndex = daysInMonth; // Bắt đầu làm từ tháng sau trở đi
+                }
+              }
+            }
+
+            // Gạch ngày TRƯỚC ngày nhận việc (không làm, không tính quân số)
+            for (let day = 0; day < startDayIndex; day++) {
+              if (day < daysInMonth) {
+                schedule[tx][day] = "";
+                driversWorkingPerDay[day]--;
+              }
+            }
+
+            // Gạch ngày SAU ngày nghỉ việc (không làm, không tính quân số)
+            for (let day = finalDayIndex + 1; day < daysInMonth; day++) {
+              if (day >= startDayIndex) { // Tránh trừ trùng nếu bị gạch bởi nhận việc
+                schedule[tx][day] = "";
+                driversWorkingPerDay[day]--;
+              }
+            }
+
+            // Offset tịnh tiến để các lái xe phân bổ xen kẽ nhau 
+            const offset = tx % gap;
+            for (let loop = 0; loop < sundaysCount; loop++) {
+              let dayOff = offset + loop * gap;
+              if (dayOff >= daysInMonth) dayOff = daysInMonth - 1;
+              // Chỉ xếp nghỉ nếu ngày đó nằm trong khung thời gian đang làm việc
+              if (dayOff >= startDayIndex && dayOff <= finalDayIndex) {
+                schedule[tx][dayOff] = "CN";
+                driversWorkingPerDay[dayOff]--;
+              }
+            }
+          }
+
+          // FIX: LƯU LOCALSTORAGE ĐỂ CỐ ĐỊNH
+          const dataToSave = {
+            schedule: schedule,
+            driversWorkingPerDay: driversWorkingPerDay,
+            soLuongXeHienTai: soLuongXeHienTai,
+            createdAt: now.getTime()
+          };
+          localStorage.setItem(storageKey, JSON.stringify(dataToSave));
+        }
+
+        // Render ra HTML
+        let bodyHtml = "";
+        let txIdx = 0;
+        activeDrivers.forEach((r, idx) => {
+          bodyHtml += `<tr>`;
+          bodyHtml += `<td class="llv-sticky-col-1 has-background-grey-lighter">${idx + 1}</td>`;
+          bodyHtml += `<td class="llv-sticky-col-2 has-text-left" style="background:#fff;"><strong>${r.ho_ten || ""}</strong></td>`;
+          bodyHtml += `<td class="llv-sticky-col-3 has-text-weight-bold" style="background:#fff;">${r.ma_nv || ""}</td>`;
+          bodyHtml += `<td class="llv-sticky-col-4 has-text-weight-bold" style="background:#fff;">${r.sdt || ""}</td>`;
+          bodyHtml += `<td class="llv-sticky-col-5 has-text-weight-bold" style="background:#fff2cc; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width: 150px;">${r.tuyen_phu_trach || ""}</td>`;
+
+          const localSchedule = schedule[txIdx] || new Array(daysInMonth).fill("1");
+          for (let day = 0; day < daysInMonth; day++) {
+            const s = localSchedule[day];
+            let sClass = "llv-bg-white";
+            if (s === "CN") sClass = "llv-bg-green";
+            if (s === "0") sClass = "llv-bg-purple";
+            if (s === "P") sClass = "llv-bg-cyan";
+            if (s === "HC" || s === "4") sClass = "llv-bg-orange";
+            if (s === "KL") sClass = "llv-bg-yellow";
+            if (s === "") sClass = "has-background-grey-lighter has-text-grey-light"; // Ngày đã nghỉ việc
+
+            bodyHtml += `<td class="has-text-centered has-text-weight-bold ${sClass}" style="color: #000; border: 1px solid #ccc;">${s}</td>`;
+          }
+          bodyHtml += `</tr>`;
+          txIdx++;
+        });
+
+        if (tbody) {
+          tbody.innerHTML = bodyHtml;
+          // Thêm 1 dòng báo cáo số xe
+          const footerRow = document.createElement("tr");
+          let footerHtml = `<td colspan="5" class="has-text-right has-text-weight-bold" style="background:#ddd;">`;
+
+          if (soLuongXeHienTai > 0 && Array.from(driversWorkingPerDay).some(dayCount => dayCount < soLuongXeHienTai)) {
+            footerHtml += `⚠ THIẾU TÀI XẾ DO VỚI SỐ XE (${soLuongXeHienTai})<br>`;
+          }
+          footerHtml += `SỐ TÀI XẾ HOẠT ĐỘNG TRONG NGÀY (${soLuongXeHienTai} Xe):</td>`;
+
+          footerRow.innerHTML = footerHtml;
+          for (let day = 0; day < daysInMonth; day++) {
+            const numWorking = driversWorkingPerDay[day] || 0;
+            const bgStatus = (soLuongXeHienTai > 0 && numWorking < soLuongXeHienTai) ? "bg-red has-text-white" : "background:#ddd";
+            footerRow.innerHTML += `<td class="has-text-centered has-text-weight-bold" style="${bgStatus}; border: 1px solid #999;">${numWorking}</td>`;
+          }
+          tbody.appendChild(footerRow);
+        }
+
+      } catch (err) {
+        console.error(err);
+        if (tbody) tbody.innerHTML = `<tr><td colspan="40" class="has-text-danger has-text-centered" style="background:#fff;">Lỗi xử lý tự động: ${err.message}</td></tr>`;
+      }
+    }
+
+    function resetLichLamViec() {
+      const monthSelect = document.getElementById("llv_select_month");
+      const yearSelect = document.getElementById("llv_select_year");
+      const m = monthSelect ? parseInt(monthSelect.value) : new Date().getMonth() + 1;
+      const y = yearSelect ? parseInt(yearSelect.value) : new Date().getFullYear();
+      const storageKey = `lich_lam_viec_data_${y}_${m}`;
+
+      if (confirm(`Bạn có chắc chắn muốn TẠO LẠI LỊCH MỚI HOÀN TOÀN cho Tháng ${m}/${y}?\nThuật toán sẽ chia lại lịch rải đều nghỉ bù và mất đi lịch chốt cũ.`)) {
+        localStorage.removeItem(storageKey);
+        generateAutoLichLamViec();
+      }
     }
   </script>
   <!-- Nút ẩn hiện bảng -->
