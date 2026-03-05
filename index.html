@@ -183,6 +183,26 @@
       padding: 15px;
     }
 
+    .notification-badge {
+      position: absolute;
+      top: -8px;
+      right: -12px;
+      background: #ff3b30;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: bold;
+      border-radius: 50%;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      border: 2px solid white;
+      z-index: 10;
+    }
+
     /* ================= MODERN INPUT DECORATION ================= */
     .input,
     .textarea,
@@ -1185,7 +1205,7 @@
 
     #lichlamviec_table thead th {
       position: sticky;
-      top: 0;
+      top: auto !important;
       z-index: 10;
       box-shadow: 0 1px 0 #777;
       /* tạo viền chìm giả khi cuộn */
@@ -1570,7 +1590,10 @@
         </div>
 
         <div class="app-card" data-tag="lichlamviec" onclick="openLichLamViec()">
-          <div class="app-icon">🗓️</div>
+          <div class="app-icon" style="position: relative;">
+            🗓️
+            <span id="badgeLichLamViec" class="notification-badge" style="display: none;">0</span>
+          </div>
           <div class="app-name">Lịch làm việc</div>
         </div>
 
@@ -1636,13 +1659,13 @@
             <thead>
               <!-- Row 1: Headers -->
               <tr class="has-background-grey-lighter">
-                <th rowspan="3" class="llv-sticky-col-1" style="min-width: 40px; top:0;">STT</th>
-                <th rowspan="3" class="llv-sticky-col-2" style="min-width: 120px; background: #ddebf7; top:0;">HỌ TÊN
+                <th rowspan="3" class="llv-sticky-col-1" style="min-width: 40px;">STT</th>
+                <th rowspan="3" class="llv-sticky-col-2" style="min-width: 120px; background: #ddebf7;">HỌ TÊN
                 </th>
-                <th rowspan="3" class="" style="min-width: 80px; top:0; background: #fff;">Mã<br>NV</th>
-                <th rowspan="3" class="" style="min-width: 100px; top:0; background: #fff;">SĐT<br>LIÊN HỆ</th>
-                <th rowspan="3" class="" style="min-width: 150px; background: #fff2cc; top:0;">TUYẾN</th>
-                <th colspan="31" class="has-text-centered" style="background: #ffe699; top:0;" id="llv_month_year">
+                <th rowspan="3" class="" style="min-width: 80px; background: #fff;">Mã<br>NV</th>
+                <th rowspan="3" class="" style="min-width: 100px; background: #fff;">SĐT<br>LIÊN HỆ</th>
+                <th rowspan="3" class="" style="min-width: 150px; background: #fff2cc;">TUYẾN</th>
+                <th colspan="31" class="has-text-centered" style="background: #ffe699;" id="llv_month_year">
                   THÁNG 3
                   NĂM 2026</th>
               </tr>
@@ -1717,9 +1740,12 @@
       <h2 class="title is-4 has-text-weight-bold">🚚 THÔNG TIN XE </h2>
       <!-- ========= TRA CỨU ========= -->
       <section class="box">
-        <h3 class="subtitle has-text-info">
-          🔍 Tra cứu BIỂN SỐ XE
-        </h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+          <h3 class="subtitle has-text-info mb-0">🔍 Tra cứu BIỂN SỐ XE</h3>
+          <button type="button" class="button is-primary is-small has-text-weight-bold"
+            onclick="document.getElementById('xeForm').reset(); document.getElementById('xeForm').classList.remove('hidden'); document.getElementById('xeForm').scrollIntoView({behavior: 'smooth'})">➕
+            Thêm mới</button>
+        </div>
         <div class="columns is-mobile">
           <div class="column is-8-mobile is-4-tablet">
             <label class="label">Biển số xe</label>
@@ -1737,7 +1763,7 @@
           </table>
         </div>
       </section>
-      <form id="xeForm">
+      <form id="xeForm" class="hidden">
         <!-- ========= 1. THÔNG TIN CƠ BẢN ========= -->
         <h3 class="subtitle">1️⃣ Thông tin cơ bản</h3>
         <div class="columns is-mobile is-multiline">
@@ -1900,7 +1926,12 @@
       <h2 class="title is-4">👨‍✈️ THÔNG TIN TÀI XẾ</h2>
       <!-- ===== TRA CỨU ===== -->
       <section class="box">
-        <h3 class="subtitle">🔍 Tra cứu MÃ NHÂN VIÊN / HỌ TÊN</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+          <h3 class="subtitle has-text-info mb-0">🔍 Tra cứu MÃ NHÂN VIÊN / HỌ TÊN</h3>
+          <button type="button" class="button is-primary is-small has-text-weight-bold"
+            onclick="document.getElementById('taixeForm').reset(); document.getElementById('taixeForm').classList.remove('hidden'); document.getElementById('taixeForm').scrollIntoView({behavior: 'smooth'})">➕
+            Thêm mới</button>
+        </div>
         <div class="columns is-mobile">
           <div class="column is-8-mobile is-4-tablet">
             <input class="input" id="search_mnv" placeholder="Nhập mã nhân viên hoặc họ tên">
@@ -1919,7 +1950,7 @@
           </table>
         </div>
       </section>
-      <form id="taixeForm">
+      <form id="taixeForm" class="hidden">
         <!-- 1. THÔNG TIN CÁ NHÂN -->
         <h3 class="subtitle">1️⃣ Thông tin cá nhân</h3>
         <div class="columns is-mobile is-multiline">
@@ -3106,7 +3137,7 @@
         }, 4000);
       }
       /* ================= CONFIG ================= */
-      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzHHk0htKIVFXNJewGSkGQXLuf3pj51M9JqkrZKipbNDbM-Ufrie3zVDqpdev-Q1YW6/exec";
+      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxXkVP7vEnAuE-KEpYmB0ORE2SOeSz6lMz8Vn341uz0YsZZKN28zxVgjvDykmwCzIv7/exec";
       const ACCOUNT_SS_ID = "1i0CFkUWJoY18C-DKIlavRpbsYYVIM4fpKtIYGkdPZ-A";
 
       let USER_ROLE = null; // manager | admin | taixe
@@ -3319,6 +3350,8 @@ Hết hạn: ${w.ngay_he} <br>
         if (document.getElementById("km_month")) document.getElementById("km_month").value = m;
         if (document.getElementById("km_year")) document.getElementById("km_year").value = y;
         switchFuelSubTab('fuel'); // Mặc định mở tab tra cứu
+        openFuelLogGrid(); // Tự động load dữ liệu Nhiên liệu khi vừa mở tab
+        openKmGrid(); // Tự động refresh ngầm tab KM
       }
 
       function switchFuelSubTab(type) {
@@ -3365,7 +3398,7 @@ Hết hạn: ${w.ngay_he} <br>
         container.innerHTML = `<p class="has-text-centered py-5"><button class="button is-loading is-white">Đang tải dữ liệu...</button></p>`;
 
         try {
-          const res = await fetch(`${SCRIPT_URL}?action=get_km_grid&month=${m}&year=${y}&bien_so_xe=${encodeURIComponent(bsx)}`);
+          const res = await fetch(`${SCRIPT_URL}?action=get_km_grid&month=${m}&year=${y}&bien_so_xe=${encodeURIComponent(bsx)}&_t=${Date.now()}`);
           const json = await res.json();
           if (json.status === "success") {
             renderKmGrid(json, m, y);
@@ -3445,7 +3478,7 @@ Hết hạn: ${w.ngay_he} <br>
 
         container.innerHTML = `<div class="has-text-centered p-5"><button class="button is-loading is-white">Đang tải...</button></div>`;
 
-        fetch(`${SCRIPT_URL}?action=get_quota`)
+        fetch(`${SCRIPT_URL}?action=get_quota&_t=${Date.now()}`)
           .then(res => res.json())
           .then(json => {
             if (json.status === "success") {
@@ -3533,7 +3566,7 @@ Hết hạn: ${w.ngay_he} <br>
           btn.classList.add("is-loading");
           btn.disabled = true;
         }
-        fetch(`${SCRIPT_URL}?action=get_report&month=${m}&year=${y}&bien_so_xe=${encodeURIComponent(bsx)}`)
+        fetch(`${SCRIPT_URL}?action=get_report&month=${m}&year=${y}&bien_so_xe=${encodeURIComponent(bsx)}&_t=${Date.now()}`)
           .then(res => res.json())
           .then(d => {
             if (d.status === "success") {
@@ -3705,10 +3738,14 @@ Hết hạn: ${w.ngay_he} <br>
         loadQuotaData();
         generateAutoLichLamViec(true); // Tải ngầm lịch làm việc không bật alert
 
+        // Tải ngầm bảng Xe và Tài xế (áp dụng cho cả lần đầu login lẫn khi refresh trang)
+        loadTableByKey("xe", "bien_so_xe", "", "xeTable");
+        loadTableByKey("taixe", "ma_nv", "", "taixeTable");
+
         // Tải ngầm Kế hoạch bảo dưỡng
         const tbodyMaintenance = document.querySelector("#maintenancePlanTable tbody");
         if (tbodyMaintenance) {
-          fetch(`${SCRIPT_URL}?action=get_maintenance_plan`)
+          fetch(`${SCRIPT_URL}?action=get_maintenance_plan&_t=${Date.now()}`)
             .then(res => res.json())
             .then(res => {
               if (res.status === "success") {
@@ -3734,7 +3771,7 @@ Hết hạn: ${w.ngay_he} <br>
         if (container) {
           container.innerHTML = `<p class="has-text-centered py-5">Đang tải dữ liệu...</p>`;
           try {
-            const res = await fetch(`${SCRIPT_URL}?action=get_log_grid&bien_so_xe=${encodeURIComponent(bsx)}&month=${m}&year=${y}`);
+            const res = await fetch(`${SCRIPT_URL}?action=get_log_grid&bien_so_xe=${encodeURIComponent(bsx)}&month=${m}&year=${y}&_t=${Date.now()}`);
             const json = await res.json();
 
             if (json.status === "success") {
@@ -3753,7 +3790,7 @@ Hết hạn: ${w.ngay_he} <br>
         if (container) {
           container.innerHTML = `<p class="has-text-centered py-5">Đang tải dữ liệu...</p>`;
           try {
-            const res = await fetch(`${SCRIPT_URL}?action=get_km_grid&month=${m}&year=${y}&bien_so_xe=${encodeURIComponent(bsx)}`);
+            const res = await fetch(`${SCRIPT_URL}?action=get_km_grid&month=${m}&year=${y}&bien_so_xe=${encodeURIComponent(bsx)}&_t=${Date.now()}`);
             const json = await res.json();
 
             if (json.status === "success") {
@@ -3860,6 +3897,30 @@ Hết hạn: ${w.ngay_he} <br>
           const tag = card.dataset.tag;
           card.style.display = allowTags.includes(tag) ? "" : "none";
         });
+
+        updateLichLamViecBadge();
+      }
+
+      function updateLichLamViecBadge() {
+        const badge = document.getElementById("badgeLichLamViec");
+        if (!badge) return;
+        if (USER_ROLE !== "admin" && USER_ROLE !== "manager") {
+          badge.style.display = "none";
+          return;
+        }
+        fetch(`${SCRIPT_URL}?tag=dangkylich&_t=${Date.now()}`)
+          .then(r => r.json())
+          .then(data => {
+            if (!Array.isArray(data)) return;
+            const count = data.filter(d => String(d.trang_thai).toLowerCase() === "chờ duyệt").length;
+            if (count > 0) {
+              badge.textContent = count > 99 ? "99+" : count;
+              badge.style.display = "flex";
+            } else {
+              badge.style.display = "none";
+            }
+          })
+          .catch(e => console.error(e));
       }
       function openTag(tagId) {
         if (!USER_ROLE) {
@@ -3978,7 +4039,14 @@ Hết hạn: ${w.ngay_he} <br>
             }
             if (r.status === "success") {
               showAlert("Lưu thành công", "is-success");
-              setTimeout(() => form.reset(), 300);
+              setTimeout(() => {
+                form.reset();
+                if (tag === 'xe' || tag === 'taixe') {
+                  form.classList.add('hidden');
+                  if (tag === 'xe') loadTableByKey("xe", "bien_so_xe", "", "xeTable");
+                  if (tag === 'taixe') loadTableByKey("taixe", "ma_nv", "", "taixeTable");
+                }
+              }, 300);
             } else {
               showAlert("Lỗi lưu dữ liệu", "is-danger");
             }
@@ -3997,7 +4065,7 @@ Hết hạn: ${w.ngay_he} <br>
         const url =
           `${SCRIPT_URL}?tag=${encodeURIComponent(tag)}&${encodeURIComponent(
             keyName
-          )}=${encodeURIComponent(keyValue)}`;
+          )}=${encodeURIComponent(keyValue)}&_t=${Date.now()}`;
         fetch(url)
           .then(res => res.json())
           .then(data => {
@@ -4285,6 +4353,7 @@ Hết hạn: ${w.ngay_he} <br>
         if (keyValue) {
           url += `&${encodeURIComponent(keyName)}=${encodeURIComponent(keyValue)}`;
         }
+        url += `${url.includes('?') ? '&' : '?'}_t=${Date.now()}`;
         fetch(url)
           .then(res => res.json())
           .then(list => {
@@ -4437,7 +4506,7 @@ Hết hạn: ${w.ngay_he} <br>
         tbody.innerHTML = "";
         const url =
           `${SCRIPT_URL}?tag=${encodeURIComponent(tag)}` +
-          `&${encodeURIComponent(keyName)}=${encodeURIComponent(keyValue)}`;
+          `&${encodeURIComponent(keyName)}=${encodeURIComponent(keyValue)}&_t=${Date.now()}`;
         fetch(url)
           .then(res => res.json())
           .then(rows => {
@@ -4674,14 +4743,14 @@ Hết hạn: ${w.ngay_he} <br>
           });
       }
       const API_URL =
-        "https://script.google.com/macros/s/AKfycbzHHk0htKIVFXNJewGSkGQXLuf3pj51M9JqkrZKipbNDbM-Ufrie3zVDqpdev-Q1YW6/exec";
+        "https://script.google.com/macros/s/AKfycbxXkVP7vEnAuE-KEpYmB0ORE2SOeSz6lMz8Vn341uz0YsZZKN28zxVgjvDykmwCzIv7/exec";
       function autoFillTaiXe(mnv, targetInput) {
         if (!mnv) {
           targetInput.value = "";
           return;
         }
         fetch(
-          `${SCRIPT_URL}?tag=taixe&ma_nv=${encodeURIComponent(mnv)}`
+          `${SCRIPT_URL}?tag=taixe&ma_nv=${encodeURIComponent(mnv)}&_t=${Date.now()}`
         )
           .then(res => res.json())
           .then(list => {
@@ -4698,6 +4767,7 @@ Hết hạn: ${w.ngay_he} <br>
       function fillFormXe(data) {
         const form = document.getElementById("xeForm");
         if (!form) return;
+        form.classList.remove("hidden");
         Object.keys(data).forEach(k => {
           const val = data[k];
           // Xử lý riêng cho Radio buttons
@@ -4718,6 +4788,7 @@ Hết hạn: ${w.ngay_he} <br>
       function fillFormTaiXe(data) {
         const form = document.getElementById("taixeForm");
         if (!form) return;
+        form.classList.remove("hidden");
         Object.keys(data).forEach(k => {
           // Tìm input bên trong form-taixe để tránh nhầm lẫn
           const el = form.querySelector(`[name = "${k}"]`);
@@ -4763,6 +4834,8 @@ Hết hạn: ${w.ngay_he} <br>
         /* Ẩn toàn bộ TAG form và hiện HOME */
         document.querySelectorAll(".form-box").forEach(el => el.classList.add("hidden"));
         document.getElementById("home").classList.remove("hidden");
+
+        // Tải ngầm bảng Xe và Tài xế (preLoadData sẽ xử lý sau khi login thành công)
       }
       /* ================= LOGOUT ================= */
       function doLogout() {
@@ -4868,7 +4941,7 @@ Hết hạn: ${w.ngay_he} <br>
         showAlert(bsx ? `Đang tải bảng kê cho xe ${bsx}...` : "Đang tải bảng kê toàn bộ xe...", "is-info");
 
         try {
-          const res = await fetch(`${SCRIPT_URL}?action=get_log_grid&bien_so_xe=${encodeURIComponent(bsx)}&month=${m}&year=${y}`);
+          const res = await fetch(`${SCRIPT_URL}?action=get_log_grid&bien_so_xe=${encodeURIComponent(bsx)}&month=${m}&year=${y}&_t=${Date.now()}`);
           const json = await res.json();
 
           if (json.status === "success") {
@@ -4948,9 +5021,8 @@ Hết hạn: ${w.ngay_he} <br>
             const entries = vehicleData[col.day] || [];
             const entry = entries[col.idx];
             if (entry) {
-              if (entry.km_dau !== null && entry.km_cuoi !== null) {
-                vTotalKm += (entry.km_cuoi - entry.km_dau);
-              }
+              // Dùng km_tong (cộng dồn tất cả chuyến) thay vì km_cuoi - km_dau
+              vTotalKm += (entry.km_tong || 0);
               (entry.fuels || []).forEach(f => {
                 vTotalLit += (Number(f.lit) || 0);
                 vTotalMoney += (Number(f.tong) || 0);
@@ -4980,7 +5052,9 @@ Hết hạn: ${w.ngay_he} <br>
                 if (rowInfo.key === "km_dau") cellVal = fmt(entry.km_dau);
                 else if (rowInfo.key === "km_cuoi") cellVal = fmt(entry.km_cuoi);
                 else if (rowInfo.key === "km_ca_ngay") {
-                  if (entry.km_dau !== null && entry.km_cuoi !== null) cellVal = fmt(entry.km_cuoi - entry.km_dau);
+                  // Dùng km_tong (cộng dồn) thay vì km_cuoi - km_dau
+                  if (entry.km_tong != null && entry.km_tong > 0) cellVal = fmt(entry.km_tong);
+                  else if (entry.km_dau !== null && entry.km_cuoi !== null) cellVal = fmt(entry.km_cuoi - entry.km_dau);
                 }
                 else if (entry.fuels && entry.fuels.length > 0) {
                   // Phân bổ dữ liệu fuel vào đúng hàng
@@ -5047,7 +5121,7 @@ Hết hạn: ${w.ngay_he} <br>
 
         try {
           // Fetch Drivers
-          const txRes = await fetch(`${SCRIPT_URL}?tag=taixe`);
+          const txRes = await fetch(`${SCRIPT_URL}?tag=taixe&_t=${Date.now()}`);
           let txData = await txRes.json();
           if (!Array.isArray(txData)) txData = [];
 
@@ -5097,8 +5171,8 @@ Hết hạn: ${w.ngay_he} <br>
             const isSun = dowText === "CN";
             const thClass = isSun ? "has-background-danger has-text-white" : "";
 
-            dayHtml += `<th class="${thClass}" style="min-width: 30px; text-align: center; top: 38px; position: sticky; border-bottom: 1px solid #777;">${i.toString().padStart(2, '0')}</th>`;
-            dowHtml += `<th class="${thClass}" style="min-width: 30px; text-align: center; top: 76px; position: sticky;">${dowText}</th>`;
+            dayHtml += `<th class="${thClass}" style="min-width: 30px; text-align: center; border-bottom: 1px solid #777;">${i.toString().padStart(2, '0')}</th>`;
+            dowHtml += `<th class="${thClass}" style="min-width: 30px; text-align: center;">${dowText}</th>`;
           }
 
           document.getElementById("llv_days_row").innerHTML = dayHtml;
@@ -5133,7 +5207,7 @@ Hết hạn: ${w.ngay_he} <br>
             }
 
             // Fetch Cars (chỉ chạy tải khi tính toán mới)
-            const xeRes = await fetch(`${SCRIPT_URL}?tag=xe`);
+            const xeRes = await fetch(`${SCRIPT_URL}?tag=xe&_t=${Date.now()}`);
             const xeData = await xeRes.json();
 
             if (Array.isArray(xeData)) {
@@ -5232,7 +5306,7 @@ Hết hạn: ${w.ngay_he} <br>
 
           // ===== ÁP DỤNG ĐĂNG KÝ LỊCH ĐÃ DUYỆT ĐÈ LÊN LỊCH QUY CHUẨN =====
           try {
-            const dkRes = await fetch(`${SCRIPT_URL}?tag=dangkylich`);
+            const dkRes = await fetch(`${SCRIPT_URL}?tag=dangkylich&_t=${Date.now()}`);
             let dkData = await dkRes.json();
             if (Array.isArray(dkData)) {
               const approvedRequests = dkData.filter(d => {
@@ -5416,7 +5490,7 @@ Hết hạn: ${w.ngay_he} <br>
         const tbody = document.getElementById("dangkylich_body");
         if (tbody) tbody.innerHTML = `<tr><td colspan="8" class="has-text-centered">Đang tải...</td></tr>`;
         try {
-          const res = await fetch(`${SCRIPT_URL}?tag=dangkylich`);
+          const res = await fetch(`${SCRIPT_URL}?tag=dangkylich&_t=${Date.now()}`);
           let data = await res.json();
           if (!Array.isArray(data)) data = [];
 
@@ -5498,6 +5572,7 @@ Hết hạn: ${w.ngay_he} <br>
             showAlert("Gửi đơn thành công! Vui lòng chờ quản lý duyệt.", "is-success");
             closeFormDangKyLich();
             loadDangKyLich();
+            updateLichLamViecBadge();
           } else {
             showAlert("Lỗi: " + (result.message || "Không thể gửi đơn"), "is-danger");
           }
@@ -5516,6 +5591,7 @@ Hết hạn: ${w.ngay_he} <br>
           if (result.status === "success") {
             showAlert("Đã duyệt thành công! Đang cập nhật lịch...", "is-success");
             loadDangKyLich();
+            updateLichLamViecBadge();
             // Tải lại lịch — LUÔN render lại để áp dụng đơn đã duyệt
             await generateAutoLichLamViec();
           } else { showAlert("Lỗi: " + (result.message || ""), "is-danger"); }
@@ -5531,7 +5607,7 @@ Hết hạn: ${w.ngay_he} <br>
         try {
           const res = await fetch(SCRIPT_URL, { method: "POST", body: fd });
           const result = await res.json();
-          if (result.status === "success") { showAlert("Đã từ chối đơn.", "is-warning"); loadDangKyLich(); }
+          if (result.status === "success") { showAlert("Đã từ chối đơn.", "is-warning"); loadDangKyLich(); updateLichLamViecBadge(); }
           else { showAlert("Lỗi: " + (result.message || ""), "is-danger"); }
         } catch (err) { showAlert("Lỗi kết nối", "is-danger"); }
       }
